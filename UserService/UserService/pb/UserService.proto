@@ -1,0 +1,39 @@
+syntax = "proto3";
+
+option cc_generic_services = true;
+
+message LoginRequest {
+    int32 id = 1;
+    bytes password = 2;
+}
+
+message LoginReponse {
+    int32 ret_code = 1;
+    string res_info = 2;
+}
+
+message RegisterRequest {
+    bytes name = 1;
+    bytes password = 2;
+}
+
+message RegisterResponse {
+    int32 ret_code = 1;
+    string res_info = 2;
+    int32 id = 3;
+}
+
+message LogoutRequest {
+    int32 id = 1;
+}
+
+message LogoutReponse {
+    int32 ret_code = 1;
+    string res_info = 2;
+}
+
+service UserServiceRpc {
+    rpc Login(LoginRequest) returns(LoginReponse);
+    rpc Register(RegisterRequest) returns(RegisterResponse);
+    rpc Logout(LogoutRequest) returns(LogoutReponse);
+}
