@@ -37,7 +37,12 @@ bool MySQL::connect()
         USER_LOG_ERROR << "MySQL config is not initialized!";
         return false;
     }
-    return mysql_real_connect(mysql_, gMySQLConfig->ip.c_str(), gMySQLConfig->user.c_str(), gMySQLConfig->password.c_str(), gMySQLConfig->dbname.c_str(), gMySQLConfig->port, nullptr, 0);
+    if (!mysql_real_connect(mysql_, gMySQLConfig->ip.c_str(), gMySQLConfig->user.c_str(), gMySQLConfig->password.c_str(), gMySQLConfig->dbname.c_str(), gMySQLConfig->port, nullptr, 0)) {
+        USER_LOG_ERROR << "connect MySQL failed!";
+        return false;
+    }
+    USER_LOG_INFO << "connect MySQL server success!";
+    return true;
 }
 
 bool MySQL::update(const std::string &sql)
