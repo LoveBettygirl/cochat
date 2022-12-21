@@ -6,9 +6,13 @@ namespace UserService {
 
 UserDao::UserDao()
 {
-    ConnectionPool<MySQL> *pool = ConnectionPool<MySQL>::getInstance();
-    pool->init(corpc::getConfig()->getYamlNode("mysql"));
-    mysql_ = pool->getConnection();
+    ConnectionPool<MySQL> *mysqlPool = ConnectionPool<MySQL>::getInstance();
+    mysqlPool->init(corpc::getConfig()->getYamlNode("mysql"));
+    mysql_ = mysqlPool->getConnection();
+
+    ConnectionPool<Redis> *redisPool = ConnectionPool<Redis>::getInstance();
+    redisPool->init(corpc::getConfig()->getYamlNode("redis"));
+    redis_ = redisPool->getConnection();
 }
 
 // User表的增加方法
@@ -27,8 +31,8 @@ bool UserDao::insert(User &user)
     return false;
 }
 
-// 根据用户号码查询用户信息
-User UserDao::query(int id)
+// 根据用户号码查询用户信息，此逻辑不走缓存
+User UserDao::queryInfo(int id)
 {
     // 1. 组装sql语句
     char sql[1024] = {0};
@@ -48,7 +52,38 @@ User UserDao::query(int id)
             return user;
         }
     }
-    return User();
+    redis_->set("state:" + std::to_string(id), "not_exist");
+    return User(id, "", "", "not_exist");
+}
+
+// 查询用户状态信息
+User UserDao::queryState(int id)
+{
+    std::string state = redis_->get("state:" + std::to_string(id));
+    if (!state.empty()) {
+        return User(id, "", "", state);
+    }
+
+    // 1. 组装sql语句
+    char sql[1024] = {0};
+    sprintf(sql, "select id, state from user where id = %d", id);
+
+    MYSQL_RES *res = mysql_->query(sql);
+    if (res != nullptr) {
+        MYSQL_ROW row = mysql_fetch_row(res);
+        if (row != nullptr) {
+            User user;
+            user.setId(atoi(row[0]));
+            user.setState(row[1]);
+
+            mysql_free_result(res);
+
+            redis_->set("state:" + std::to_string(user.getId()), user.getState());
+            return user;
+        }
+    }
+    redis_->set("state:" + std::to_string(id), "not_exist");
+    return User(id, "", "", "not_exist");
 }
 
 // 更新用户的状态信息
@@ -58,16 +93,12 @@ bool UserDao::updateState(User user)
     char sql[1024] = {0};
     sprintf(sql, "update user set state = '%s' where id = '%d'", user.getState().c_str(), user.getId());
 
-    return mysql_->update(sql);
-}
-
-// 重置用户的状态信息
-void UserDao::resetState()
-{
-    // 1. 组装sql语句
-    char sql[1024] = "update user set state = 'offline' where state = 'online'";
-
-    mysql_->update(sql);
+    if (!mysql_->update(sql)) {
+        return false;
+    }
+    // TODO: 加锁、解锁
+    redis_->del("state:" + std::to_string(user.getId()));
+    return true;
 }
 
 }
