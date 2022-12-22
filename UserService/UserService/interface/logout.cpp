@@ -9,6 +9,9 @@
 #include <corpc/common/log.h>
 #include "UserService/interface/logout.h"
 #include "UserService/pb/UserService.pb.h"
+#include "UserService/dao/user_dao.h"
+#include "UserService/common/business_exception.h"
+#include "UserService/common/error_code.h"
 
 
 namespace UserService {
@@ -32,7 +35,16 @@ void LogoutInterface::run()
     // response_.set_ret_code(0);
     // response_.set_res_info("Succ");
     //
-
+    int id = request_.id();
+    UserDao dao;
+    User user = dao.queryState(id);
+    if (user.getState() != "online") {
+        throw BusinessException(ACCOUNT_LOGGED_OUT, getErrorMsg(ACCOUNT_LOGGED_OUT), __FILE__, __LINE__);
+    }
+    if (!dao.updateState(user)) {
+        // 注销失败
+        throw BusinessException(LOGOUT_FAILED, getErrorMsg(LOGOUT_FAILED), __FILE__, __LINE__);
+    }
 }
 
 }

@@ -9,6 +9,9 @@
 #include <corpc/common/log.h>
 #include "UserService/interface/register.h"
 #include "UserService/pb/UserService.pb.h"
+#include "UserService/dao/user_dao.h"
+#include "UserService/common/business_exception.h"
+#include "UserService/common/error_code.h"
 
 
 namespace UserService {
@@ -32,7 +35,21 @@ void RegisterInterface::run()
     // response_.set_ret_code(0);
     // response_.set_res_info("Succ");
     //
+    std::string name = request_.name();
+    std::string pwd = request_.password();
 
+    User user;
+    user.setName(name);
+    user.setPwd(pwd);
+    UserDao dao;
+    if (dao.insert(user)) {
+        // 注册成功
+        response_.set_id(user.getId());
+    }
+    else {
+        // 注册失败
+        throw BusinessException(REGISTER_FAILED, getErrorMsg(REGISTER_FAILED), __FILE__, __LINE__);
+    }
 }
 
 }
