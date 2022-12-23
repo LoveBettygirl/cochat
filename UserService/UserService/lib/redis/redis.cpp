@@ -79,13 +79,13 @@ std::string Redis::get(const std::string &key)
 
 bool Redis::del(const std::string &key)
 {
-	redisReply *reply = (redisReply *)redisCommand(cacheContext_, "DEL %s", key.c_str());
-	if (nullptr == reply) {
+    redisReply *reply = (redisReply *)redisCommand(cacheContext_, "DEL %s", key.c_str());
+    if (nullptr == reply) {
         USER_LOG_ERROR << "Redis del command failed!";
-		return false;
-	}
+        return false;
+    }
     freeReplyObject(reply);
-	return true;
+    return true;
 }
 
 bool Redis::flushdb()
