@@ -55,18 +55,18 @@ struct TableStruct_UserService_2eproto {
   static const ::PROTOBUF_NAMESPACE_ID::uint32 offsets[];
 };
 extern const ::PROTOBUF_NAMESPACE_ID::internal::DescriptorTable descriptor_table_UserService_2eproto;
-class LoginReponse;
-class LoginReponseDefaultTypeInternal;
-extern LoginReponseDefaultTypeInternal _LoginReponse_default_instance_;
 class LoginRequest;
 class LoginRequestDefaultTypeInternal;
 extern LoginRequestDefaultTypeInternal _LoginRequest_default_instance_;
-class LogoutReponse;
-class LogoutReponseDefaultTypeInternal;
-extern LogoutReponseDefaultTypeInternal _LogoutReponse_default_instance_;
+class LoginResponse;
+class LoginResponseDefaultTypeInternal;
+extern LoginResponseDefaultTypeInternal _LoginResponse_default_instance_;
 class LogoutRequest;
 class LogoutRequestDefaultTypeInternal;
 extern LogoutRequestDefaultTypeInternal _LogoutRequest_default_instance_;
+class LogoutResponse;
+class LogoutResponseDefaultTypeInternal;
+extern LogoutResponseDefaultTypeInternal _LogoutResponse_default_instance_;
 class RegisterRequest;
 class RegisterRequestDefaultTypeInternal;
 extern RegisterRequestDefaultTypeInternal _RegisterRequest_default_instance_;
@@ -74,10 +74,10 @@ class RegisterResponse;
 class RegisterResponseDefaultTypeInternal;
 extern RegisterResponseDefaultTypeInternal _RegisterResponse_default_instance_;
 PROTOBUF_NAMESPACE_OPEN
-template<> ::LoginReponse* Arena::CreateMaybeMessage<::LoginReponse>(Arena*);
 template<> ::LoginRequest* Arena::CreateMaybeMessage<::LoginRequest>(Arena*);
-template<> ::LogoutReponse* Arena::CreateMaybeMessage<::LogoutReponse>(Arena*);
+template<> ::LoginResponse* Arena::CreateMaybeMessage<::LoginResponse>(Arena*);
 template<> ::LogoutRequest* Arena::CreateMaybeMessage<::LogoutRequest>(Arena*);
+template<> ::LogoutResponse* Arena::CreateMaybeMessage<::LogoutResponse>(Arena*);
 template<> ::RegisterRequest* Arena::CreateMaybeMessage<::RegisterRequest>(Arena*);
 template<> ::RegisterResponse* Arena::CreateMaybeMessage<::RegisterResponse>(Arena*);
 PROTOBUF_NAMESPACE_CLOSE
@@ -230,23 +230,23 @@ class LoginRequest :
 };
 // -------------------------------------------------------------------
 
-class LoginReponse :
-    public ::PROTOBUF_NAMESPACE_ID::Message /* @@protoc_insertion_point(class_definition:LoginReponse) */ {
+class LoginResponse :
+    public ::PROTOBUF_NAMESPACE_ID::Message /* @@protoc_insertion_point(class_definition:LoginResponse) */ {
  public:
-  LoginReponse();
-  virtual ~LoginReponse();
+  LoginResponse();
+  virtual ~LoginResponse();
 
-  LoginReponse(const LoginReponse& from);
-  LoginReponse(LoginReponse&& from) noexcept
-    : LoginReponse() {
+  LoginResponse(const LoginResponse& from);
+  LoginResponse(LoginResponse&& from) noexcept
+    : LoginResponse() {
     *this = ::std::move(from);
   }
 
-  inline LoginReponse& operator=(const LoginReponse& from) {
+  inline LoginResponse& operator=(const LoginResponse& from) {
     CopyFrom(from);
     return *this;
   }
-  inline LoginReponse& operator=(LoginReponse&& from) noexcept {
+  inline LoginResponse& operator=(LoginResponse&& from) noexcept {
     if (GetArenaNoVirtual() == from.GetArenaNoVirtual()) {
       if (this != &from) InternalSwap(&from);
     } else {
@@ -264,37 +264,37 @@ class LoginReponse :
   static const ::PROTOBUF_NAMESPACE_ID::Reflection* GetReflection() {
     return GetMetadataStatic().reflection;
   }
-  static const LoginReponse& default_instance();
+  static const LoginResponse& default_instance();
 
   static void InitAsDefaultInstance();  // FOR INTERNAL USE ONLY
-  static inline const LoginReponse* internal_default_instance() {
-    return reinterpret_cast<const LoginReponse*>(
-               &_LoginReponse_default_instance_);
+  static inline const LoginResponse* internal_default_instance() {
+    return reinterpret_cast<const LoginResponse*>(
+               &_LoginResponse_default_instance_);
   }
   static constexpr int kIndexInFileMessages =
     1;
 
-  friend void swap(LoginReponse& a, LoginReponse& b) {
+  friend void swap(LoginResponse& a, LoginResponse& b) {
     a.Swap(&b);
   }
-  inline void Swap(LoginReponse* other) {
+  inline void Swap(LoginResponse* other) {
     if (other == this) return;
     InternalSwap(other);
   }
 
   // implements Message ----------------------------------------------
 
-  inline LoginReponse* New() const final {
-    return CreateMaybeMessage<LoginReponse>(nullptr);
+  inline LoginResponse* New() const final {
+    return CreateMaybeMessage<LoginResponse>(nullptr);
   }
 
-  LoginReponse* New(::PROTOBUF_NAMESPACE_ID::Arena* arena) const final {
-    return CreateMaybeMessage<LoginReponse>(arena);
+  LoginResponse* New(::PROTOBUF_NAMESPACE_ID::Arena* arena) const final {
+    return CreateMaybeMessage<LoginResponse>(arena);
   }
   void CopyFrom(const ::PROTOBUF_NAMESPACE_ID::Message& from) final;
   void MergeFrom(const ::PROTOBUF_NAMESPACE_ID::Message& from) final;
-  void CopyFrom(const LoginReponse& from);
-  void MergeFrom(const LoginReponse& from);
+  void CopyFrom(const LoginResponse& from);
+  void MergeFrom(const LoginResponse& from);
   PROTOBUF_ATTRIBUTE_REINITIALIZES void Clear() final;
   bool IsInitialized() const final;
 
@@ -308,10 +308,10 @@ class LoginReponse :
   inline void SharedCtor();
   inline void SharedDtor();
   void SetCachedSize(int size) const final;
-  void InternalSwap(LoginReponse* other);
+  void InternalSwap(LoginResponse* other);
   friend class ::PROTOBUF_NAMESPACE_ID::internal::AnyMetadata;
   static ::PROTOBUF_NAMESPACE_ID::StringPiece FullMessageName() {
-    return "LoginReponse";
+    return "LoginResponse";
   }
   private:
   inline ::PROTOBUF_NAMESPACE_ID::Arena* GetArenaNoVirtual() const {
@@ -364,7 +364,7 @@ class LoginReponse :
   void _internal_set_ret_code(::PROTOBUF_NAMESPACE_ID::int32 value);
   public:
 
-  // @@protoc_insertion_point(class_scope:LoginReponse)
+  // @@protoc_insertion_point(class_scope:LoginResponse)
  private:
   class _Internal;
 
@@ -814,23 +814,23 @@ class LogoutRequest :
 };
 // -------------------------------------------------------------------
 
-class LogoutReponse :
-    public ::PROTOBUF_NAMESPACE_ID::Message /* @@protoc_insertion_point(class_definition:LogoutReponse) */ {
+class LogoutResponse :
+    public ::PROTOBUF_NAMESPACE_ID::Message /* @@protoc_insertion_point(class_definition:LogoutResponse) */ {
  public:
-  LogoutReponse();
-  virtual ~LogoutReponse();
+  LogoutResponse();
+  virtual ~LogoutResponse();
 
-  LogoutReponse(const LogoutReponse& from);
-  LogoutReponse(LogoutReponse&& from) noexcept
-    : LogoutReponse() {
+  LogoutResponse(const LogoutResponse& from);
+  LogoutResponse(LogoutResponse&& from) noexcept
+    : LogoutResponse() {
     *this = ::std::move(from);
   }
 
-  inline LogoutReponse& operator=(const LogoutReponse& from) {
+  inline LogoutResponse& operator=(const LogoutResponse& from) {
     CopyFrom(from);
     return *this;
   }
-  inline LogoutReponse& operator=(LogoutReponse&& from) noexcept {
+  inline LogoutResponse& operator=(LogoutResponse&& from) noexcept {
     if (GetArenaNoVirtual() == from.GetArenaNoVirtual()) {
       if (this != &from) InternalSwap(&from);
     } else {
@@ -848,37 +848,37 @@ class LogoutReponse :
   static const ::PROTOBUF_NAMESPACE_ID::Reflection* GetReflection() {
     return GetMetadataStatic().reflection;
   }
-  static const LogoutReponse& default_instance();
+  static const LogoutResponse& default_instance();
 
   static void InitAsDefaultInstance();  // FOR INTERNAL USE ONLY
-  static inline const LogoutReponse* internal_default_instance() {
-    return reinterpret_cast<const LogoutReponse*>(
-               &_LogoutReponse_default_instance_);
+  static inline const LogoutResponse* internal_default_instance() {
+    return reinterpret_cast<const LogoutResponse*>(
+               &_LogoutResponse_default_instance_);
   }
   static constexpr int kIndexInFileMessages =
     5;
 
-  friend void swap(LogoutReponse& a, LogoutReponse& b) {
+  friend void swap(LogoutResponse& a, LogoutResponse& b) {
     a.Swap(&b);
   }
-  inline void Swap(LogoutReponse* other) {
+  inline void Swap(LogoutResponse* other) {
     if (other == this) return;
     InternalSwap(other);
   }
 
   // implements Message ----------------------------------------------
 
-  inline LogoutReponse* New() const final {
-    return CreateMaybeMessage<LogoutReponse>(nullptr);
+  inline LogoutResponse* New() const final {
+    return CreateMaybeMessage<LogoutResponse>(nullptr);
   }
 
-  LogoutReponse* New(::PROTOBUF_NAMESPACE_ID::Arena* arena) const final {
-    return CreateMaybeMessage<LogoutReponse>(arena);
+  LogoutResponse* New(::PROTOBUF_NAMESPACE_ID::Arena* arena) const final {
+    return CreateMaybeMessage<LogoutResponse>(arena);
   }
   void CopyFrom(const ::PROTOBUF_NAMESPACE_ID::Message& from) final;
   void MergeFrom(const ::PROTOBUF_NAMESPACE_ID::Message& from) final;
-  void CopyFrom(const LogoutReponse& from);
-  void MergeFrom(const LogoutReponse& from);
+  void CopyFrom(const LogoutResponse& from);
+  void MergeFrom(const LogoutResponse& from);
   PROTOBUF_ATTRIBUTE_REINITIALIZES void Clear() final;
   bool IsInitialized() const final;
 
@@ -892,10 +892,10 @@ class LogoutReponse :
   inline void SharedCtor();
   inline void SharedDtor();
   void SetCachedSize(int size) const final;
-  void InternalSwap(LogoutReponse* other);
+  void InternalSwap(LogoutResponse* other);
   friend class ::PROTOBUF_NAMESPACE_ID::internal::AnyMetadata;
   static ::PROTOBUF_NAMESPACE_ID::StringPiece FullMessageName() {
-    return "LogoutReponse";
+    return "LogoutResponse";
   }
   private:
   inline ::PROTOBUF_NAMESPACE_ID::Arena* GetArenaNoVirtual() const {
@@ -948,7 +948,7 @@ class LogoutReponse :
   void _internal_set_ret_code(::PROTOBUF_NAMESPACE_ID::int32 value);
   public:
 
-  // @@protoc_insertion_point(class_scope:LogoutReponse)
+  // @@protoc_insertion_point(class_scope:LogoutResponse)
  private:
   class _Internal;
 
@@ -975,7 +975,7 @@ class UserServiceRpc : public ::PROTOBUF_NAMESPACE_ID::Service {
 
   virtual void Login(::PROTOBUF_NAMESPACE_ID::RpcController* controller,
                        const ::LoginRequest* request,
-                       ::LoginReponse* response,
+                       ::LoginResponse* response,
                        ::google::protobuf::Closure* done);
   virtual void Register(::PROTOBUF_NAMESPACE_ID::RpcController* controller,
                        const ::RegisterRequest* request,
@@ -983,7 +983,7 @@ class UserServiceRpc : public ::PROTOBUF_NAMESPACE_ID::Service {
                        ::google::protobuf::Closure* done);
   virtual void Logout(::PROTOBUF_NAMESPACE_ID::RpcController* controller,
                        const ::LogoutRequest* request,
-                       ::LogoutReponse* response,
+                       ::LogoutResponse* response,
                        ::google::protobuf::Closure* done);
 
   // implements Service ----------------------------------------------
@@ -1016,7 +1016,7 @@ class UserServiceRpc_Stub : public UserServiceRpc {
 
   void Login(::PROTOBUF_NAMESPACE_ID::RpcController* controller,
                        const ::LoginRequest* request,
-                       ::LoginReponse* response,
+                       ::LoginResponse* response,
                        ::google::protobuf::Closure* done);
   void Register(::PROTOBUF_NAMESPACE_ID::RpcController* controller,
                        const ::RegisterRequest* request,
@@ -1024,7 +1024,7 @@ class UserServiceRpc_Stub : public UserServiceRpc {
                        ::google::protobuf::Closure* done);
   void Logout(::PROTOBUF_NAMESPACE_ID::RpcController* controller,
                        const ::LogoutRequest* request,
-                       ::LogoutReponse* response,
+                       ::LogoutResponse* response,
                        ::google::protobuf::Closure* done);
  private:
   ::PROTOBUF_NAMESPACE_ID::RpcChannel* channel_;
@@ -1126,86 +1126,86 @@ inline void LoginRequest::set_allocated_password(std::string* password) {
 
 // -------------------------------------------------------------------
 
-// LoginReponse
+// LoginResponse
 
 // int32 ret_code = 1;
-inline void LoginReponse::clear_ret_code() {
+inline void LoginResponse::clear_ret_code() {
   ret_code_ = 0;
 }
-inline ::PROTOBUF_NAMESPACE_ID::int32 LoginReponse::_internal_ret_code() const {
+inline ::PROTOBUF_NAMESPACE_ID::int32 LoginResponse::_internal_ret_code() const {
   return ret_code_;
 }
-inline ::PROTOBUF_NAMESPACE_ID::int32 LoginReponse::ret_code() const {
-  // @@protoc_insertion_point(field_get:LoginReponse.ret_code)
+inline ::PROTOBUF_NAMESPACE_ID::int32 LoginResponse::ret_code() const {
+  // @@protoc_insertion_point(field_get:LoginResponse.ret_code)
   return _internal_ret_code();
 }
-inline void LoginReponse::_internal_set_ret_code(::PROTOBUF_NAMESPACE_ID::int32 value) {
+inline void LoginResponse::_internal_set_ret_code(::PROTOBUF_NAMESPACE_ID::int32 value) {
   
   ret_code_ = value;
 }
-inline void LoginReponse::set_ret_code(::PROTOBUF_NAMESPACE_ID::int32 value) {
+inline void LoginResponse::set_ret_code(::PROTOBUF_NAMESPACE_ID::int32 value) {
   _internal_set_ret_code(value);
-  // @@protoc_insertion_point(field_set:LoginReponse.ret_code)
+  // @@protoc_insertion_point(field_set:LoginResponse.ret_code)
 }
 
 // string res_info = 2;
-inline void LoginReponse::clear_res_info() {
+inline void LoginResponse::clear_res_info() {
   res_info_.ClearToEmptyNoArena(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited());
 }
-inline const std::string& LoginReponse::res_info() const {
-  // @@protoc_insertion_point(field_get:LoginReponse.res_info)
+inline const std::string& LoginResponse::res_info() const {
+  // @@protoc_insertion_point(field_get:LoginResponse.res_info)
   return _internal_res_info();
 }
-inline void LoginReponse::set_res_info(const std::string& value) {
+inline void LoginResponse::set_res_info(const std::string& value) {
   _internal_set_res_info(value);
-  // @@protoc_insertion_point(field_set:LoginReponse.res_info)
+  // @@protoc_insertion_point(field_set:LoginResponse.res_info)
 }
-inline std::string* LoginReponse::mutable_res_info() {
-  // @@protoc_insertion_point(field_mutable:LoginReponse.res_info)
+inline std::string* LoginResponse::mutable_res_info() {
+  // @@protoc_insertion_point(field_mutable:LoginResponse.res_info)
   return _internal_mutable_res_info();
 }
-inline const std::string& LoginReponse::_internal_res_info() const {
+inline const std::string& LoginResponse::_internal_res_info() const {
   return res_info_.GetNoArena();
 }
-inline void LoginReponse::_internal_set_res_info(const std::string& value) {
+inline void LoginResponse::_internal_set_res_info(const std::string& value) {
   
   res_info_.SetNoArena(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), value);
 }
-inline void LoginReponse::set_res_info(std::string&& value) {
+inline void LoginResponse::set_res_info(std::string&& value) {
   
   res_info_.SetNoArena(
     &::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), ::std::move(value));
-  // @@protoc_insertion_point(field_set_rvalue:LoginReponse.res_info)
+  // @@protoc_insertion_point(field_set_rvalue:LoginResponse.res_info)
 }
-inline void LoginReponse::set_res_info(const char* value) {
+inline void LoginResponse::set_res_info(const char* value) {
   GOOGLE_DCHECK(value != nullptr);
   
   res_info_.SetNoArena(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), ::std::string(value));
-  // @@protoc_insertion_point(field_set_char:LoginReponse.res_info)
+  // @@protoc_insertion_point(field_set_char:LoginResponse.res_info)
 }
-inline void LoginReponse::set_res_info(const char* value, size_t size) {
+inline void LoginResponse::set_res_info(const char* value, size_t size) {
   
   res_info_.SetNoArena(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(),
       ::std::string(reinterpret_cast<const char*>(value), size));
-  // @@protoc_insertion_point(field_set_pointer:LoginReponse.res_info)
+  // @@protoc_insertion_point(field_set_pointer:LoginResponse.res_info)
 }
-inline std::string* LoginReponse::_internal_mutable_res_info() {
+inline std::string* LoginResponse::_internal_mutable_res_info() {
   
   return res_info_.MutableNoArena(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited());
 }
-inline std::string* LoginReponse::release_res_info() {
-  // @@protoc_insertion_point(field_release:LoginReponse.res_info)
+inline std::string* LoginResponse::release_res_info() {
+  // @@protoc_insertion_point(field_release:LoginResponse.res_info)
   
   return res_info_.ReleaseNoArena(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited());
 }
-inline void LoginReponse::set_allocated_res_info(std::string* res_info) {
+inline void LoginResponse::set_allocated_res_info(std::string* res_info) {
   if (res_info != nullptr) {
     
   } else {
     
   }
   res_info_.SetAllocatedNoArena(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), res_info);
-  // @@protoc_insertion_point(field_set_allocated:LoginReponse.res_info)
+  // @@protoc_insertion_point(field_set_allocated:LoginResponse.res_info)
 }
 
 // -------------------------------------------------------------------
@@ -1462,86 +1462,86 @@ inline void LogoutRequest::set_id(::PROTOBUF_NAMESPACE_ID::int32 value) {
 
 // -------------------------------------------------------------------
 
-// LogoutReponse
+// LogoutResponse
 
 // int32 ret_code = 1;
-inline void LogoutReponse::clear_ret_code() {
+inline void LogoutResponse::clear_ret_code() {
   ret_code_ = 0;
 }
-inline ::PROTOBUF_NAMESPACE_ID::int32 LogoutReponse::_internal_ret_code() const {
+inline ::PROTOBUF_NAMESPACE_ID::int32 LogoutResponse::_internal_ret_code() const {
   return ret_code_;
 }
-inline ::PROTOBUF_NAMESPACE_ID::int32 LogoutReponse::ret_code() const {
-  // @@protoc_insertion_point(field_get:LogoutReponse.ret_code)
+inline ::PROTOBUF_NAMESPACE_ID::int32 LogoutResponse::ret_code() const {
+  // @@protoc_insertion_point(field_get:LogoutResponse.ret_code)
   return _internal_ret_code();
 }
-inline void LogoutReponse::_internal_set_ret_code(::PROTOBUF_NAMESPACE_ID::int32 value) {
+inline void LogoutResponse::_internal_set_ret_code(::PROTOBUF_NAMESPACE_ID::int32 value) {
   
   ret_code_ = value;
 }
-inline void LogoutReponse::set_ret_code(::PROTOBUF_NAMESPACE_ID::int32 value) {
+inline void LogoutResponse::set_ret_code(::PROTOBUF_NAMESPACE_ID::int32 value) {
   _internal_set_ret_code(value);
-  // @@protoc_insertion_point(field_set:LogoutReponse.ret_code)
+  // @@protoc_insertion_point(field_set:LogoutResponse.ret_code)
 }
 
 // string res_info = 2;
-inline void LogoutReponse::clear_res_info() {
+inline void LogoutResponse::clear_res_info() {
   res_info_.ClearToEmptyNoArena(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited());
 }
-inline const std::string& LogoutReponse::res_info() const {
-  // @@protoc_insertion_point(field_get:LogoutReponse.res_info)
+inline const std::string& LogoutResponse::res_info() const {
+  // @@protoc_insertion_point(field_get:LogoutResponse.res_info)
   return _internal_res_info();
 }
-inline void LogoutReponse::set_res_info(const std::string& value) {
+inline void LogoutResponse::set_res_info(const std::string& value) {
   _internal_set_res_info(value);
-  // @@protoc_insertion_point(field_set:LogoutReponse.res_info)
+  // @@protoc_insertion_point(field_set:LogoutResponse.res_info)
 }
-inline std::string* LogoutReponse::mutable_res_info() {
-  // @@protoc_insertion_point(field_mutable:LogoutReponse.res_info)
+inline std::string* LogoutResponse::mutable_res_info() {
+  // @@protoc_insertion_point(field_mutable:LogoutResponse.res_info)
   return _internal_mutable_res_info();
 }
-inline const std::string& LogoutReponse::_internal_res_info() const {
+inline const std::string& LogoutResponse::_internal_res_info() const {
   return res_info_.GetNoArena();
 }
-inline void LogoutReponse::_internal_set_res_info(const std::string& value) {
+inline void LogoutResponse::_internal_set_res_info(const std::string& value) {
   
   res_info_.SetNoArena(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), value);
 }
-inline void LogoutReponse::set_res_info(std::string&& value) {
+inline void LogoutResponse::set_res_info(std::string&& value) {
   
   res_info_.SetNoArena(
     &::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), ::std::move(value));
-  // @@protoc_insertion_point(field_set_rvalue:LogoutReponse.res_info)
+  // @@protoc_insertion_point(field_set_rvalue:LogoutResponse.res_info)
 }
-inline void LogoutReponse::set_res_info(const char* value) {
+inline void LogoutResponse::set_res_info(const char* value) {
   GOOGLE_DCHECK(value != nullptr);
   
   res_info_.SetNoArena(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), ::std::string(value));
-  // @@protoc_insertion_point(field_set_char:LogoutReponse.res_info)
+  // @@protoc_insertion_point(field_set_char:LogoutResponse.res_info)
 }
-inline void LogoutReponse::set_res_info(const char* value, size_t size) {
+inline void LogoutResponse::set_res_info(const char* value, size_t size) {
   
   res_info_.SetNoArena(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(),
       ::std::string(reinterpret_cast<const char*>(value), size));
-  // @@protoc_insertion_point(field_set_pointer:LogoutReponse.res_info)
+  // @@protoc_insertion_point(field_set_pointer:LogoutResponse.res_info)
 }
-inline std::string* LogoutReponse::_internal_mutable_res_info() {
+inline std::string* LogoutResponse::_internal_mutable_res_info() {
   
   return res_info_.MutableNoArena(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited());
 }
-inline std::string* LogoutReponse::release_res_info() {
-  // @@protoc_insertion_point(field_release:LogoutReponse.res_info)
+inline std::string* LogoutResponse::release_res_info() {
+  // @@protoc_insertion_point(field_release:LogoutResponse.res_info)
   
   return res_info_.ReleaseNoArena(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited());
 }
-inline void LogoutReponse::set_allocated_res_info(std::string* res_info) {
+inline void LogoutResponse::set_allocated_res_info(std::string* res_info) {
   if (res_info != nullptr) {
     
   } else {
     
   }
   res_info_.SetAllocatedNoArena(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), res_info);
-  // @@protoc_insertion_point(field_set_allocated:LogoutReponse.res_info)
+  // @@protoc_insertion_point(field_set_allocated:LogoutResponse.res_info)
 }
 
 #ifdef __GNUC__

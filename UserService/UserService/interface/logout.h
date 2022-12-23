@@ -21,14 +21,14 @@ namespace UserService {
 
 class LogoutInterface {
 public:
-    LogoutInterface(const ::LogoutRequest& request, ::LogoutReponse& response);
+    LogoutInterface(const ::LogoutRequest& request, ::LogoutResponse& response);
     ~LogoutInterface();
 
     void run(); // Business implementation
 
 private:
     const ::LogoutRequest& request_;      // request object from client
-    ::LogoutReponse& response_;          // response object that reply to client
+    ::LogoutResponse& response_;          // response object that reply to client
 };
 
 }

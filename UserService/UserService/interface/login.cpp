@@ -16,7 +16,7 @@
 
 namespace UserService {
 
-LoginInterface::LoginInterface(const ::LoginRequest &request, ::LoginReponse &response)
+LoginInterface::LoginInterface(const ::LoginRequest &request, ::LoginResponse &response)
     : request_(request), 
     response_(response)
 {

@@ -16,7 +16,7 @@
 
 namespace UserService {
 
-LogoutInterface::LogoutInterface(const ::LogoutRequest &request, ::LogoutReponse &response)
+LogoutInterface::LogoutInterface(const ::LogoutRequest &request, ::LogoutResponse &response)
     : request_(request), 
     response_(response)
 {

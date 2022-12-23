@@ -21,14 +21,14 @@ namespace UserService {
 
 class LoginInterface {
 public:
-    LoginInterface(const ::LoginRequest& request, ::LoginReponse& response);
+    LoginInterface(const ::LoginRequest& request, ::LoginResponse& response);
     ~LoginInterface();
 
     void run(); // Business implementation
 
 private:
     const ::LoginRequest& request_;      // request object from client
-    ::LoginReponse& response_;          // response object that reply to client
+    ::LoginResponse& response_;          // response object that reply to client
 };
 
 }

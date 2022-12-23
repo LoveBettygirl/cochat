@@ -7,7 +7,7 @@ message LoginRequest {
     bytes password = 2;
 }
 
-message LoginReponse {
+message LoginResponse {
     int32 ret_code = 1;
     string res_info = 2;
 }
@@ -27,13 +27,13 @@ message LogoutRequest {
     int32 id = 1;
 }
 
-message LogoutReponse {
+message LogoutResponse {
     int32 ret_code = 1;
     string res_info = 2;
 }
 
 service UserServiceRpc {
-    rpc Login(LoginRequest) returns(LoginReponse);
+    rpc Login(LoginRequest) returns(LoginResponse);
     rpc Register(RegisterRequest) returns(RegisterResponse);
-    rpc Logout(LogoutRequest) returns(LogoutReponse);
+    rpc Logout(LogoutRequest) returns(LogoutResponse);
 }
