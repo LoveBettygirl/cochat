@@ -198,6 +198,7 @@ const ::PROTOBUF_NAMESPACE_ID::uint32 TableStruct_FriendService_2eproto::offsets
   PROTOBUF_FIELD_OFFSET(::UserInfoResponse, res_info_),
   PROTOBUF_FIELD_OFFSET(::UserInfoResponse, id_),
   PROTOBUF_FIELD_OFFSET(::UserInfoResponse, name_),
+  PROTOBUF_FIELD_OFFSET(::UserInfoResponse, state_),
   ~0u,  // no _has_bits_
   PROTOBUF_FIELD_OFFSET(::FriendInfo, _internal_metadata_),
   ~0u,  // no _extensions_
@@ -205,6 +206,7 @@ const ::PROTOBUF_NAMESPACE_ID::uint32 TableStruct_FriendService_2eproto::offsets
   ~0u,  // no _weak_field_map_
   PROTOBUF_FIELD_OFFSET(::FriendInfo, id_),
   PROTOBUF_FIELD_OFFSET(::FriendInfo, name_),
+  PROTOBUF_FIELD_OFFSET(::FriendInfo, state_),
   ~0u,  // no _has_bits_
   PROTOBUF_FIELD_OFFSET(::FriendListRequest, _internal_metadata_),
   ~0u,  // no _extensions_
@@ -251,13 +253,13 @@ const ::PROTOBUF_NAMESPACE_ID::uint32 TableStruct_FriendService_2eproto::offsets
 static const ::PROTOBUF_NAMESPACE_ID::internal::MigrationSchema schemas[] PROTOBUF_SECTION_VARIABLE(protodesc_cold) = {
   { 0, -1, sizeof(::UserInfoRequest)},
   { 6, -1, sizeof(::UserInfoResponse)},
-  { 15, -1, sizeof(::FriendInfo)},
-  { 22, -1, sizeof(::FriendListRequest)},
-  { 28, -1, sizeof(::FriendListResponse)},
-  { 36, -1, sizeof(::AddFriendRequest)},
-  { 43, -1, sizeof(::AddFriendResponse)},
-  { 50, -1, sizeof(::DeleteFriendRequest)},
-  { 57, -1, sizeof(::DeleteFriendResponse)},
+  { 16, -1, sizeof(::FriendInfo)},
+  { 24, -1, sizeof(::FriendListRequest)},
+  { 30, -1, sizeof(::FriendListResponse)},
+  { 38, -1, sizeof(::AddFriendRequest)},
+  { 45, -1, sizeof(::AddFriendResponse)},
+  { 52, -1, sizeof(::DeleteFriendRequest)},
+  { 59, -1, sizeof(::DeleteFriendResponse)},
 };
 
 static ::PROTOBUF_NAMESPACE_ID::Message const * const file_default_instances[] = {
@@ -274,25 +276,26 @@ static ::PROTOBUF_NAMESPACE_ID::Message const * const file_default_instances[] =
 
 const char descriptor_table_protodef_FriendService_2eproto[] PROTOBUF_SECTION_VARIABLE(protodesc_cold) =
   "\n\023FriendService.proto\"\035\n\017UserInfoRequest"
-  "\022\n\n\002id\030\001 \001(\005\"P\n\020UserInfoResponse\022\020\n\010ret_"
+  "\022\n\n\002id\030\001 \001(\005\"_\n\020UserInfoResponse\022\020\n\010ret_"
   "code\030\001 \001(\005\022\020\n\010res_info\030\002 \001(\t\022\n\n\002id\030\003 \001(\005"
-  "\022\014\n\004name\030\004 \001(\014\"&\n\nFriendInfo\022\n\n\002id\030\001 \001(\005"
-  "\022\014\n\004name\030\002 \001(\014\"\037\n\021FriendListRequest\022\n\n\002i"
-  "d\030\001 \001(\005\"V\n\022FriendListResponse\022\020\n\010ret_cod"
-  "e\030\001 \001(\005\022\020\n\010res_info\030\002 \001(\t\022\034\n\007friends\030\003 \003"
-  "(\0132\013.FriendInfo\"4\n\020AddFriendRequest\022\r\n\005m"
-  "y_id\030\001 \001(\005\022\021\n\tfriend_id\030\002 \001(\005\"7\n\021AddFrie"
-  "ndResponse\022\020\n\010ret_code\030\001 \001(\005\022\020\n\010res_info"
-  "\030\002 \001(\t\"7\n\023DeleteFriendRequest\022\r\n\005my_id\030\001"
-  " \001(\005\022\021\n\tfriend_id\030\002 \001(\005\":\n\024DeleteFriendR"
-  "esponse\022\020\n\010ret_code\030\001 \001(\005\022\020\n\010res_info\030\002 "
-  "\001(\t2\361\001\n\020FriendServiceRpc\0228\n\rGetFriendLis"
-  "t\022\022.FriendListRequest\032\023.FriendListRespon"
-  "se\0222\n\013GetUserInfo\022\020.UserInfoRequest\032\021.Us"
-  "erInfoResponse\0222\n\tAddFriend\022\021.AddFriendR"
-  "equest\032\022.AddFriendResponse\022;\n\014DeleteFrie"
-  "nd\022\024.DeleteFriendRequest\032\025.DeleteFriendR"
-  "esponseB\003\200\001\001b\006proto3"
+  "\022\014\n\004name\030\004 \001(\014\022\r\n\005state\030\005 \001(\014\"5\n\nFriendI"
+  "nfo\022\n\n\002id\030\001 \001(\005\022\014\n\004name\030\002 \001(\014\022\r\n\005state\030\003"
+  " \001(\014\"\037\n\021FriendListRequest\022\n\n\002id\030\001 \001(\005\"V\n"
+  "\022FriendListResponse\022\020\n\010ret_code\030\001 \001(\005\022\020\n"
+  "\010res_info\030\002 \001(\t\022\034\n\007friends\030\003 \003(\0132\013.Frien"
+  "dInfo\"4\n\020AddFriendRequest\022\r\n\005my_id\030\001 \001(\005"
+  "\022\021\n\tfriend_id\030\002 \001(\005\"7\n\021AddFriendResponse"
+  "\022\020\n\010ret_code\030\001 \001(\005\022\020\n\010res_info\030\002 \001(\t\"7\n\023"
+  "DeleteFriendRequest\022\r\n\005my_id\030\001 \001(\005\022\021\n\tfr"
+  "iend_id\030\002 \001(\005\":\n\024DeleteFriendResponse\022\020\n"
+  "\010ret_code\030\001 \001(\005\022\020\n\010res_info\030\002 \001(\t2\361\001\n\020Fr"
+  "iendServiceRpc\0228\n\rGetFriendList\022\022.Friend"
+  "ListRequest\032\023.FriendListResponse\0222\n\013GetU"
+  "serInfo\022\020.UserInfoRequest\032\021.UserInfoResp"
+  "onse\0222\n\tAddFriend\022\021.AddFriendRequest\032\022.A"
+  "ddFriendResponse\022;\n\014DeleteFriend\022\024.Delet"
+  "eFriendRequest\032\025.DeleteFriendResponseB\003\200"
+  "\001\001b\006proto3"
   ;
 static const ::PROTOBUF_NAMESPACE_ID::internal::DescriptorTable*const descriptor_table_FriendService_2eproto_deps[1] = {
 };
@@ -310,7 +313,7 @@ static ::PROTOBUF_NAMESPACE_ID::internal::SCCInfoBase*const descriptor_table_Fri
 static ::PROTOBUF_NAMESPACE_ID::internal::once_flag descriptor_table_FriendService_2eproto_once;
 static bool descriptor_table_FriendService_2eproto_initialized = false;
 const ::PROTOBUF_NAMESPACE_ID::internal::DescriptorTable descriptor_table_FriendService_2eproto = {
-  &descriptor_table_FriendService_2eproto_initialized, descriptor_table_protodef_FriendService_2eproto, "FriendService.proto", 780,
+  &descriptor_table_FriendService_2eproto_initialized, descriptor_table_protodef_FriendService_2eproto, "FriendService.proto", 810,
   &descriptor_table_FriendService_2eproto_once, descriptor_table_FriendService_2eproto_sccs, descriptor_table_FriendService_2eproto_deps, 9, 0,
   schemas, file_default_instances, TableStruct_FriendService_2eproto::offsets,
   file_level_metadata_FriendService_2eproto, 9, file_level_enum_descriptors_FriendService_2eproto, file_level_service_descriptors_FriendService_2eproto,
@@ -530,6 +533,10 @@ UserInfoResponse::UserInfoResponse(const UserInfoResponse& from)
   if (!from._internal_name().empty()) {
     name_.AssignWithDefault(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), from.name_);
   }
+  state_.UnsafeSetDefault(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited());
+  if (!from._internal_state().empty()) {
+    state_.AssignWithDefault(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), from.state_);
+  }
   ::memcpy(&ret_code_, &from.ret_code_,
     static_cast<size_t>(reinterpret_cast<char*>(&id_) -
     reinterpret_cast<char*>(&ret_code_)) + sizeof(id_));
@@ -540,6 +547,7 @@ void UserInfoResponse::SharedCtor() {
   ::PROTOBUF_NAMESPACE_ID::internal::InitSCC(&scc_info_UserInfoResponse_FriendService_2eproto.base);
   res_info_.UnsafeSetDefault(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited());
   name_.UnsafeSetDefault(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited());
+  state_.UnsafeSetDefault(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited());
   ::memset(&ret_code_, 0, static_cast<size_t>(
       reinterpret_cast<char*>(&id_) -
       reinterpret_cast<char*>(&ret_code_)) + sizeof(id_));
@@ -553,6 +561,7 @@ UserInfoResponse::~UserInfoResponse() {
 void UserInfoResponse::SharedDtor() {
   res_info_.DestroyNoArena(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited());
   name_.DestroyNoArena(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited());
+  state_.DestroyNoArena(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited());
 }
 
 void UserInfoResponse::SetCachedSize(int size) const {
@@ -572,6 +581,7 @@ void UserInfoResponse::Clear() {
 
   res_info_.ClearToEmptyNoArena(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited());
   name_.ClearToEmptyNoArena(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited());
+  state_.ClearToEmptyNoArena(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited());
   ::memset(&ret_code_, 0, static_cast<size_t>(
       reinterpret_cast<char*>(&id_) -
       reinterpret_cast<char*>(&ret_code_)) + sizeof(id_));
@@ -612,6 +622,14 @@ const char* UserInfoResponse::_InternalParse(const char* ptr, ::PROTOBUF_NAMESPA
       case 4:
         if (PROTOBUF_PREDICT_TRUE(static_cast<::PROTOBUF_NAMESPACE_ID::uint8>(tag) == 34)) {
           auto str = _internal_mutable_name();
+          ptr = ::PROTOBUF_NAMESPACE_ID::internal::InlineGreedyStringParser(str, ptr, ctx);
+          CHK_(ptr);
+        } else goto handle_unusual;
+        continue;
+      // bytes state = 5;
+      case 5:
+        if (PROTOBUF_PREDICT_TRUE(static_cast<::PROTOBUF_NAMESPACE_ID::uint8>(tag) == 42)) {
+          auto str = _internal_mutable_state();
           ptr = ::PROTOBUF_NAMESPACE_ID::internal::InlineGreedyStringParser(str, ptr, ctx);
           CHK_(ptr);
         } else goto handle_unusual;
@@ -670,6 +688,12 @@ failure:
         4, this->_internal_name(), target);
   }
 
+  // bytes state = 5;
+  if (this->state().size() > 0) {
+    target = stream->WriteBytesMaybeAliased(
+        5, this->_internal_state(), target);
+  }
+
   if (PROTOBUF_PREDICT_FALSE(_internal_metadata_.have_unknown_fields())) {
     target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormat::InternalSerializeUnknownFieldsToArray(
         _internal_metadata_.unknown_fields(), target, stream);
@@ -698,6 +722,13 @@ size_t UserInfoResponse::ByteSizeLong() const {
     total_size += 1 +
       ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::BytesSize(
         this->_internal_name());
+  }
+
+  // bytes state = 5;
+  if (this->state().size() > 0) {
+    total_size += 1 +
+      ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::BytesSize(
+        this->_internal_state());
   }
 
   // int32 ret_code = 1;
@@ -753,6 +784,10 @@ void UserInfoResponse::MergeFrom(const UserInfoResponse& from) {
 
     name_.AssignWithDefault(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), from.name_);
   }
+  if (from.state().size() > 0) {
+
+    state_.AssignWithDefault(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), from.state_);
+  }
   if (from.ret_code() != 0) {
     _internal_set_ret_code(from._internal_ret_code());
   }
@@ -786,6 +821,8 @@ void UserInfoResponse::InternalSwap(UserInfoResponse* other) {
     GetArenaNoVirtual());
   name_.Swap(&other->name_, &::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(),
     GetArenaNoVirtual());
+  state_.Swap(&other->state_, &::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(),
+    GetArenaNoVirtual());
   swap(ret_code_, other->ret_code_);
   swap(id_, other->id_);
 }
@@ -816,6 +853,10 @@ FriendInfo::FriendInfo(const FriendInfo& from)
   if (!from._internal_name().empty()) {
     name_.AssignWithDefault(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), from.name_);
   }
+  state_.UnsafeSetDefault(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited());
+  if (!from._internal_state().empty()) {
+    state_.AssignWithDefault(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), from.state_);
+  }
   id_ = from.id_;
   // @@protoc_insertion_point(copy_constructor:FriendInfo)
 }
@@ -823,6 +864,7 @@ FriendInfo::FriendInfo(const FriendInfo& from)
 void FriendInfo::SharedCtor() {
   ::PROTOBUF_NAMESPACE_ID::internal::InitSCC(&scc_info_FriendInfo_FriendService_2eproto.base);
   name_.UnsafeSetDefault(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited());
+  state_.UnsafeSetDefault(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited());
   id_ = 0;
 }
 
@@ -833,6 +875,7 @@ FriendInfo::~FriendInfo() {
 
 void FriendInfo::SharedDtor() {
   name_.DestroyNoArena(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited());
+  state_.DestroyNoArena(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited());
 }
 
 void FriendInfo::SetCachedSize(int size) const {
@@ -851,6 +894,7 @@ void FriendInfo::Clear() {
   (void) cached_has_bits;
 
   name_.ClearToEmptyNoArena(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited());
+  state_.ClearToEmptyNoArena(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited());
   id_ = 0;
   _internal_metadata_.Clear();
 }
@@ -873,6 +917,14 @@ const char* FriendInfo::_InternalParse(const char* ptr, ::PROTOBUF_NAMESPACE_ID:
       case 2:
         if (PROTOBUF_PREDICT_TRUE(static_cast<::PROTOBUF_NAMESPACE_ID::uint8>(tag) == 18)) {
           auto str = _internal_mutable_name();
+          ptr = ::PROTOBUF_NAMESPACE_ID::internal::InlineGreedyStringParser(str, ptr, ctx);
+          CHK_(ptr);
+        } else goto handle_unusual;
+        continue;
+      // bytes state = 3;
+      case 3:
+        if (PROTOBUF_PREDICT_TRUE(static_cast<::PROTOBUF_NAMESPACE_ID::uint8>(tag) == 26)) {
+          auto str = _internal_mutable_state();
           ptr = ::PROTOBUF_NAMESPACE_ID::internal::InlineGreedyStringParser(str, ptr, ctx);
           CHK_(ptr);
         } else goto handle_unusual;
@@ -915,6 +967,12 @@ failure:
         2, this->_internal_name(), target);
   }
 
+  // bytes state = 3;
+  if (this->state().size() > 0) {
+    target = stream->WriteBytesMaybeAliased(
+        3, this->_internal_state(), target);
+  }
+
   if (PROTOBUF_PREDICT_FALSE(_internal_metadata_.have_unknown_fields())) {
     target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormat::InternalSerializeUnknownFieldsToArray(
         _internal_metadata_.unknown_fields(), target, stream);
@@ -936,6 +994,13 @@ size_t FriendInfo::ByteSizeLong() const {
     total_size += 1 +
       ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::BytesSize(
         this->_internal_name());
+  }
+
+  // bytes state = 3;
+  if (this->state().size() > 0) {
+    total_size += 1 +
+      ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::BytesSize(
+        this->_internal_state());
   }
 
   // int32 id = 1;
@@ -980,6 +1045,10 @@ void FriendInfo::MergeFrom(const FriendInfo& from) {
 
     name_.AssignWithDefault(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), from.name_);
   }
+  if (from.state().size() > 0) {
+
+    state_.AssignWithDefault(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), from.state_);
+  }
   if (from.id() != 0) {
     _internal_set_id(from._internal_id());
   }
@@ -1007,6 +1076,8 @@ void FriendInfo::InternalSwap(FriendInfo* other) {
   using std::swap;
   _internal_metadata_.Swap(&other->_internal_metadata_);
   name_.Swap(&other->name_, &::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(),
+    GetArenaNoVirtual());
+  state_.Swap(&other->state_, &::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(),
     GetArenaNoVirtual());
   swap(id_, other->id_);
 }

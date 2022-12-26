@@ -332,6 +332,7 @@ class UserInfoResponse :
   enum : int {
     kResInfoFieldNumber = 2,
     kNameFieldNumber = 4,
+    kStateFieldNumber = 5,
     kRetCodeFieldNumber = 1,
     kIdFieldNumber = 3,
   };
@@ -367,6 +368,22 @@ class UserInfoResponse :
   std::string* _internal_mutable_name();
   public:
 
+  // bytes state = 5;
+  void clear_state();
+  const std::string& state() const;
+  void set_state(const std::string& value);
+  void set_state(std::string&& value);
+  void set_state(const char* value);
+  void set_state(const void* value, size_t size);
+  std::string* mutable_state();
+  std::string* release_state();
+  void set_allocated_state(std::string* state);
+  private:
+  const std::string& _internal_state() const;
+  void _internal_set_state(const std::string& value);
+  std::string* _internal_mutable_state();
+  public:
+
   // int32 ret_code = 1;
   void clear_ret_code();
   ::PROTOBUF_NAMESPACE_ID::int32 ret_code() const;
@@ -392,6 +409,7 @@ class UserInfoResponse :
   ::PROTOBUF_NAMESPACE_ID::internal::InternalMetadataWithArena _internal_metadata_;
   ::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr res_info_;
   ::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr name_;
+  ::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr state_;
   ::PROTOBUF_NAMESPACE_ID::int32 ret_code_;
   ::PROTOBUF_NAMESPACE_ID::int32 id_;
   mutable ::PROTOBUF_NAMESPACE_ID::internal::CachedSize _cached_size_;
@@ -506,6 +524,7 @@ class FriendInfo :
 
   enum : int {
     kNameFieldNumber = 2,
+    kStateFieldNumber = 3,
     kIdFieldNumber = 1,
   };
   // bytes name = 2;
@@ -524,6 +543,22 @@ class FriendInfo :
   std::string* _internal_mutable_name();
   public:
 
+  // bytes state = 3;
+  void clear_state();
+  const std::string& state() const;
+  void set_state(const std::string& value);
+  void set_state(std::string&& value);
+  void set_state(const char* value);
+  void set_state(const void* value, size_t size);
+  std::string* mutable_state();
+  std::string* release_state();
+  void set_allocated_state(std::string* state);
+  private:
+  const std::string& _internal_state() const;
+  void _internal_set_state(const std::string& value);
+  std::string* _internal_mutable_state();
+  public:
+
   // int32 id = 1;
   void clear_id();
   ::PROTOBUF_NAMESPACE_ID::int32 id() const;
@@ -539,6 +574,7 @@ class FriendInfo :
 
   ::PROTOBUF_NAMESPACE_ID::internal::InternalMetadataWithArena _internal_metadata_;
   ::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr name_;
+  ::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr state_;
   ::PROTOBUF_NAMESPACE_ID::int32 id_;
   mutable ::PROTOBUF_NAMESPACE_ID::internal::CachedSize _cached_size_;
   friend struct ::TableStruct_FriendService_2eproto;
@@ -1685,6 +1721,66 @@ inline void UserInfoResponse::set_allocated_name(std::string* name) {
   // @@protoc_insertion_point(field_set_allocated:UserInfoResponse.name)
 }
 
+// bytes state = 5;
+inline void UserInfoResponse::clear_state() {
+  state_.ClearToEmptyNoArena(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited());
+}
+inline const std::string& UserInfoResponse::state() const {
+  // @@protoc_insertion_point(field_get:UserInfoResponse.state)
+  return _internal_state();
+}
+inline void UserInfoResponse::set_state(const std::string& value) {
+  _internal_set_state(value);
+  // @@protoc_insertion_point(field_set:UserInfoResponse.state)
+}
+inline std::string* UserInfoResponse::mutable_state() {
+  // @@protoc_insertion_point(field_mutable:UserInfoResponse.state)
+  return _internal_mutable_state();
+}
+inline const std::string& UserInfoResponse::_internal_state() const {
+  return state_.GetNoArena();
+}
+inline void UserInfoResponse::_internal_set_state(const std::string& value) {
+  
+  state_.SetNoArena(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), value);
+}
+inline void UserInfoResponse::set_state(std::string&& value) {
+  
+  state_.SetNoArena(
+    &::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), ::std::move(value));
+  // @@protoc_insertion_point(field_set_rvalue:UserInfoResponse.state)
+}
+inline void UserInfoResponse::set_state(const char* value) {
+  GOOGLE_DCHECK(value != nullptr);
+  
+  state_.SetNoArena(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), ::std::string(value));
+  // @@protoc_insertion_point(field_set_char:UserInfoResponse.state)
+}
+inline void UserInfoResponse::set_state(const void* value, size_t size) {
+  
+  state_.SetNoArena(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(),
+      ::std::string(reinterpret_cast<const char*>(value), size));
+  // @@protoc_insertion_point(field_set_pointer:UserInfoResponse.state)
+}
+inline std::string* UserInfoResponse::_internal_mutable_state() {
+  
+  return state_.MutableNoArena(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited());
+}
+inline std::string* UserInfoResponse::release_state() {
+  // @@protoc_insertion_point(field_release:UserInfoResponse.state)
+  
+  return state_.ReleaseNoArena(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited());
+}
+inline void UserInfoResponse::set_allocated_state(std::string* state) {
+  if (state != nullptr) {
+    
+  } else {
+    
+  }
+  state_.SetAllocatedNoArena(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), state);
+  // @@protoc_insertion_point(field_set_allocated:UserInfoResponse.state)
+}
+
 // -------------------------------------------------------------------
 
 // FriendInfo
@@ -1767,6 +1863,66 @@ inline void FriendInfo::set_allocated_name(std::string* name) {
   }
   name_.SetAllocatedNoArena(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), name);
   // @@protoc_insertion_point(field_set_allocated:FriendInfo.name)
+}
+
+// bytes state = 3;
+inline void FriendInfo::clear_state() {
+  state_.ClearToEmptyNoArena(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited());
+}
+inline const std::string& FriendInfo::state() const {
+  // @@protoc_insertion_point(field_get:FriendInfo.state)
+  return _internal_state();
+}
+inline void FriendInfo::set_state(const std::string& value) {
+  _internal_set_state(value);
+  // @@protoc_insertion_point(field_set:FriendInfo.state)
+}
+inline std::string* FriendInfo::mutable_state() {
+  // @@protoc_insertion_point(field_mutable:FriendInfo.state)
+  return _internal_mutable_state();
+}
+inline const std::string& FriendInfo::_internal_state() const {
+  return state_.GetNoArena();
+}
+inline void FriendInfo::_internal_set_state(const std::string& value) {
+  
+  state_.SetNoArena(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), value);
+}
+inline void FriendInfo::set_state(std::string&& value) {
+  
+  state_.SetNoArena(
+    &::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), ::std::move(value));
+  // @@protoc_insertion_point(field_set_rvalue:FriendInfo.state)
+}
+inline void FriendInfo::set_state(const char* value) {
+  GOOGLE_DCHECK(value != nullptr);
+  
+  state_.SetNoArena(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), ::std::string(value));
+  // @@protoc_insertion_point(field_set_char:FriendInfo.state)
+}
+inline void FriendInfo::set_state(const void* value, size_t size) {
+  
+  state_.SetNoArena(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(),
+      ::std::string(reinterpret_cast<const char*>(value), size));
+  // @@protoc_insertion_point(field_set_pointer:FriendInfo.state)
+}
+inline std::string* FriendInfo::_internal_mutable_state() {
+  
+  return state_.MutableNoArena(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited());
+}
+inline std::string* FriendInfo::release_state() {
+  // @@protoc_insertion_point(field_release:FriendInfo.state)
+  
+  return state_.ReleaseNoArena(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited());
+}
+inline void FriendInfo::set_allocated_state(std::string* state) {
+  if (state != nullptr) {
+    
+  } else {
+    
+  }
+  state_.SetAllocatedNoArena(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), state);
+  // @@protoc_insertion_point(field_set_allocated:FriendInfo.state)
 }
 
 // -------------------------------------------------------------------

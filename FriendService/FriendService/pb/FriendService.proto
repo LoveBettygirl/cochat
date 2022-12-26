@@ -11,11 +11,13 @@ message UserInfoResponse {
     string res_info = 2;
     int32 id = 3;
     bytes name = 4;
+    bytes state = 5;
 }
 
 message FriendInfo {
     int32 id = 1;
     bytes name = 2;
+    bytes state = 3;
 }
 
 message FriendListRequest {
