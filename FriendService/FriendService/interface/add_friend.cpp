@@ -9,6 +9,9 @@
 #include <corpc/common/log.h>
 #include "FriendService/interface/add_friend.h"
 #include "FriendService/pb/FriendService.pb.h"
+#include "FriendService/dao/friend_dao.h"
+#include "FriendService/common/business_exception.h"
+#include "FriendService/common/error_code.h"
 
 
 namespace FriendService {
@@ -32,7 +35,15 @@ void AddFriendInterface::run()
     // response_.set_ret_code(0);
     // response_.set_res_info("Succ");
     //
+    int userid = request_.my_id();
+    int friendid = request_.friend_id();
 
+    FriendDao dao;
+    // 存储好友信息
+    if (!dao.insertFriend(userid, friendid)) {
+        // 加好友失败，不能重复添加
+        throw BusinessException(RELATION_IS_ADDED, getErrorMsg(RELATION_IS_ADDED), __FILE__, __LINE__);
+    }
 }
 
 }

@@ -9,6 +9,9 @@
 #include <corpc/common/log.h>
 #include "FriendService/interface/get_user_info.h"
 #include "FriendService/pb/FriendService.pb.h"
+#include "FriendService/dao/user_dao.h"
+#include "FriendService/common/business_exception.h"
+#include "FriendService/common/error_code.h"
 
 
 namespace FriendService {
@@ -32,7 +35,15 @@ void GetUserInfoInterface::run()
     // response_.set_ret_code(0);
     // response_.set_res_info("Succ");
     //
-
+    int userid = request_.id();
+    UserDao dao;
+    User user = dao.queryInfo(userid);
+    if (user.getState() == "not_exist") {
+        throw BusinessException(ACCOUNT_NOT_EXIST, getErrorMsg(ACCOUNT_NOT_EXIST), __FILE__, __LINE__);
+    }
+    response_.set_id(user.getId());
+    response_.set_name(user.getName());
+    response_.set_state(user.getState());
 }
 
 }

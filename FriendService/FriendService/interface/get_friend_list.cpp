@@ -9,6 +9,10 @@
 #include <corpc/common/log.h>
 #include "FriendService/interface/get_friend_list.h"
 #include "FriendService/pb/FriendService.pb.h"
+#include "FriendService/dao/friend_dao.h"
+#include "FriendService/common/business_exception.h"
+#include "FriendService/common/error_code.h"
+#include <vector>
 
 
 namespace FriendService {
@@ -32,7 +36,16 @@ void GetFriendListInterface::run()
     // response_.set_ret_code(0);
     // response_.set_res_info("Succ");
     //
-
+    int userid = request_.id();
+    // 获取好友列表信息
+    FriendDao dao;
+    std::vector<User> users = dao.queryFriendList(userid);
+    for (const auto &user : users) {
+        ::FriendInfo *info = response_.add_friends();
+        info->set_id(user.getId());
+        info->set_name(user.getName());
+        info->set_state(user.getState());
+    }
 }
 
 }
