@@ -31,6 +31,7 @@
 #include <google/protobuf/message.h>
 #include <google/protobuf/repeated_field.h>  // IWYU pragma: export
 #include <google/protobuf/extension_set.h>  // IWYU pragma: export
+#include <google/protobuf/generated_enum_reflection.h>
 #include <google/protobuf/service.h>
 #include <google/protobuf/unknown_field_set.h>
 // @@protoc_insertion_point(includes)
@@ -48,7 +49,7 @@ struct TableStruct_GroupService_2eproto {
     PROTOBUF_SECTION_VARIABLE(protodesc_cold);
   static const ::PROTOBUF_NAMESPACE_ID::internal::AuxillaryParseTableField aux[]
     PROTOBUF_SECTION_VARIABLE(protodesc_cold);
-  static const ::PROTOBUF_NAMESPACE_ID::internal::ParseTable schema[9]
+  static const ::PROTOBUF_NAMESPACE_ID::internal::ParseTable schema[12]
     PROTOBUF_SECTION_VARIABLE(protodesc_cold);
   static const ::PROTOBUF_NAMESPACE_ID::internal::FieldMetadata field_metadata[];
   static const ::PROTOBUF_NAMESPACE_ID::internal::SerializationTable serialization_table[];
@@ -67,34 +68,448 @@ extern CreateGroupRequestDefaultTypeInternal _CreateGroupRequest_default_instanc
 class CreateGroupResponse;
 class CreateGroupResponseDefaultTypeInternal;
 extern CreateGroupResponseDefaultTypeInternal _CreateGroupResponse_default_instance_;
-class GetGroupUsersRequest;
-class GetGroupUsersRequestDefaultTypeInternal;
-extern GetGroupUsersRequestDefaultTypeInternal _GetGroupUsersRequest_default_instance_;
-class GetGroupUsersResponse;
-class GetGroupUsersResponseDefaultTypeInternal;
-extern GetGroupUsersResponseDefaultTypeInternal _GetGroupUsersResponse_default_instance_;
+class GetGroupInfoRequest;
+class GetGroupInfoRequestDefaultTypeInternal;
+extern GetGroupInfoRequestDefaultTypeInternal _GetGroupInfoRequest_default_instance_;
+class GetGroupInfoResponse;
+class GetGroupInfoResponseDefaultTypeInternal;
+extern GetGroupInfoResponseDefaultTypeInternal _GetGroupInfoResponse_default_instance_;
+class GetUserGroupsRequest;
+class GetUserGroupsRequestDefaultTypeInternal;
+extern GetUserGroupsRequestDefaultTypeInternal _GetUserGroupsRequest_default_instance_;
+class GetUserGroupsResponse;
+class GetUserGroupsResponseDefaultTypeInternal;
+extern GetUserGroupsResponseDefaultTypeInternal _GetUserGroupsResponse_default_instance_;
+class GroupInfo;
+class GroupInfoDefaultTypeInternal;
+extern GroupInfoDefaultTypeInternal _GroupInfo_default_instance_;
+class GroupUserInfo;
+class GroupUserInfoDefaultTypeInternal;
+extern GroupUserInfoDefaultTypeInternal _GroupUserInfo_default_instance_;
 class QuitGroupRequest;
 class QuitGroupRequestDefaultTypeInternal;
 extern QuitGroupRequestDefaultTypeInternal _QuitGroupRequest_default_instance_;
 class QuitGroupResponse;
 class QuitGroupResponseDefaultTypeInternal;
 extern QuitGroupResponseDefaultTypeInternal _QuitGroupResponse_default_instance_;
-class UserInfo;
-class UserInfoDefaultTypeInternal;
-extern UserInfoDefaultTypeInternal _UserInfo_default_instance_;
 PROTOBUF_NAMESPACE_OPEN
 template<> ::AddGroupRequest* Arena::CreateMaybeMessage<::AddGroupRequest>(Arena*);
 template<> ::AddGroupResponse* Arena::CreateMaybeMessage<::AddGroupResponse>(Arena*);
 template<> ::CreateGroupRequest* Arena::CreateMaybeMessage<::CreateGroupRequest>(Arena*);
 template<> ::CreateGroupResponse* Arena::CreateMaybeMessage<::CreateGroupResponse>(Arena*);
-template<> ::GetGroupUsersRequest* Arena::CreateMaybeMessage<::GetGroupUsersRequest>(Arena*);
-template<> ::GetGroupUsersResponse* Arena::CreateMaybeMessage<::GetGroupUsersResponse>(Arena*);
+template<> ::GetGroupInfoRequest* Arena::CreateMaybeMessage<::GetGroupInfoRequest>(Arena*);
+template<> ::GetGroupInfoResponse* Arena::CreateMaybeMessage<::GetGroupInfoResponse>(Arena*);
+template<> ::GetUserGroupsRequest* Arena::CreateMaybeMessage<::GetUserGroupsRequest>(Arena*);
+template<> ::GetUserGroupsResponse* Arena::CreateMaybeMessage<::GetUserGroupsResponse>(Arena*);
+template<> ::GroupInfo* Arena::CreateMaybeMessage<::GroupInfo>(Arena*);
+template<> ::GroupUserInfo* Arena::CreateMaybeMessage<::GroupUserInfo>(Arena*);
 template<> ::QuitGroupRequest* Arena::CreateMaybeMessage<::QuitGroupRequest>(Arena*);
 template<> ::QuitGroupResponse* Arena::CreateMaybeMessage<::QuitGroupResponse>(Arena*);
-template<> ::UserInfo* Arena::CreateMaybeMessage<::UserInfo>(Arena*);
 PROTOBUF_NAMESPACE_CLOSE
 
+enum GroupUserRole : int {
+  CREATOR = 0,
+  NORMAL = 1,
+  GroupUserRole_INT_MIN_SENTINEL_DO_NOT_USE_ = std::numeric_limits<::PROTOBUF_NAMESPACE_ID::int32>::min(),
+  GroupUserRole_INT_MAX_SENTINEL_DO_NOT_USE_ = std::numeric_limits<::PROTOBUF_NAMESPACE_ID::int32>::max()
+};
+bool GroupUserRole_IsValid(int value);
+constexpr GroupUserRole GroupUserRole_MIN = CREATOR;
+constexpr GroupUserRole GroupUserRole_MAX = NORMAL;
+constexpr int GroupUserRole_ARRAYSIZE = GroupUserRole_MAX + 1;
+
+const ::PROTOBUF_NAMESPACE_ID::EnumDescriptor* GroupUserRole_descriptor();
+template<typename T>
+inline const std::string& GroupUserRole_Name(T enum_t_value) {
+  static_assert(::std::is_same<T, GroupUserRole>::value ||
+    ::std::is_integral<T>::value,
+    "Incorrect type passed to function GroupUserRole_Name.");
+  return ::PROTOBUF_NAMESPACE_ID::internal::NameOfEnum(
+    GroupUserRole_descriptor(), enum_t_value);
+}
+inline bool GroupUserRole_Parse(
+    const std::string& name, GroupUserRole* value) {
+  return ::PROTOBUF_NAMESPACE_ID::internal::ParseNamedEnum<GroupUserRole>(
+    GroupUserRole_descriptor(), name, value);
+}
+enum UserState : int {
+  ONLINE = 0,
+  OFFLINE = 1,
+  UserState_INT_MIN_SENTINEL_DO_NOT_USE_ = std::numeric_limits<::PROTOBUF_NAMESPACE_ID::int32>::min(),
+  UserState_INT_MAX_SENTINEL_DO_NOT_USE_ = std::numeric_limits<::PROTOBUF_NAMESPACE_ID::int32>::max()
+};
+bool UserState_IsValid(int value);
+constexpr UserState UserState_MIN = ONLINE;
+constexpr UserState UserState_MAX = OFFLINE;
+constexpr int UserState_ARRAYSIZE = UserState_MAX + 1;
+
+const ::PROTOBUF_NAMESPACE_ID::EnumDescriptor* UserState_descriptor();
+template<typename T>
+inline const std::string& UserState_Name(T enum_t_value) {
+  static_assert(::std::is_same<T, UserState>::value ||
+    ::std::is_integral<T>::value,
+    "Incorrect type passed to function UserState_Name.");
+  return ::PROTOBUF_NAMESPACE_ID::internal::NameOfEnum(
+    UserState_descriptor(), enum_t_value);
+}
+inline bool UserState_Parse(
+    const std::string& name, UserState* value) {
+  return ::PROTOBUF_NAMESPACE_ID::internal::ParseNamedEnum<UserState>(
+    UserState_descriptor(), name, value);
+}
 // ===================================================================
+
+class GroupUserInfo :
+    public ::PROTOBUF_NAMESPACE_ID::Message /* @@protoc_insertion_point(class_definition:GroupUserInfo) */ {
+ public:
+  GroupUserInfo();
+  virtual ~GroupUserInfo();
+
+  GroupUserInfo(const GroupUserInfo& from);
+  GroupUserInfo(GroupUserInfo&& from) noexcept
+    : GroupUserInfo() {
+    *this = ::std::move(from);
+  }
+
+  inline GroupUserInfo& operator=(const GroupUserInfo& from) {
+    CopyFrom(from);
+    return *this;
+  }
+  inline GroupUserInfo& operator=(GroupUserInfo&& from) noexcept {
+    if (GetArenaNoVirtual() == from.GetArenaNoVirtual()) {
+      if (this != &from) InternalSwap(&from);
+    } else {
+      CopyFrom(from);
+    }
+    return *this;
+  }
+
+  static const ::PROTOBUF_NAMESPACE_ID::Descriptor* descriptor() {
+    return GetDescriptor();
+  }
+  static const ::PROTOBUF_NAMESPACE_ID::Descriptor* GetDescriptor() {
+    return GetMetadataStatic().descriptor;
+  }
+  static const ::PROTOBUF_NAMESPACE_ID::Reflection* GetReflection() {
+    return GetMetadataStatic().reflection;
+  }
+  static const GroupUserInfo& default_instance();
+
+  static void InitAsDefaultInstance();  // FOR INTERNAL USE ONLY
+  static inline const GroupUserInfo* internal_default_instance() {
+    return reinterpret_cast<const GroupUserInfo*>(
+               &_GroupUserInfo_default_instance_);
+  }
+  static constexpr int kIndexInFileMessages =
+    0;
+
+  friend void swap(GroupUserInfo& a, GroupUserInfo& b) {
+    a.Swap(&b);
+  }
+  inline void Swap(GroupUserInfo* other) {
+    if (other == this) return;
+    InternalSwap(other);
+  }
+
+  // implements Message ----------------------------------------------
+
+  inline GroupUserInfo* New() const final {
+    return CreateMaybeMessage<GroupUserInfo>(nullptr);
+  }
+
+  GroupUserInfo* New(::PROTOBUF_NAMESPACE_ID::Arena* arena) const final {
+    return CreateMaybeMessage<GroupUserInfo>(arena);
+  }
+  void CopyFrom(const ::PROTOBUF_NAMESPACE_ID::Message& from) final;
+  void MergeFrom(const ::PROTOBUF_NAMESPACE_ID::Message& from) final;
+  void CopyFrom(const GroupUserInfo& from);
+  void MergeFrom(const GroupUserInfo& from);
+  PROTOBUF_ATTRIBUTE_REINITIALIZES void Clear() final;
+  bool IsInitialized() const final;
+
+  size_t ByteSizeLong() const final;
+  const char* _InternalParse(const char* ptr, ::PROTOBUF_NAMESPACE_ID::internal::ParseContext* ctx) final;
+  ::PROTOBUF_NAMESPACE_ID::uint8* _InternalSerialize(
+      ::PROTOBUF_NAMESPACE_ID::uint8* target, ::PROTOBUF_NAMESPACE_ID::io::EpsCopyOutputStream* stream) const final;
+  int GetCachedSize() const final { return _cached_size_.Get(); }
+
+  private:
+  inline void SharedCtor();
+  inline void SharedDtor();
+  void SetCachedSize(int size) const final;
+  void InternalSwap(GroupUserInfo* other);
+  friend class ::PROTOBUF_NAMESPACE_ID::internal::AnyMetadata;
+  static ::PROTOBUF_NAMESPACE_ID::StringPiece FullMessageName() {
+    return "GroupUserInfo";
+  }
+  private:
+  inline ::PROTOBUF_NAMESPACE_ID::Arena* GetArenaNoVirtual() const {
+    return nullptr;
+  }
+  inline void* MaybeArenaPtr() const {
+    return nullptr;
+  }
+  public:
+
+  ::PROTOBUF_NAMESPACE_ID::Metadata GetMetadata() const final;
+  private:
+  static ::PROTOBUF_NAMESPACE_ID::Metadata GetMetadataStatic() {
+    ::PROTOBUF_NAMESPACE_ID::internal::AssignDescriptors(&::descriptor_table_GroupService_2eproto);
+    return ::descriptor_table_GroupService_2eproto.file_level_metadata[kIndexInFileMessages];
+  }
+
+  public:
+
+  // nested types ----------------------------------------------------
+
+  // accessors -------------------------------------------------------
+
+  enum : int {
+    kNameFieldNumber = 2,
+    kIdFieldNumber = 1,
+    kStateFieldNumber = 3,
+    kRoleFieldNumber = 4,
+  };
+  // bytes name = 2;
+  void clear_name();
+  const std::string& name() const;
+  void set_name(const std::string& value);
+  void set_name(std::string&& value);
+  void set_name(const char* value);
+  void set_name(const void* value, size_t size);
+  std::string* mutable_name();
+  std::string* release_name();
+  void set_allocated_name(std::string* name);
+  private:
+  const std::string& _internal_name() const;
+  void _internal_set_name(const std::string& value);
+  std::string* _internal_mutable_name();
+  public:
+
+  // int32 id = 1;
+  void clear_id();
+  ::PROTOBUF_NAMESPACE_ID::int32 id() const;
+  void set_id(::PROTOBUF_NAMESPACE_ID::int32 value);
+  private:
+  ::PROTOBUF_NAMESPACE_ID::int32 _internal_id() const;
+  void _internal_set_id(::PROTOBUF_NAMESPACE_ID::int32 value);
+  public:
+
+  // .UserState state = 3;
+  void clear_state();
+  ::UserState state() const;
+  void set_state(::UserState value);
+  private:
+  ::UserState _internal_state() const;
+  void _internal_set_state(::UserState value);
+  public:
+
+  // .GroupUserRole role = 4;
+  void clear_role();
+  ::GroupUserRole role() const;
+  void set_role(::GroupUserRole value);
+  private:
+  ::GroupUserRole _internal_role() const;
+  void _internal_set_role(::GroupUserRole value);
+  public:
+
+  // @@protoc_insertion_point(class_scope:GroupUserInfo)
+ private:
+  class _Internal;
+
+  ::PROTOBUF_NAMESPACE_ID::internal::InternalMetadataWithArena _internal_metadata_;
+  ::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr name_;
+  ::PROTOBUF_NAMESPACE_ID::int32 id_;
+  int state_;
+  int role_;
+  mutable ::PROTOBUF_NAMESPACE_ID::internal::CachedSize _cached_size_;
+  friend struct ::TableStruct_GroupService_2eproto;
+};
+// -------------------------------------------------------------------
+
+class GroupInfo :
+    public ::PROTOBUF_NAMESPACE_ID::Message /* @@protoc_insertion_point(class_definition:GroupInfo) */ {
+ public:
+  GroupInfo();
+  virtual ~GroupInfo();
+
+  GroupInfo(const GroupInfo& from);
+  GroupInfo(GroupInfo&& from) noexcept
+    : GroupInfo() {
+    *this = ::std::move(from);
+  }
+
+  inline GroupInfo& operator=(const GroupInfo& from) {
+    CopyFrom(from);
+    return *this;
+  }
+  inline GroupInfo& operator=(GroupInfo&& from) noexcept {
+    if (GetArenaNoVirtual() == from.GetArenaNoVirtual()) {
+      if (this != &from) InternalSwap(&from);
+    } else {
+      CopyFrom(from);
+    }
+    return *this;
+  }
+
+  static const ::PROTOBUF_NAMESPACE_ID::Descriptor* descriptor() {
+    return GetDescriptor();
+  }
+  static const ::PROTOBUF_NAMESPACE_ID::Descriptor* GetDescriptor() {
+    return GetMetadataStatic().descriptor;
+  }
+  static const ::PROTOBUF_NAMESPACE_ID::Reflection* GetReflection() {
+    return GetMetadataStatic().reflection;
+  }
+  static const GroupInfo& default_instance();
+
+  static void InitAsDefaultInstance();  // FOR INTERNAL USE ONLY
+  static inline const GroupInfo* internal_default_instance() {
+    return reinterpret_cast<const GroupInfo*>(
+               &_GroupInfo_default_instance_);
+  }
+  static constexpr int kIndexInFileMessages =
+    1;
+
+  friend void swap(GroupInfo& a, GroupInfo& b) {
+    a.Swap(&b);
+  }
+  inline void Swap(GroupInfo* other) {
+    if (other == this) return;
+    InternalSwap(other);
+  }
+
+  // implements Message ----------------------------------------------
+
+  inline GroupInfo* New() const final {
+    return CreateMaybeMessage<GroupInfo>(nullptr);
+  }
+
+  GroupInfo* New(::PROTOBUF_NAMESPACE_ID::Arena* arena) const final {
+    return CreateMaybeMessage<GroupInfo>(arena);
+  }
+  void CopyFrom(const ::PROTOBUF_NAMESPACE_ID::Message& from) final;
+  void MergeFrom(const ::PROTOBUF_NAMESPACE_ID::Message& from) final;
+  void CopyFrom(const GroupInfo& from);
+  void MergeFrom(const GroupInfo& from);
+  PROTOBUF_ATTRIBUTE_REINITIALIZES void Clear() final;
+  bool IsInitialized() const final;
+
+  size_t ByteSizeLong() const final;
+  const char* _InternalParse(const char* ptr, ::PROTOBUF_NAMESPACE_ID::internal::ParseContext* ctx) final;
+  ::PROTOBUF_NAMESPACE_ID::uint8* _InternalSerialize(
+      ::PROTOBUF_NAMESPACE_ID::uint8* target, ::PROTOBUF_NAMESPACE_ID::io::EpsCopyOutputStream* stream) const final;
+  int GetCachedSize() const final { return _cached_size_.Get(); }
+
+  private:
+  inline void SharedCtor();
+  inline void SharedDtor();
+  void SetCachedSize(int size) const final;
+  void InternalSwap(GroupInfo* other);
+  friend class ::PROTOBUF_NAMESPACE_ID::internal::AnyMetadata;
+  static ::PROTOBUF_NAMESPACE_ID::StringPiece FullMessageName() {
+    return "GroupInfo";
+  }
+  private:
+  inline ::PROTOBUF_NAMESPACE_ID::Arena* GetArenaNoVirtual() const {
+    return nullptr;
+  }
+  inline void* MaybeArenaPtr() const {
+    return nullptr;
+  }
+  public:
+
+  ::PROTOBUF_NAMESPACE_ID::Metadata GetMetadata() const final;
+  private:
+  static ::PROTOBUF_NAMESPACE_ID::Metadata GetMetadataStatic() {
+    ::PROTOBUF_NAMESPACE_ID::internal::AssignDescriptors(&::descriptor_table_GroupService_2eproto);
+    return ::descriptor_table_GroupService_2eproto.file_level_metadata[kIndexInFileMessages];
+  }
+
+  public:
+
+  // nested types ----------------------------------------------------
+
+  // accessors -------------------------------------------------------
+
+  enum : int {
+    kUsersFieldNumber = 4,
+    kNameFieldNumber = 2,
+    kDescFieldNumber = 3,
+    kIdFieldNumber = 1,
+  };
+  // repeated .GroupUserInfo users = 4;
+  int users_size() const;
+  private:
+  int _internal_users_size() const;
+  public:
+  void clear_users();
+  ::GroupUserInfo* mutable_users(int index);
+  ::PROTOBUF_NAMESPACE_ID::RepeatedPtrField< ::GroupUserInfo >*
+      mutable_users();
+  private:
+  const ::GroupUserInfo& _internal_users(int index) const;
+  ::GroupUserInfo* _internal_add_users();
+  public:
+  const ::GroupUserInfo& users(int index) const;
+  ::GroupUserInfo* add_users();
+  const ::PROTOBUF_NAMESPACE_ID::RepeatedPtrField< ::GroupUserInfo >&
+      users() const;
+
+  // bytes name = 2;
+  void clear_name();
+  const std::string& name() const;
+  void set_name(const std::string& value);
+  void set_name(std::string&& value);
+  void set_name(const char* value);
+  void set_name(const void* value, size_t size);
+  std::string* mutable_name();
+  std::string* release_name();
+  void set_allocated_name(std::string* name);
+  private:
+  const std::string& _internal_name() const;
+  void _internal_set_name(const std::string& value);
+  std::string* _internal_mutable_name();
+  public:
+
+  // bytes desc = 3;
+  void clear_desc();
+  const std::string& desc() const;
+  void set_desc(const std::string& value);
+  void set_desc(std::string&& value);
+  void set_desc(const char* value);
+  void set_desc(const void* value, size_t size);
+  std::string* mutable_desc();
+  std::string* release_desc();
+  void set_allocated_desc(std::string* desc);
+  private:
+  const std::string& _internal_desc() const;
+  void _internal_set_desc(const std::string& value);
+  std::string* _internal_mutable_desc();
+  public:
+
+  // int32 id = 1;
+  void clear_id();
+  ::PROTOBUF_NAMESPACE_ID::int32 id() const;
+  void set_id(::PROTOBUF_NAMESPACE_ID::int32 value);
+  private:
+  ::PROTOBUF_NAMESPACE_ID::int32 _internal_id() const;
+  void _internal_set_id(::PROTOBUF_NAMESPACE_ID::int32 value);
+  public:
+
+  // @@protoc_insertion_point(class_scope:GroupInfo)
+ private:
+  class _Internal;
+
+  ::PROTOBUF_NAMESPACE_ID::internal::InternalMetadataWithArena _internal_metadata_;
+  ::PROTOBUF_NAMESPACE_ID::RepeatedPtrField< ::GroupUserInfo > users_;
+  ::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr name_;
+  ::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr desc_;
+  ::PROTOBUF_NAMESPACE_ID::int32 id_;
+  mutable ::PROTOBUF_NAMESPACE_ID::internal::CachedSize _cached_size_;
+  friend struct ::TableStruct_GroupService_2eproto;
+};
+// -------------------------------------------------------------------
 
 class AddGroupRequest :
     public ::PROTOBUF_NAMESPACE_ID::Message /* @@protoc_insertion_point(class_definition:AddGroupRequest) */ {
@@ -138,7 +553,7 @@ class AddGroupRequest :
                &_AddGroupRequest_default_instance_);
   }
   static constexpr int kIndexInFileMessages =
-    0;
+    2;
 
   friend void swap(AddGroupRequest& a, AddGroupRequest& b) {
     a.Swap(&b);
@@ -277,7 +692,7 @@ class AddGroupResponse :
                &_AddGroupResponse_default_instance_);
   }
   static constexpr int kIndexInFileMessages =
-    1;
+    3;
 
   friend void swap(AddGroupResponse& a, AddGroupResponse& b) {
     a.Swap(&b);
@@ -423,7 +838,7 @@ class CreateGroupRequest :
                &_CreateGroupRequest_default_instance_);
   }
   static constexpr int kIndexInFileMessages =
-    2;
+    4;
 
   friend void swap(CreateGroupRequest& a, CreateGroupRequest& b) {
     a.Swap(&b);
@@ -488,6 +903,7 @@ class CreateGroupRequest :
 
   enum : int {
     kGroupNameFieldNumber = 2,
+    kGroupDescFieldNumber = 3,
     kUserIdFieldNumber = 1,
   };
   // bytes group_name = 2;
@@ -506,6 +922,22 @@ class CreateGroupRequest :
   std::string* _internal_mutable_group_name();
   public:
 
+  // bytes group_desc = 3;
+  void clear_group_desc();
+  const std::string& group_desc() const;
+  void set_group_desc(const std::string& value);
+  void set_group_desc(std::string&& value);
+  void set_group_desc(const char* value);
+  void set_group_desc(const void* value, size_t size);
+  std::string* mutable_group_desc();
+  std::string* release_group_desc();
+  void set_allocated_group_desc(std::string* group_desc);
+  private:
+  const std::string& _internal_group_desc() const;
+  void _internal_set_group_desc(const std::string& value);
+  std::string* _internal_mutable_group_desc();
+  public:
+
   // int32 user_id = 1;
   void clear_user_id();
   ::PROTOBUF_NAMESPACE_ID::int32 user_id() const;
@@ -521,6 +953,7 @@ class CreateGroupRequest :
 
   ::PROTOBUF_NAMESPACE_ID::internal::InternalMetadataWithArena _internal_metadata_;
   ::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr group_name_;
+  ::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr group_desc_;
   ::PROTOBUF_NAMESPACE_ID::int32 user_id_;
   mutable ::PROTOBUF_NAMESPACE_ID::internal::CachedSize _cached_size_;
   friend struct ::TableStruct_GroupService_2eproto;
@@ -569,7 +1002,7 @@ class CreateGroupResponse :
                &_CreateGroupResponse_default_instance_);
   }
   static constexpr int kIndexInFileMessages =
-    3;
+    5;
 
   friend void swap(CreateGroupResponse& a, CreateGroupResponse& b) {
     a.Swap(&b);
@@ -726,7 +1159,7 @@ class QuitGroupRequest :
                &_QuitGroupRequest_default_instance_);
   }
   static constexpr int kIndexInFileMessages =
-    4;
+    6;
 
   friend void swap(QuitGroupRequest& a, QuitGroupRequest& b) {
     a.Swap(&b);
@@ -865,7 +1298,7 @@ class QuitGroupResponse :
                &_QuitGroupResponse_default_instance_);
   }
   static constexpr int kIndexInFileMessages =
-    5;
+    7;
 
   friend void swap(QuitGroupResponse& a, QuitGroupResponse& b) {
     a.Swap(&b);
@@ -969,23 +1402,23 @@ class QuitGroupResponse :
 };
 // -------------------------------------------------------------------
 
-class UserInfo :
-    public ::PROTOBUF_NAMESPACE_ID::Message /* @@protoc_insertion_point(class_definition:UserInfo) */ {
+class GetGroupInfoRequest :
+    public ::PROTOBUF_NAMESPACE_ID::Message /* @@protoc_insertion_point(class_definition:GetGroupInfoRequest) */ {
  public:
-  UserInfo();
-  virtual ~UserInfo();
+  GetGroupInfoRequest();
+  virtual ~GetGroupInfoRequest();
 
-  UserInfo(const UserInfo& from);
-  UserInfo(UserInfo&& from) noexcept
-    : UserInfo() {
+  GetGroupInfoRequest(const GetGroupInfoRequest& from);
+  GetGroupInfoRequest(GetGroupInfoRequest&& from) noexcept
+    : GetGroupInfoRequest() {
     *this = ::std::move(from);
   }
 
-  inline UserInfo& operator=(const UserInfo& from) {
+  inline GetGroupInfoRequest& operator=(const GetGroupInfoRequest& from) {
     CopyFrom(from);
     return *this;
   }
-  inline UserInfo& operator=(UserInfo&& from) noexcept {
+  inline GetGroupInfoRequest& operator=(GetGroupInfoRequest&& from) noexcept {
     if (GetArenaNoVirtual() == from.GetArenaNoVirtual()) {
       if (this != &from) InternalSwap(&from);
     } else {
@@ -1003,37 +1436,37 @@ class UserInfo :
   static const ::PROTOBUF_NAMESPACE_ID::Reflection* GetReflection() {
     return GetMetadataStatic().reflection;
   }
-  static const UserInfo& default_instance();
+  static const GetGroupInfoRequest& default_instance();
 
   static void InitAsDefaultInstance();  // FOR INTERNAL USE ONLY
-  static inline const UserInfo* internal_default_instance() {
-    return reinterpret_cast<const UserInfo*>(
-               &_UserInfo_default_instance_);
+  static inline const GetGroupInfoRequest* internal_default_instance() {
+    return reinterpret_cast<const GetGroupInfoRequest*>(
+               &_GetGroupInfoRequest_default_instance_);
   }
   static constexpr int kIndexInFileMessages =
-    6;
+    8;
 
-  friend void swap(UserInfo& a, UserInfo& b) {
+  friend void swap(GetGroupInfoRequest& a, GetGroupInfoRequest& b) {
     a.Swap(&b);
   }
-  inline void Swap(UserInfo* other) {
+  inline void Swap(GetGroupInfoRequest* other) {
     if (other == this) return;
     InternalSwap(other);
   }
 
   // implements Message ----------------------------------------------
 
-  inline UserInfo* New() const final {
-    return CreateMaybeMessage<UserInfo>(nullptr);
+  inline GetGroupInfoRequest* New() const final {
+    return CreateMaybeMessage<GetGroupInfoRequest>(nullptr);
   }
 
-  UserInfo* New(::PROTOBUF_NAMESPACE_ID::Arena* arena) const final {
-    return CreateMaybeMessage<UserInfo>(arena);
+  GetGroupInfoRequest* New(::PROTOBUF_NAMESPACE_ID::Arena* arena) const final {
+    return CreateMaybeMessage<GetGroupInfoRequest>(arena);
   }
   void CopyFrom(const ::PROTOBUF_NAMESPACE_ID::Message& from) final;
   void MergeFrom(const ::PROTOBUF_NAMESPACE_ID::Message& from) final;
-  void CopyFrom(const UserInfo& from);
-  void MergeFrom(const UserInfo& from);
+  void CopyFrom(const GetGroupInfoRequest& from);
+  void MergeFrom(const GetGroupInfoRequest& from);
   PROTOBUF_ATTRIBUTE_REINITIALIZES void Clear() final;
   bool IsInitialized() const final;
 
@@ -1047,174 +1480,10 @@ class UserInfo :
   inline void SharedCtor();
   inline void SharedDtor();
   void SetCachedSize(int size) const final;
-  void InternalSwap(UserInfo* other);
+  void InternalSwap(GetGroupInfoRequest* other);
   friend class ::PROTOBUF_NAMESPACE_ID::internal::AnyMetadata;
   static ::PROTOBUF_NAMESPACE_ID::StringPiece FullMessageName() {
-    return "UserInfo";
-  }
-  private:
-  inline ::PROTOBUF_NAMESPACE_ID::Arena* GetArenaNoVirtual() const {
-    return nullptr;
-  }
-  inline void* MaybeArenaPtr() const {
-    return nullptr;
-  }
-  public:
-
-  ::PROTOBUF_NAMESPACE_ID::Metadata GetMetadata() const final;
-  private:
-  static ::PROTOBUF_NAMESPACE_ID::Metadata GetMetadataStatic() {
-    ::PROTOBUF_NAMESPACE_ID::internal::AssignDescriptors(&::descriptor_table_GroupService_2eproto);
-    return ::descriptor_table_GroupService_2eproto.file_level_metadata[kIndexInFileMessages];
-  }
-
-  public:
-
-  // nested types ----------------------------------------------------
-
-  // accessors -------------------------------------------------------
-
-  enum : int {
-    kNameFieldNumber = 2,
-    kStateFieldNumber = 3,
-    kIdFieldNumber = 1,
-  };
-  // bytes name = 2;
-  void clear_name();
-  const std::string& name() const;
-  void set_name(const std::string& value);
-  void set_name(std::string&& value);
-  void set_name(const char* value);
-  void set_name(const void* value, size_t size);
-  std::string* mutable_name();
-  std::string* release_name();
-  void set_allocated_name(std::string* name);
-  private:
-  const std::string& _internal_name() const;
-  void _internal_set_name(const std::string& value);
-  std::string* _internal_mutable_name();
-  public:
-
-  // bytes state = 3;
-  void clear_state();
-  const std::string& state() const;
-  void set_state(const std::string& value);
-  void set_state(std::string&& value);
-  void set_state(const char* value);
-  void set_state(const void* value, size_t size);
-  std::string* mutable_state();
-  std::string* release_state();
-  void set_allocated_state(std::string* state);
-  private:
-  const std::string& _internal_state() const;
-  void _internal_set_state(const std::string& value);
-  std::string* _internal_mutable_state();
-  public:
-
-  // int32 id = 1;
-  void clear_id();
-  ::PROTOBUF_NAMESPACE_ID::int32 id() const;
-  void set_id(::PROTOBUF_NAMESPACE_ID::int32 value);
-  private:
-  ::PROTOBUF_NAMESPACE_ID::int32 _internal_id() const;
-  void _internal_set_id(::PROTOBUF_NAMESPACE_ID::int32 value);
-  public:
-
-  // @@protoc_insertion_point(class_scope:UserInfo)
- private:
-  class _Internal;
-
-  ::PROTOBUF_NAMESPACE_ID::internal::InternalMetadataWithArena _internal_metadata_;
-  ::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr name_;
-  ::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr state_;
-  ::PROTOBUF_NAMESPACE_ID::int32 id_;
-  mutable ::PROTOBUF_NAMESPACE_ID::internal::CachedSize _cached_size_;
-  friend struct ::TableStruct_GroupService_2eproto;
-};
-// -------------------------------------------------------------------
-
-class GetGroupUsersRequest :
-    public ::PROTOBUF_NAMESPACE_ID::Message /* @@protoc_insertion_point(class_definition:GetGroupUsersRequest) */ {
- public:
-  GetGroupUsersRequest();
-  virtual ~GetGroupUsersRequest();
-
-  GetGroupUsersRequest(const GetGroupUsersRequest& from);
-  GetGroupUsersRequest(GetGroupUsersRequest&& from) noexcept
-    : GetGroupUsersRequest() {
-    *this = ::std::move(from);
-  }
-
-  inline GetGroupUsersRequest& operator=(const GetGroupUsersRequest& from) {
-    CopyFrom(from);
-    return *this;
-  }
-  inline GetGroupUsersRequest& operator=(GetGroupUsersRequest&& from) noexcept {
-    if (GetArenaNoVirtual() == from.GetArenaNoVirtual()) {
-      if (this != &from) InternalSwap(&from);
-    } else {
-      CopyFrom(from);
-    }
-    return *this;
-  }
-
-  static const ::PROTOBUF_NAMESPACE_ID::Descriptor* descriptor() {
-    return GetDescriptor();
-  }
-  static const ::PROTOBUF_NAMESPACE_ID::Descriptor* GetDescriptor() {
-    return GetMetadataStatic().descriptor;
-  }
-  static const ::PROTOBUF_NAMESPACE_ID::Reflection* GetReflection() {
-    return GetMetadataStatic().reflection;
-  }
-  static const GetGroupUsersRequest& default_instance();
-
-  static void InitAsDefaultInstance();  // FOR INTERNAL USE ONLY
-  static inline const GetGroupUsersRequest* internal_default_instance() {
-    return reinterpret_cast<const GetGroupUsersRequest*>(
-               &_GetGroupUsersRequest_default_instance_);
-  }
-  static constexpr int kIndexInFileMessages =
-    7;
-
-  friend void swap(GetGroupUsersRequest& a, GetGroupUsersRequest& b) {
-    a.Swap(&b);
-  }
-  inline void Swap(GetGroupUsersRequest* other) {
-    if (other == this) return;
-    InternalSwap(other);
-  }
-
-  // implements Message ----------------------------------------------
-
-  inline GetGroupUsersRequest* New() const final {
-    return CreateMaybeMessage<GetGroupUsersRequest>(nullptr);
-  }
-
-  GetGroupUsersRequest* New(::PROTOBUF_NAMESPACE_ID::Arena* arena) const final {
-    return CreateMaybeMessage<GetGroupUsersRequest>(arena);
-  }
-  void CopyFrom(const ::PROTOBUF_NAMESPACE_ID::Message& from) final;
-  void MergeFrom(const ::PROTOBUF_NAMESPACE_ID::Message& from) final;
-  void CopyFrom(const GetGroupUsersRequest& from);
-  void MergeFrom(const GetGroupUsersRequest& from);
-  PROTOBUF_ATTRIBUTE_REINITIALIZES void Clear() final;
-  bool IsInitialized() const final;
-
-  size_t ByteSizeLong() const final;
-  const char* _InternalParse(const char* ptr, ::PROTOBUF_NAMESPACE_ID::internal::ParseContext* ctx) final;
-  ::PROTOBUF_NAMESPACE_ID::uint8* _InternalSerialize(
-      ::PROTOBUF_NAMESPACE_ID::uint8* target, ::PROTOBUF_NAMESPACE_ID::io::EpsCopyOutputStream* stream) const final;
-  int GetCachedSize() const final { return _cached_size_.Get(); }
-
-  private:
-  inline void SharedCtor();
-  inline void SharedDtor();
-  void SetCachedSize(int size) const final;
-  void InternalSwap(GetGroupUsersRequest* other);
-  friend class ::PROTOBUF_NAMESPACE_ID::internal::AnyMetadata;
-  static ::PROTOBUF_NAMESPACE_ID::StringPiece FullMessageName() {
-    return "GetGroupUsersRequest";
+    return "GetGroupInfoRequest";
   }
   private:
   inline ::PROTOBUF_NAMESPACE_ID::Arena* GetArenaNoVirtual() const {
@@ -1250,7 +1519,7 @@ class GetGroupUsersRequest :
   void _internal_set_group_id(::PROTOBUF_NAMESPACE_ID::int32 value);
   public:
 
-  // @@protoc_insertion_point(class_scope:GetGroupUsersRequest)
+  // @@protoc_insertion_point(class_scope:GetGroupInfoRequest)
  private:
   class _Internal;
 
@@ -1261,23 +1530,23 @@ class GetGroupUsersRequest :
 };
 // -------------------------------------------------------------------
 
-class GetGroupUsersResponse :
-    public ::PROTOBUF_NAMESPACE_ID::Message /* @@protoc_insertion_point(class_definition:GetGroupUsersResponse) */ {
+class GetGroupInfoResponse :
+    public ::PROTOBUF_NAMESPACE_ID::Message /* @@protoc_insertion_point(class_definition:GetGroupInfoResponse) */ {
  public:
-  GetGroupUsersResponse();
-  virtual ~GetGroupUsersResponse();
+  GetGroupInfoResponse();
+  virtual ~GetGroupInfoResponse();
 
-  GetGroupUsersResponse(const GetGroupUsersResponse& from);
-  GetGroupUsersResponse(GetGroupUsersResponse&& from) noexcept
-    : GetGroupUsersResponse() {
+  GetGroupInfoResponse(const GetGroupInfoResponse& from);
+  GetGroupInfoResponse(GetGroupInfoResponse&& from) noexcept
+    : GetGroupInfoResponse() {
     *this = ::std::move(from);
   }
 
-  inline GetGroupUsersResponse& operator=(const GetGroupUsersResponse& from) {
+  inline GetGroupInfoResponse& operator=(const GetGroupInfoResponse& from) {
     CopyFrom(from);
     return *this;
   }
-  inline GetGroupUsersResponse& operator=(GetGroupUsersResponse&& from) noexcept {
+  inline GetGroupInfoResponse& operator=(GetGroupInfoResponse&& from) noexcept {
     if (GetArenaNoVirtual() == from.GetArenaNoVirtual()) {
       if (this != &from) InternalSwap(&from);
     } else {
@@ -1295,37 +1564,37 @@ class GetGroupUsersResponse :
   static const ::PROTOBUF_NAMESPACE_ID::Reflection* GetReflection() {
     return GetMetadataStatic().reflection;
   }
-  static const GetGroupUsersResponse& default_instance();
+  static const GetGroupInfoResponse& default_instance();
 
   static void InitAsDefaultInstance();  // FOR INTERNAL USE ONLY
-  static inline const GetGroupUsersResponse* internal_default_instance() {
-    return reinterpret_cast<const GetGroupUsersResponse*>(
-               &_GetGroupUsersResponse_default_instance_);
+  static inline const GetGroupInfoResponse* internal_default_instance() {
+    return reinterpret_cast<const GetGroupInfoResponse*>(
+               &_GetGroupInfoResponse_default_instance_);
   }
   static constexpr int kIndexInFileMessages =
-    8;
+    9;
 
-  friend void swap(GetGroupUsersResponse& a, GetGroupUsersResponse& b) {
+  friend void swap(GetGroupInfoResponse& a, GetGroupInfoResponse& b) {
     a.Swap(&b);
   }
-  inline void Swap(GetGroupUsersResponse* other) {
+  inline void Swap(GetGroupInfoResponse* other) {
     if (other == this) return;
     InternalSwap(other);
   }
 
   // implements Message ----------------------------------------------
 
-  inline GetGroupUsersResponse* New() const final {
-    return CreateMaybeMessage<GetGroupUsersResponse>(nullptr);
+  inline GetGroupInfoResponse* New() const final {
+    return CreateMaybeMessage<GetGroupInfoResponse>(nullptr);
   }
 
-  GetGroupUsersResponse* New(::PROTOBUF_NAMESPACE_ID::Arena* arena) const final {
-    return CreateMaybeMessage<GetGroupUsersResponse>(arena);
+  GetGroupInfoResponse* New(::PROTOBUF_NAMESPACE_ID::Arena* arena) const final {
+    return CreateMaybeMessage<GetGroupInfoResponse>(arena);
   }
   void CopyFrom(const ::PROTOBUF_NAMESPACE_ID::Message& from) final;
   void MergeFrom(const ::PROTOBUF_NAMESPACE_ID::Message& from) final;
-  void CopyFrom(const GetGroupUsersResponse& from);
-  void MergeFrom(const GetGroupUsersResponse& from);
+  void CopyFrom(const GetGroupInfoResponse& from);
+  void MergeFrom(const GetGroupInfoResponse& from);
   PROTOBUF_ATTRIBUTE_REINITIALIZES void Clear() final;
   bool IsInitialized() const final;
 
@@ -1339,10 +1608,10 @@ class GetGroupUsersResponse :
   inline void SharedCtor();
   inline void SharedDtor();
   void SetCachedSize(int size) const final;
-  void InternalSwap(GetGroupUsersResponse* other);
+  void InternalSwap(GetGroupInfoResponse* other);
   friend class ::PROTOBUF_NAMESPACE_ID::internal::AnyMetadata;
   static ::PROTOBUF_NAMESPACE_ID::StringPiece FullMessageName() {
-    return "GetGroupUsersResponse";
+    return "GetGroupInfoResponse";
   }
   private:
   inline ::PROTOBUF_NAMESPACE_ID::Arena* GetArenaNoVirtual() const {
@@ -1367,27 +1636,318 @@ class GetGroupUsersResponse :
   // accessors -------------------------------------------------------
 
   enum : int {
-    kUsersFieldNumber = 3,
+    kResInfoFieldNumber = 2,
+    kGroupInfoFieldNumber = 3,
+    kRetCodeFieldNumber = 1,
+  };
+  // string res_info = 2;
+  void clear_res_info();
+  const std::string& res_info() const;
+  void set_res_info(const std::string& value);
+  void set_res_info(std::string&& value);
+  void set_res_info(const char* value);
+  void set_res_info(const char* value, size_t size);
+  std::string* mutable_res_info();
+  std::string* release_res_info();
+  void set_allocated_res_info(std::string* res_info);
+  private:
+  const std::string& _internal_res_info() const;
+  void _internal_set_res_info(const std::string& value);
+  std::string* _internal_mutable_res_info();
+  public:
+
+  // .GroupInfo group_info = 3;
+  bool has_group_info() const;
+  private:
+  bool _internal_has_group_info() const;
+  public:
+  void clear_group_info();
+  const ::GroupInfo& group_info() const;
+  ::GroupInfo* release_group_info();
+  ::GroupInfo* mutable_group_info();
+  void set_allocated_group_info(::GroupInfo* group_info);
+  private:
+  const ::GroupInfo& _internal_group_info() const;
+  ::GroupInfo* _internal_mutable_group_info();
+  public:
+
+  // int32 ret_code = 1;
+  void clear_ret_code();
+  ::PROTOBUF_NAMESPACE_ID::int32 ret_code() const;
+  void set_ret_code(::PROTOBUF_NAMESPACE_ID::int32 value);
+  private:
+  ::PROTOBUF_NAMESPACE_ID::int32 _internal_ret_code() const;
+  void _internal_set_ret_code(::PROTOBUF_NAMESPACE_ID::int32 value);
+  public:
+
+  // @@protoc_insertion_point(class_scope:GetGroupInfoResponse)
+ private:
+  class _Internal;
+
+  ::PROTOBUF_NAMESPACE_ID::internal::InternalMetadataWithArena _internal_metadata_;
+  ::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr res_info_;
+  ::GroupInfo* group_info_;
+  ::PROTOBUF_NAMESPACE_ID::int32 ret_code_;
+  mutable ::PROTOBUF_NAMESPACE_ID::internal::CachedSize _cached_size_;
+  friend struct ::TableStruct_GroupService_2eproto;
+};
+// -------------------------------------------------------------------
+
+class GetUserGroupsRequest :
+    public ::PROTOBUF_NAMESPACE_ID::Message /* @@protoc_insertion_point(class_definition:GetUserGroupsRequest) */ {
+ public:
+  GetUserGroupsRequest();
+  virtual ~GetUserGroupsRequest();
+
+  GetUserGroupsRequest(const GetUserGroupsRequest& from);
+  GetUserGroupsRequest(GetUserGroupsRequest&& from) noexcept
+    : GetUserGroupsRequest() {
+    *this = ::std::move(from);
+  }
+
+  inline GetUserGroupsRequest& operator=(const GetUserGroupsRequest& from) {
+    CopyFrom(from);
+    return *this;
+  }
+  inline GetUserGroupsRequest& operator=(GetUserGroupsRequest&& from) noexcept {
+    if (GetArenaNoVirtual() == from.GetArenaNoVirtual()) {
+      if (this != &from) InternalSwap(&from);
+    } else {
+      CopyFrom(from);
+    }
+    return *this;
+  }
+
+  static const ::PROTOBUF_NAMESPACE_ID::Descriptor* descriptor() {
+    return GetDescriptor();
+  }
+  static const ::PROTOBUF_NAMESPACE_ID::Descriptor* GetDescriptor() {
+    return GetMetadataStatic().descriptor;
+  }
+  static const ::PROTOBUF_NAMESPACE_ID::Reflection* GetReflection() {
+    return GetMetadataStatic().reflection;
+  }
+  static const GetUserGroupsRequest& default_instance();
+
+  static void InitAsDefaultInstance();  // FOR INTERNAL USE ONLY
+  static inline const GetUserGroupsRequest* internal_default_instance() {
+    return reinterpret_cast<const GetUserGroupsRequest*>(
+               &_GetUserGroupsRequest_default_instance_);
+  }
+  static constexpr int kIndexInFileMessages =
+    10;
+
+  friend void swap(GetUserGroupsRequest& a, GetUserGroupsRequest& b) {
+    a.Swap(&b);
+  }
+  inline void Swap(GetUserGroupsRequest* other) {
+    if (other == this) return;
+    InternalSwap(other);
+  }
+
+  // implements Message ----------------------------------------------
+
+  inline GetUserGroupsRequest* New() const final {
+    return CreateMaybeMessage<GetUserGroupsRequest>(nullptr);
+  }
+
+  GetUserGroupsRequest* New(::PROTOBUF_NAMESPACE_ID::Arena* arena) const final {
+    return CreateMaybeMessage<GetUserGroupsRequest>(arena);
+  }
+  void CopyFrom(const ::PROTOBUF_NAMESPACE_ID::Message& from) final;
+  void MergeFrom(const ::PROTOBUF_NAMESPACE_ID::Message& from) final;
+  void CopyFrom(const GetUserGroupsRequest& from);
+  void MergeFrom(const GetUserGroupsRequest& from);
+  PROTOBUF_ATTRIBUTE_REINITIALIZES void Clear() final;
+  bool IsInitialized() const final;
+
+  size_t ByteSizeLong() const final;
+  const char* _InternalParse(const char* ptr, ::PROTOBUF_NAMESPACE_ID::internal::ParseContext* ctx) final;
+  ::PROTOBUF_NAMESPACE_ID::uint8* _InternalSerialize(
+      ::PROTOBUF_NAMESPACE_ID::uint8* target, ::PROTOBUF_NAMESPACE_ID::io::EpsCopyOutputStream* stream) const final;
+  int GetCachedSize() const final { return _cached_size_.Get(); }
+
+  private:
+  inline void SharedCtor();
+  inline void SharedDtor();
+  void SetCachedSize(int size) const final;
+  void InternalSwap(GetUserGroupsRequest* other);
+  friend class ::PROTOBUF_NAMESPACE_ID::internal::AnyMetadata;
+  static ::PROTOBUF_NAMESPACE_ID::StringPiece FullMessageName() {
+    return "GetUserGroupsRequest";
+  }
+  private:
+  inline ::PROTOBUF_NAMESPACE_ID::Arena* GetArenaNoVirtual() const {
+    return nullptr;
+  }
+  inline void* MaybeArenaPtr() const {
+    return nullptr;
+  }
+  public:
+
+  ::PROTOBUF_NAMESPACE_ID::Metadata GetMetadata() const final;
+  private:
+  static ::PROTOBUF_NAMESPACE_ID::Metadata GetMetadataStatic() {
+    ::PROTOBUF_NAMESPACE_ID::internal::AssignDescriptors(&::descriptor_table_GroupService_2eproto);
+    return ::descriptor_table_GroupService_2eproto.file_level_metadata[kIndexInFileMessages];
+  }
+
+  public:
+
+  // nested types ----------------------------------------------------
+
+  // accessors -------------------------------------------------------
+
+  enum : int {
+    kUserIdFieldNumber = 1,
+  };
+  // int32 user_id = 1;
+  void clear_user_id();
+  ::PROTOBUF_NAMESPACE_ID::int32 user_id() const;
+  void set_user_id(::PROTOBUF_NAMESPACE_ID::int32 value);
+  private:
+  ::PROTOBUF_NAMESPACE_ID::int32 _internal_user_id() const;
+  void _internal_set_user_id(::PROTOBUF_NAMESPACE_ID::int32 value);
+  public:
+
+  // @@protoc_insertion_point(class_scope:GetUserGroupsRequest)
+ private:
+  class _Internal;
+
+  ::PROTOBUF_NAMESPACE_ID::internal::InternalMetadataWithArena _internal_metadata_;
+  ::PROTOBUF_NAMESPACE_ID::int32 user_id_;
+  mutable ::PROTOBUF_NAMESPACE_ID::internal::CachedSize _cached_size_;
+  friend struct ::TableStruct_GroupService_2eproto;
+};
+// -------------------------------------------------------------------
+
+class GetUserGroupsResponse :
+    public ::PROTOBUF_NAMESPACE_ID::Message /* @@protoc_insertion_point(class_definition:GetUserGroupsResponse) */ {
+ public:
+  GetUserGroupsResponse();
+  virtual ~GetUserGroupsResponse();
+
+  GetUserGroupsResponse(const GetUserGroupsResponse& from);
+  GetUserGroupsResponse(GetUserGroupsResponse&& from) noexcept
+    : GetUserGroupsResponse() {
+    *this = ::std::move(from);
+  }
+
+  inline GetUserGroupsResponse& operator=(const GetUserGroupsResponse& from) {
+    CopyFrom(from);
+    return *this;
+  }
+  inline GetUserGroupsResponse& operator=(GetUserGroupsResponse&& from) noexcept {
+    if (GetArenaNoVirtual() == from.GetArenaNoVirtual()) {
+      if (this != &from) InternalSwap(&from);
+    } else {
+      CopyFrom(from);
+    }
+    return *this;
+  }
+
+  static const ::PROTOBUF_NAMESPACE_ID::Descriptor* descriptor() {
+    return GetDescriptor();
+  }
+  static const ::PROTOBUF_NAMESPACE_ID::Descriptor* GetDescriptor() {
+    return GetMetadataStatic().descriptor;
+  }
+  static const ::PROTOBUF_NAMESPACE_ID::Reflection* GetReflection() {
+    return GetMetadataStatic().reflection;
+  }
+  static const GetUserGroupsResponse& default_instance();
+
+  static void InitAsDefaultInstance();  // FOR INTERNAL USE ONLY
+  static inline const GetUserGroupsResponse* internal_default_instance() {
+    return reinterpret_cast<const GetUserGroupsResponse*>(
+               &_GetUserGroupsResponse_default_instance_);
+  }
+  static constexpr int kIndexInFileMessages =
+    11;
+
+  friend void swap(GetUserGroupsResponse& a, GetUserGroupsResponse& b) {
+    a.Swap(&b);
+  }
+  inline void Swap(GetUserGroupsResponse* other) {
+    if (other == this) return;
+    InternalSwap(other);
+  }
+
+  // implements Message ----------------------------------------------
+
+  inline GetUserGroupsResponse* New() const final {
+    return CreateMaybeMessage<GetUserGroupsResponse>(nullptr);
+  }
+
+  GetUserGroupsResponse* New(::PROTOBUF_NAMESPACE_ID::Arena* arena) const final {
+    return CreateMaybeMessage<GetUserGroupsResponse>(arena);
+  }
+  void CopyFrom(const ::PROTOBUF_NAMESPACE_ID::Message& from) final;
+  void MergeFrom(const ::PROTOBUF_NAMESPACE_ID::Message& from) final;
+  void CopyFrom(const GetUserGroupsResponse& from);
+  void MergeFrom(const GetUserGroupsResponse& from);
+  PROTOBUF_ATTRIBUTE_REINITIALIZES void Clear() final;
+  bool IsInitialized() const final;
+
+  size_t ByteSizeLong() const final;
+  const char* _InternalParse(const char* ptr, ::PROTOBUF_NAMESPACE_ID::internal::ParseContext* ctx) final;
+  ::PROTOBUF_NAMESPACE_ID::uint8* _InternalSerialize(
+      ::PROTOBUF_NAMESPACE_ID::uint8* target, ::PROTOBUF_NAMESPACE_ID::io::EpsCopyOutputStream* stream) const final;
+  int GetCachedSize() const final { return _cached_size_.Get(); }
+
+  private:
+  inline void SharedCtor();
+  inline void SharedDtor();
+  void SetCachedSize(int size) const final;
+  void InternalSwap(GetUserGroupsResponse* other);
+  friend class ::PROTOBUF_NAMESPACE_ID::internal::AnyMetadata;
+  static ::PROTOBUF_NAMESPACE_ID::StringPiece FullMessageName() {
+    return "GetUserGroupsResponse";
+  }
+  private:
+  inline ::PROTOBUF_NAMESPACE_ID::Arena* GetArenaNoVirtual() const {
+    return nullptr;
+  }
+  inline void* MaybeArenaPtr() const {
+    return nullptr;
+  }
+  public:
+
+  ::PROTOBUF_NAMESPACE_ID::Metadata GetMetadata() const final;
+  private:
+  static ::PROTOBUF_NAMESPACE_ID::Metadata GetMetadataStatic() {
+    ::PROTOBUF_NAMESPACE_ID::internal::AssignDescriptors(&::descriptor_table_GroupService_2eproto);
+    return ::descriptor_table_GroupService_2eproto.file_level_metadata[kIndexInFileMessages];
+  }
+
+  public:
+
+  // nested types ----------------------------------------------------
+
+  // accessors -------------------------------------------------------
+
+  enum : int {
+    kGroupsFieldNumber = 3,
     kResInfoFieldNumber = 2,
     kRetCodeFieldNumber = 1,
   };
-  // repeated .UserInfo users = 3;
-  int users_size() const;
+  // repeated .GroupInfo groups = 3;
+  int groups_size() const;
   private:
-  int _internal_users_size() const;
+  int _internal_groups_size() const;
   public:
-  void clear_users();
-  ::UserInfo* mutable_users(int index);
-  ::PROTOBUF_NAMESPACE_ID::RepeatedPtrField< ::UserInfo >*
-      mutable_users();
+  void clear_groups();
+  ::GroupInfo* mutable_groups(int index);
+  ::PROTOBUF_NAMESPACE_ID::RepeatedPtrField< ::GroupInfo >*
+      mutable_groups();
   private:
-  const ::UserInfo& _internal_users(int index) const;
-  ::UserInfo* _internal_add_users();
+  const ::GroupInfo& _internal_groups(int index) const;
+  ::GroupInfo* _internal_add_groups();
   public:
-  const ::UserInfo& users(int index) const;
-  ::UserInfo* add_users();
-  const ::PROTOBUF_NAMESPACE_ID::RepeatedPtrField< ::UserInfo >&
-      users() const;
+  const ::GroupInfo& groups(int index) const;
+  ::GroupInfo* add_groups();
+  const ::PROTOBUF_NAMESPACE_ID::RepeatedPtrField< ::GroupInfo >&
+      groups() const;
 
   // string res_info = 2;
   void clear_res_info();
@@ -1414,12 +1974,12 @@ class GetGroupUsersResponse :
   void _internal_set_ret_code(::PROTOBUF_NAMESPACE_ID::int32 value);
   public:
 
-  // @@protoc_insertion_point(class_scope:GetGroupUsersResponse)
+  // @@protoc_insertion_point(class_scope:GetUserGroupsResponse)
  private:
   class _Internal;
 
   ::PROTOBUF_NAMESPACE_ID::internal::InternalMetadataWithArena _internal_metadata_;
-  ::PROTOBUF_NAMESPACE_ID::RepeatedPtrField< ::UserInfo > users_;
+  ::PROTOBUF_NAMESPACE_ID::RepeatedPtrField< ::GroupInfo > groups_;
   ::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr res_info_;
   ::PROTOBUF_NAMESPACE_ID::int32 ret_code_;
   mutable ::PROTOBUF_NAMESPACE_ID::internal::CachedSize _cached_size_;
@@ -1452,9 +2012,13 @@ class GroupServiceRpc : public ::PROTOBUF_NAMESPACE_ID::Service {
                        const ::QuitGroupRequest* request,
                        ::QuitGroupResponse* response,
                        ::google::protobuf::Closure* done);
-  virtual void GetGroupUsers(::PROTOBUF_NAMESPACE_ID::RpcController* controller,
-                       const ::GetGroupUsersRequest* request,
-                       ::GetGroupUsersResponse* response,
+  virtual void GetGroupInfo(::PROTOBUF_NAMESPACE_ID::RpcController* controller,
+                       const ::GetGroupInfoRequest* request,
+                       ::GetGroupInfoResponse* response,
+                       ::google::protobuf::Closure* done);
+  virtual void GetUserGroups(::PROTOBUF_NAMESPACE_ID::RpcController* controller,
+                       const ::GetUserGroupsRequest* request,
+                       ::GetUserGroupsResponse* response,
                        ::google::protobuf::Closure* done);
 
   // implements Service ----------------------------------------------
@@ -1497,9 +2061,13 @@ class GroupServiceRpc_Stub : public GroupServiceRpc {
                        const ::QuitGroupRequest* request,
                        ::QuitGroupResponse* response,
                        ::google::protobuf::Closure* done);
-  void GetGroupUsers(::PROTOBUF_NAMESPACE_ID::RpcController* controller,
-                       const ::GetGroupUsersRequest* request,
-                       ::GetGroupUsersResponse* response,
+  void GetGroupInfo(::PROTOBUF_NAMESPACE_ID::RpcController* controller,
+                       const ::GetGroupInfoRequest* request,
+                       ::GetGroupInfoResponse* response,
+                       ::google::protobuf::Closure* done);
+  void GetUserGroups(::PROTOBUF_NAMESPACE_ID::RpcController* controller,
+                       const ::GetUserGroupsRequest* request,
+                       ::GetUserGroupsResponse* response,
                        ::google::protobuf::Closure* done);
  private:
   ::PROTOBUF_NAMESPACE_ID::RpcChannel* channel_;
@@ -1517,6 +2085,313 @@ class GroupServiceRpc_Stub : public GroupServiceRpc {
   #pragma GCC diagnostic push
   #pragma GCC diagnostic ignored "-Wstrict-aliasing"
 #endif  // __GNUC__
+// GroupUserInfo
+
+// int32 id = 1;
+inline void GroupUserInfo::clear_id() {
+  id_ = 0;
+}
+inline ::PROTOBUF_NAMESPACE_ID::int32 GroupUserInfo::_internal_id() const {
+  return id_;
+}
+inline ::PROTOBUF_NAMESPACE_ID::int32 GroupUserInfo::id() const {
+  // @@protoc_insertion_point(field_get:GroupUserInfo.id)
+  return _internal_id();
+}
+inline void GroupUserInfo::_internal_set_id(::PROTOBUF_NAMESPACE_ID::int32 value) {
+  
+  id_ = value;
+}
+inline void GroupUserInfo::set_id(::PROTOBUF_NAMESPACE_ID::int32 value) {
+  _internal_set_id(value);
+  // @@protoc_insertion_point(field_set:GroupUserInfo.id)
+}
+
+// bytes name = 2;
+inline void GroupUserInfo::clear_name() {
+  name_.ClearToEmptyNoArena(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited());
+}
+inline const std::string& GroupUserInfo::name() const {
+  // @@protoc_insertion_point(field_get:GroupUserInfo.name)
+  return _internal_name();
+}
+inline void GroupUserInfo::set_name(const std::string& value) {
+  _internal_set_name(value);
+  // @@protoc_insertion_point(field_set:GroupUserInfo.name)
+}
+inline std::string* GroupUserInfo::mutable_name() {
+  // @@protoc_insertion_point(field_mutable:GroupUserInfo.name)
+  return _internal_mutable_name();
+}
+inline const std::string& GroupUserInfo::_internal_name() const {
+  return name_.GetNoArena();
+}
+inline void GroupUserInfo::_internal_set_name(const std::string& value) {
+  
+  name_.SetNoArena(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), value);
+}
+inline void GroupUserInfo::set_name(std::string&& value) {
+  
+  name_.SetNoArena(
+    &::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), ::std::move(value));
+  // @@protoc_insertion_point(field_set_rvalue:GroupUserInfo.name)
+}
+inline void GroupUserInfo::set_name(const char* value) {
+  GOOGLE_DCHECK(value != nullptr);
+  
+  name_.SetNoArena(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), ::std::string(value));
+  // @@protoc_insertion_point(field_set_char:GroupUserInfo.name)
+}
+inline void GroupUserInfo::set_name(const void* value, size_t size) {
+  
+  name_.SetNoArena(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(),
+      ::std::string(reinterpret_cast<const char*>(value), size));
+  // @@protoc_insertion_point(field_set_pointer:GroupUserInfo.name)
+}
+inline std::string* GroupUserInfo::_internal_mutable_name() {
+  
+  return name_.MutableNoArena(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited());
+}
+inline std::string* GroupUserInfo::release_name() {
+  // @@protoc_insertion_point(field_release:GroupUserInfo.name)
+  
+  return name_.ReleaseNoArena(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited());
+}
+inline void GroupUserInfo::set_allocated_name(std::string* name) {
+  if (name != nullptr) {
+    
+  } else {
+    
+  }
+  name_.SetAllocatedNoArena(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), name);
+  // @@protoc_insertion_point(field_set_allocated:GroupUserInfo.name)
+}
+
+// .UserState state = 3;
+inline void GroupUserInfo::clear_state() {
+  state_ = 0;
+}
+inline ::UserState GroupUserInfo::_internal_state() const {
+  return static_cast< ::UserState >(state_);
+}
+inline ::UserState GroupUserInfo::state() const {
+  // @@protoc_insertion_point(field_get:GroupUserInfo.state)
+  return _internal_state();
+}
+inline void GroupUserInfo::_internal_set_state(::UserState value) {
+  
+  state_ = value;
+}
+inline void GroupUserInfo::set_state(::UserState value) {
+  _internal_set_state(value);
+  // @@protoc_insertion_point(field_set:GroupUserInfo.state)
+}
+
+// .GroupUserRole role = 4;
+inline void GroupUserInfo::clear_role() {
+  role_ = 0;
+}
+inline ::GroupUserRole GroupUserInfo::_internal_role() const {
+  return static_cast< ::GroupUserRole >(role_);
+}
+inline ::GroupUserRole GroupUserInfo::role() const {
+  // @@protoc_insertion_point(field_get:GroupUserInfo.role)
+  return _internal_role();
+}
+inline void GroupUserInfo::_internal_set_role(::GroupUserRole value) {
+  
+  role_ = value;
+}
+inline void GroupUserInfo::set_role(::GroupUserRole value) {
+  _internal_set_role(value);
+  // @@protoc_insertion_point(field_set:GroupUserInfo.role)
+}
+
+// -------------------------------------------------------------------
+
+// GroupInfo
+
+// int32 id = 1;
+inline void GroupInfo::clear_id() {
+  id_ = 0;
+}
+inline ::PROTOBUF_NAMESPACE_ID::int32 GroupInfo::_internal_id() const {
+  return id_;
+}
+inline ::PROTOBUF_NAMESPACE_ID::int32 GroupInfo::id() const {
+  // @@protoc_insertion_point(field_get:GroupInfo.id)
+  return _internal_id();
+}
+inline void GroupInfo::_internal_set_id(::PROTOBUF_NAMESPACE_ID::int32 value) {
+  
+  id_ = value;
+}
+inline void GroupInfo::set_id(::PROTOBUF_NAMESPACE_ID::int32 value) {
+  _internal_set_id(value);
+  // @@protoc_insertion_point(field_set:GroupInfo.id)
+}
+
+// bytes name = 2;
+inline void GroupInfo::clear_name() {
+  name_.ClearToEmptyNoArena(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited());
+}
+inline const std::string& GroupInfo::name() const {
+  // @@protoc_insertion_point(field_get:GroupInfo.name)
+  return _internal_name();
+}
+inline void GroupInfo::set_name(const std::string& value) {
+  _internal_set_name(value);
+  // @@protoc_insertion_point(field_set:GroupInfo.name)
+}
+inline std::string* GroupInfo::mutable_name() {
+  // @@protoc_insertion_point(field_mutable:GroupInfo.name)
+  return _internal_mutable_name();
+}
+inline const std::string& GroupInfo::_internal_name() const {
+  return name_.GetNoArena();
+}
+inline void GroupInfo::_internal_set_name(const std::string& value) {
+  
+  name_.SetNoArena(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), value);
+}
+inline void GroupInfo::set_name(std::string&& value) {
+  
+  name_.SetNoArena(
+    &::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), ::std::move(value));
+  // @@protoc_insertion_point(field_set_rvalue:GroupInfo.name)
+}
+inline void GroupInfo::set_name(const char* value) {
+  GOOGLE_DCHECK(value != nullptr);
+  
+  name_.SetNoArena(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), ::std::string(value));
+  // @@protoc_insertion_point(field_set_char:GroupInfo.name)
+}
+inline void GroupInfo::set_name(const void* value, size_t size) {
+  
+  name_.SetNoArena(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(),
+      ::std::string(reinterpret_cast<const char*>(value), size));
+  // @@protoc_insertion_point(field_set_pointer:GroupInfo.name)
+}
+inline std::string* GroupInfo::_internal_mutable_name() {
+  
+  return name_.MutableNoArena(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited());
+}
+inline std::string* GroupInfo::release_name() {
+  // @@protoc_insertion_point(field_release:GroupInfo.name)
+  
+  return name_.ReleaseNoArena(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited());
+}
+inline void GroupInfo::set_allocated_name(std::string* name) {
+  if (name != nullptr) {
+    
+  } else {
+    
+  }
+  name_.SetAllocatedNoArena(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), name);
+  // @@protoc_insertion_point(field_set_allocated:GroupInfo.name)
+}
+
+// bytes desc = 3;
+inline void GroupInfo::clear_desc() {
+  desc_.ClearToEmptyNoArena(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited());
+}
+inline const std::string& GroupInfo::desc() const {
+  // @@protoc_insertion_point(field_get:GroupInfo.desc)
+  return _internal_desc();
+}
+inline void GroupInfo::set_desc(const std::string& value) {
+  _internal_set_desc(value);
+  // @@protoc_insertion_point(field_set:GroupInfo.desc)
+}
+inline std::string* GroupInfo::mutable_desc() {
+  // @@protoc_insertion_point(field_mutable:GroupInfo.desc)
+  return _internal_mutable_desc();
+}
+inline const std::string& GroupInfo::_internal_desc() const {
+  return desc_.GetNoArena();
+}
+inline void GroupInfo::_internal_set_desc(const std::string& value) {
+  
+  desc_.SetNoArena(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), value);
+}
+inline void GroupInfo::set_desc(std::string&& value) {
+  
+  desc_.SetNoArena(
+    &::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), ::std::move(value));
+  // @@protoc_insertion_point(field_set_rvalue:GroupInfo.desc)
+}
+inline void GroupInfo::set_desc(const char* value) {
+  GOOGLE_DCHECK(value != nullptr);
+  
+  desc_.SetNoArena(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), ::std::string(value));
+  // @@protoc_insertion_point(field_set_char:GroupInfo.desc)
+}
+inline void GroupInfo::set_desc(const void* value, size_t size) {
+  
+  desc_.SetNoArena(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(),
+      ::std::string(reinterpret_cast<const char*>(value), size));
+  // @@protoc_insertion_point(field_set_pointer:GroupInfo.desc)
+}
+inline std::string* GroupInfo::_internal_mutable_desc() {
+  
+  return desc_.MutableNoArena(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited());
+}
+inline std::string* GroupInfo::release_desc() {
+  // @@protoc_insertion_point(field_release:GroupInfo.desc)
+  
+  return desc_.ReleaseNoArena(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited());
+}
+inline void GroupInfo::set_allocated_desc(std::string* desc) {
+  if (desc != nullptr) {
+    
+  } else {
+    
+  }
+  desc_.SetAllocatedNoArena(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), desc);
+  // @@protoc_insertion_point(field_set_allocated:GroupInfo.desc)
+}
+
+// repeated .GroupUserInfo users = 4;
+inline int GroupInfo::_internal_users_size() const {
+  return users_.size();
+}
+inline int GroupInfo::users_size() const {
+  return _internal_users_size();
+}
+inline void GroupInfo::clear_users() {
+  users_.Clear();
+}
+inline ::GroupUserInfo* GroupInfo::mutable_users(int index) {
+  // @@protoc_insertion_point(field_mutable:GroupInfo.users)
+  return users_.Mutable(index);
+}
+inline ::PROTOBUF_NAMESPACE_ID::RepeatedPtrField< ::GroupUserInfo >*
+GroupInfo::mutable_users() {
+  // @@protoc_insertion_point(field_mutable_list:GroupInfo.users)
+  return &users_;
+}
+inline const ::GroupUserInfo& GroupInfo::_internal_users(int index) const {
+  return users_.Get(index);
+}
+inline const ::GroupUserInfo& GroupInfo::users(int index) const {
+  // @@protoc_insertion_point(field_get:GroupInfo.users)
+  return _internal_users(index);
+}
+inline ::GroupUserInfo* GroupInfo::_internal_add_users() {
+  return users_.Add();
+}
+inline ::GroupUserInfo* GroupInfo::add_users() {
+  // @@protoc_insertion_point(field_add:GroupInfo.users)
+  return _internal_add_users();
+}
+inline const ::PROTOBUF_NAMESPACE_ID::RepeatedPtrField< ::GroupUserInfo >&
+GroupInfo::users() const {
+  // @@protoc_insertion_point(field_list:GroupInfo.users)
+  return users_;
+}
+
+// -------------------------------------------------------------------
+
 // AddGroupRequest
 
 // int32 user_id = 1;
@@ -1725,6 +2600,66 @@ inline void CreateGroupRequest::set_allocated_group_name(std::string* group_name
   }
   group_name_.SetAllocatedNoArena(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), group_name);
   // @@protoc_insertion_point(field_set_allocated:CreateGroupRequest.group_name)
+}
+
+// bytes group_desc = 3;
+inline void CreateGroupRequest::clear_group_desc() {
+  group_desc_.ClearToEmptyNoArena(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited());
+}
+inline const std::string& CreateGroupRequest::group_desc() const {
+  // @@protoc_insertion_point(field_get:CreateGroupRequest.group_desc)
+  return _internal_group_desc();
+}
+inline void CreateGroupRequest::set_group_desc(const std::string& value) {
+  _internal_set_group_desc(value);
+  // @@protoc_insertion_point(field_set:CreateGroupRequest.group_desc)
+}
+inline std::string* CreateGroupRequest::mutable_group_desc() {
+  // @@protoc_insertion_point(field_mutable:CreateGroupRequest.group_desc)
+  return _internal_mutable_group_desc();
+}
+inline const std::string& CreateGroupRequest::_internal_group_desc() const {
+  return group_desc_.GetNoArena();
+}
+inline void CreateGroupRequest::_internal_set_group_desc(const std::string& value) {
+  
+  group_desc_.SetNoArena(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), value);
+}
+inline void CreateGroupRequest::set_group_desc(std::string&& value) {
+  
+  group_desc_.SetNoArena(
+    &::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), ::std::move(value));
+  // @@protoc_insertion_point(field_set_rvalue:CreateGroupRequest.group_desc)
+}
+inline void CreateGroupRequest::set_group_desc(const char* value) {
+  GOOGLE_DCHECK(value != nullptr);
+  
+  group_desc_.SetNoArena(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), ::std::string(value));
+  // @@protoc_insertion_point(field_set_char:CreateGroupRequest.group_desc)
+}
+inline void CreateGroupRequest::set_group_desc(const void* value, size_t size) {
+  
+  group_desc_.SetNoArena(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(),
+      ::std::string(reinterpret_cast<const char*>(value), size));
+  // @@protoc_insertion_point(field_set_pointer:CreateGroupRequest.group_desc)
+}
+inline std::string* CreateGroupRequest::_internal_mutable_group_desc() {
+  
+  return group_desc_.MutableNoArena(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited());
+}
+inline std::string* CreateGroupRequest::release_group_desc() {
+  // @@protoc_insertion_point(field_release:CreateGroupRequest.group_desc)
+  
+  return group_desc_.ReleaseNoArena(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited());
+}
+inline void CreateGroupRequest::set_allocated_group_desc(std::string* group_desc) {
+  if (group_desc != nullptr) {
+    
+  } else {
+    
+  }
+  group_desc_.SetAllocatedNoArena(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), group_desc);
+  // @@protoc_insertion_point(field_set_allocated:CreateGroupRequest.group_desc)
 }
 
 // -------------------------------------------------------------------
@@ -1961,293 +2896,317 @@ inline void QuitGroupResponse::set_allocated_res_info(std::string* res_info) {
 
 // -------------------------------------------------------------------
 
-// UserInfo
-
-// int32 id = 1;
-inline void UserInfo::clear_id() {
-  id_ = 0;
-}
-inline ::PROTOBUF_NAMESPACE_ID::int32 UserInfo::_internal_id() const {
-  return id_;
-}
-inline ::PROTOBUF_NAMESPACE_ID::int32 UserInfo::id() const {
-  // @@protoc_insertion_point(field_get:UserInfo.id)
-  return _internal_id();
-}
-inline void UserInfo::_internal_set_id(::PROTOBUF_NAMESPACE_ID::int32 value) {
-  
-  id_ = value;
-}
-inline void UserInfo::set_id(::PROTOBUF_NAMESPACE_ID::int32 value) {
-  _internal_set_id(value);
-  // @@protoc_insertion_point(field_set:UserInfo.id)
-}
-
-// bytes name = 2;
-inline void UserInfo::clear_name() {
-  name_.ClearToEmptyNoArena(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited());
-}
-inline const std::string& UserInfo::name() const {
-  // @@protoc_insertion_point(field_get:UserInfo.name)
-  return _internal_name();
-}
-inline void UserInfo::set_name(const std::string& value) {
-  _internal_set_name(value);
-  // @@protoc_insertion_point(field_set:UserInfo.name)
-}
-inline std::string* UserInfo::mutable_name() {
-  // @@protoc_insertion_point(field_mutable:UserInfo.name)
-  return _internal_mutable_name();
-}
-inline const std::string& UserInfo::_internal_name() const {
-  return name_.GetNoArena();
-}
-inline void UserInfo::_internal_set_name(const std::string& value) {
-  
-  name_.SetNoArena(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), value);
-}
-inline void UserInfo::set_name(std::string&& value) {
-  
-  name_.SetNoArena(
-    &::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), ::std::move(value));
-  // @@protoc_insertion_point(field_set_rvalue:UserInfo.name)
-}
-inline void UserInfo::set_name(const char* value) {
-  GOOGLE_DCHECK(value != nullptr);
-  
-  name_.SetNoArena(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), ::std::string(value));
-  // @@protoc_insertion_point(field_set_char:UserInfo.name)
-}
-inline void UserInfo::set_name(const void* value, size_t size) {
-  
-  name_.SetNoArena(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(),
-      ::std::string(reinterpret_cast<const char*>(value), size));
-  // @@protoc_insertion_point(field_set_pointer:UserInfo.name)
-}
-inline std::string* UserInfo::_internal_mutable_name() {
-  
-  return name_.MutableNoArena(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited());
-}
-inline std::string* UserInfo::release_name() {
-  // @@protoc_insertion_point(field_release:UserInfo.name)
-  
-  return name_.ReleaseNoArena(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited());
-}
-inline void UserInfo::set_allocated_name(std::string* name) {
-  if (name != nullptr) {
-    
-  } else {
-    
-  }
-  name_.SetAllocatedNoArena(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), name);
-  // @@protoc_insertion_point(field_set_allocated:UserInfo.name)
-}
-
-// bytes state = 3;
-inline void UserInfo::clear_state() {
-  state_.ClearToEmptyNoArena(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited());
-}
-inline const std::string& UserInfo::state() const {
-  // @@protoc_insertion_point(field_get:UserInfo.state)
-  return _internal_state();
-}
-inline void UserInfo::set_state(const std::string& value) {
-  _internal_set_state(value);
-  // @@protoc_insertion_point(field_set:UserInfo.state)
-}
-inline std::string* UserInfo::mutable_state() {
-  // @@protoc_insertion_point(field_mutable:UserInfo.state)
-  return _internal_mutable_state();
-}
-inline const std::string& UserInfo::_internal_state() const {
-  return state_.GetNoArena();
-}
-inline void UserInfo::_internal_set_state(const std::string& value) {
-  
-  state_.SetNoArena(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), value);
-}
-inline void UserInfo::set_state(std::string&& value) {
-  
-  state_.SetNoArena(
-    &::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), ::std::move(value));
-  // @@protoc_insertion_point(field_set_rvalue:UserInfo.state)
-}
-inline void UserInfo::set_state(const char* value) {
-  GOOGLE_DCHECK(value != nullptr);
-  
-  state_.SetNoArena(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), ::std::string(value));
-  // @@protoc_insertion_point(field_set_char:UserInfo.state)
-}
-inline void UserInfo::set_state(const void* value, size_t size) {
-  
-  state_.SetNoArena(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(),
-      ::std::string(reinterpret_cast<const char*>(value), size));
-  // @@protoc_insertion_point(field_set_pointer:UserInfo.state)
-}
-inline std::string* UserInfo::_internal_mutable_state() {
-  
-  return state_.MutableNoArena(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited());
-}
-inline std::string* UserInfo::release_state() {
-  // @@protoc_insertion_point(field_release:UserInfo.state)
-  
-  return state_.ReleaseNoArena(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited());
-}
-inline void UserInfo::set_allocated_state(std::string* state) {
-  if (state != nullptr) {
-    
-  } else {
-    
-  }
-  state_.SetAllocatedNoArena(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), state);
-  // @@protoc_insertion_point(field_set_allocated:UserInfo.state)
-}
-
-// -------------------------------------------------------------------
-
-// GetGroupUsersRequest
+// GetGroupInfoRequest
 
 // int32 group_id = 1;
-inline void GetGroupUsersRequest::clear_group_id() {
+inline void GetGroupInfoRequest::clear_group_id() {
   group_id_ = 0;
 }
-inline ::PROTOBUF_NAMESPACE_ID::int32 GetGroupUsersRequest::_internal_group_id() const {
+inline ::PROTOBUF_NAMESPACE_ID::int32 GetGroupInfoRequest::_internal_group_id() const {
   return group_id_;
 }
-inline ::PROTOBUF_NAMESPACE_ID::int32 GetGroupUsersRequest::group_id() const {
-  // @@protoc_insertion_point(field_get:GetGroupUsersRequest.group_id)
+inline ::PROTOBUF_NAMESPACE_ID::int32 GetGroupInfoRequest::group_id() const {
+  // @@protoc_insertion_point(field_get:GetGroupInfoRequest.group_id)
   return _internal_group_id();
 }
-inline void GetGroupUsersRequest::_internal_set_group_id(::PROTOBUF_NAMESPACE_ID::int32 value) {
+inline void GetGroupInfoRequest::_internal_set_group_id(::PROTOBUF_NAMESPACE_ID::int32 value) {
   
   group_id_ = value;
 }
-inline void GetGroupUsersRequest::set_group_id(::PROTOBUF_NAMESPACE_ID::int32 value) {
+inline void GetGroupInfoRequest::set_group_id(::PROTOBUF_NAMESPACE_ID::int32 value) {
   _internal_set_group_id(value);
-  // @@protoc_insertion_point(field_set:GetGroupUsersRequest.group_id)
+  // @@protoc_insertion_point(field_set:GetGroupInfoRequest.group_id)
 }
 
 // -------------------------------------------------------------------
 
-// GetGroupUsersResponse
+// GetGroupInfoResponse
 
 // int32 ret_code = 1;
-inline void GetGroupUsersResponse::clear_ret_code() {
+inline void GetGroupInfoResponse::clear_ret_code() {
   ret_code_ = 0;
 }
-inline ::PROTOBUF_NAMESPACE_ID::int32 GetGroupUsersResponse::_internal_ret_code() const {
+inline ::PROTOBUF_NAMESPACE_ID::int32 GetGroupInfoResponse::_internal_ret_code() const {
   return ret_code_;
 }
-inline ::PROTOBUF_NAMESPACE_ID::int32 GetGroupUsersResponse::ret_code() const {
-  // @@protoc_insertion_point(field_get:GetGroupUsersResponse.ret_code)
+inline ::PROTOBUF_NAMESPACE_ID::int32 GetGroupInfoResponse::ret_code() const {
+  // @@protoc_insertion_point(field_get:GetGroupInfoResponse.ret_code)
   return _internal_ret_code();
 }
-inline void GetGroupUsersResponse::_internal_set_ret_code(::PROTOBUF_NAMESPACE_ID::int32 value) {
+inline void GetGroupInfoResponse::_internal_set_ret_code(::PROTOBUF_NAMESPACE_ID::int32 value) {
   
   ret_code_ = value;
 }
-inline void GetGroupUsersResponse::set_ret_code(::PROTOBUF_NAMESPACE_ID::int32 value) {
+inline void GetGroupInfoResponse::set_ret_code(::PROTOBUF_NAMESPACE_ID::int32 value) {
   _internal_set_ret_code(value);
-  // @@protoc_insertion_point(field_set:GetGroupUsersResponse.ret_code)
+  // @@protoc_insertion_point(field_set:GetGroupInfoResponse.ret_code)
 }
 
 // string res_info = 2;
-inline void GetGroupUsersResponse::clear_res_info() {
+inline void GetGroupInfoResponse::clear_res_info() {
   res_info_.ClearToEmptyNoArena(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited());
 }
-inline const std::string& GetGroupUsersResponse::res_info() const {
-  // @@protoc_insertion_point(field_get:GetGroupUsersResponse.res_info)
+inline const std::string& GetGroupInfoResponse::res_info() const {
+  // @@protoc_insertion_point(field_get:GetGroupInfoResponse.res_info)
   return _internal_res_info();
 }
-inline void GetGroupUsersResponse::set_res_info(const std::string& value) {
+inline void GetGroupInfoResponse::set_res_info(const std::string& value) {
   _internal_set_res_info(value);
-  // @@protoc_insertion_point(field_set:GetGroupUsersResponse.res_info)
+  // @@protoc_insertion_point(field_set:GetGroupInfoResponse.res_info)
 }
-inline std::string* GetGroupUsersResponse::mutable_res_info() {
-  // @@protoc_insertion_point(field_mutable:GetGroupUsersResponse.res_info)
+inline std::string* GetGroupInfoResponse::mutable_res_info() {
+  // @@protoc_insertion_point(field_mutable:GetGroupInfoResponse.res_info)
   return _internal_mutable_res_info();
 }
-inline const std::string& GetGroupUsersResponse::_internal_res_info() const {
+inline const std::string& GetGroupInfoResponse::_internal_res_info() const {
   return res_info_.GetNoArena();
 }
-inline void GetGroupUsersResponse::_internal_set_res_info(const std::string& value) {
+inline void GetGroupInfoResponse::_internal_set_res_info(const std::string& value) {
   
   res_info_.SetNoArena(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), value);
 }
-inline void GetGroupUsersResponse::set_res_info(std::string&& value) {
+inline void GetGroupInfoResponse::set_res_info(std::string&& value) {
   
   res_info_.SetNoArena(
     &::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), ::std::move(value));
-  // @@protoc_insertion_point(field_set_rvalue:GetGroupUsersResponse.res_info)
+  // @@protoc_insertion_point(field_set_rvalue:GetGroupInfoResponse.res_info)
 }
-inline void GetGroupUsersResponse::set_res_info(const char* value) {
+inline void GetGroupInfoResponse::set_res_info(const char* value) {
   GOOGLE_DCHECK(value != nullptr);
   
   res_info_.SetNoArena(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), ::std::string(value));
-  // @@protoc_insertion_point(field_set_char:GetGroupUsersResponse.res_info)
+  // @@protoc_insertion_point(field_set_char:GetGroupInfoResponse.res_info)
 }
-inline void GetGroupUsersResponse::set_res_info(const char* value, size_t size) {
+inline void GetGroupInfoResponse::set_res_info(const char* value, size_t size) {
   
   res_info_.SetNoArena(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(),
       ::std::string(reinterpret_cast<const char*>(value), size));
-  // @@protoc_insertion_point(field_set_pointer:GetGroupUsersResponse.res_info)
+  // @@protoc_insertion_point(field_set_pointer:GetGroupInfoResponse.res_info)
 }
-inline std::string* GetGroupUsersResponse::_internal_mutable_res_info() {
+inline std::string* GetGroupInfoResponse::_internal_mutable_res_info() {
   
   return res_info_.MutableNoArena(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited());
 }
-inline std::string* GetGroupUsersResponse::release_res_info() {
-  // @@protoc_insertion_point(field_release:GetGroupUsersResponse.res_info)
+inline std::string* GetGroupInfoResponse::release_res_info() {
+  // @@protoc_insertion_point(field_release:GetGroupInfoResponse.res_info)
   
   return res_info_.ReleaseNoArena(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited());
 }
-inline void GetGroupUsersResponse::set_allocated_res_info(std::string* res_info) {
+inline void GetGroupInfoResponse::set_allocated_res_info(std::string* res_info) {
   if (res_info != nullptr) {
     
   } else {
     
   }
   res_info_.SetAllocatedNoArena(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), res_info);
-  // @@protoc_insertion_point(field_set_allocated:GetGroupUsersResponse.res_info)
+  // @@protoc_insertion_point(field_set_allocated:GetGroupInfoResponse.res_info)
 }
 
-// repeated .UserInfo users = 3;
-inline int GetGroupUsersResponse::_internal_users_size() const {
-  return users_.size();
+// .GroupInfo group_info = 3;
+inline bool GetGroupInfoResponse::_internal_has_group_info() const {
+  return this != internal_default_instance() && group_info_ != nullptr;
 }
-inline int GetGroupUsersResponse::users_size() const {
-  return _internal_users_size();
+inline bool GetGroupInfoResponse::has_group_info() const {
+  return _internal_has_group_info();
 }
-inline void GetGroupUsersResponse::clear_users() {
-  users_.Clear();
+inline void GetGroupInfoResponse::clear_group_info() {
+  if (GetArenaNoVirtual() == nullptr && group_info_ != nullptr) {
+    delete group_info_;
+  }
+  group_info_ = nullptr;
 }
-inline ::UserInfo* GetGroupUsersResponse::mutable_users(int index) {
-  // @@protoc_insertion_point(field_mutable:GetGroupUsersResponse.users)
-  return users_.Mutable(index);
+inline const ::GroupInfo& GetGroupInfoResponse::_internal_group_info() const {
+  const ::GroupInfo* p = group_info_;
+  return p != nullptr ? *p : *reinterpret_cast<const ::GroupInfo*>(
+      &::_GroupInfo_default_instance_);
 }
-inline ::PROTOBUF_NAMESPACE_ID::RepeatedPtrField< ::UserInfo >*
-GetGroupUsersResponse::mutable_users() {
-  // @@protoc_insertion_point(field_mutable_list:GetGroupUsersResponse.users)
-  return &users_;
+inline const ::GroupInfo& GetGroupInfoResponse::group_info() const {
+  // @@protoc_insertion_point(field_get:GetGroupInfoResponse.group_info)
+  return _internal_group_info();
 }
-inline const ::UserInfo& GetGroupUsersResponse::_internal_users(int index) const {
-  return users_.Get(index);
+inline ::GroupInfo* GetGroupInfoResponse::release_group_info() {
+  // @@protoc_insertion_point(field_release:GetGroupInfoResponse.group_info)
+  
+  ::GroupInfo* temp = group_info_;
+  group_info_ = nullptr;
+  return temp;
 }
-inline const ::UserInfo& GetGroupUsersResponse::users(int index) const {
-  // @@protoc_insertion_point(field_get:GetGroupUsersResponse.users)
-  return _internal_users(index);
+inline ::GroupInfo* GetGroupInfoResponse::_internal_mutable_group_info() {
+  
+  if (group_info_ == nullptr) {
+    auto* p = CreateMaybeMessage<::GroupInfo>(GetArenaNoVirtual());
+    group_info_ = p;
+  }
+  return group_info_;
 }
-inline ::UserInfo* GetGroupUsersResponse::_internal_add_users() {
-  return users_.Add();
+inline ::GroupInfo* GetGroupInfoResponse::mutable_group_info() {
+  // @@protoc_insertion_point(field_mutable:GetGroupInfoResponse.group_info)
+  return _internal_mutable_group_info();
 }
-inline ::UserInfo* GetGroupUsersResponse::add_users() {
-  // @@protoc_insertion_point(field_add:GetGroupUsersResponse.users)
-  return _internal_add_users();
+inline void GetGroupInfoResponse::set_allocated_group_info(::GroupInfo* group_info) {
+  ::PROTOBUF_NAMESPACE_ID::Arena* message_arena = GetArenaNoVirtual();
+  if (message_arena == nullptr) {
+    delete group_info_;
+  }
+  if (group_info) {
+    ::PROTOBUF_NAMESPACE_ID::Arena* submessage_arena = nullptr;
+    if (message_arena != submessage_arena) {
+      group_info = ::PROTOBUF_NAMESPACE_ID::internal::GetOwnedMessage(
+          message_arena, group_info, submessage_arena);
+    }
+    
+  } else {
+    
+  }
+  group_info_ = group_info;
+  // @@protoc_insertion_point(field_set_allocated:GetGroupInfoResponse.group_info)
 }
-inline const ::PROTOBUF_NAMESPACE_ID::RepeatedPtrField< ::UserInfo >&
-GetGroupUsersResponse::users() const {
-  // @@protoc_insertion_point(field_list:GetGroupUsersResponse.users)
-  return users_;
+
+// -------------------------------------------------------------------
+
+// GetUserGroupsRequest
+
+// int32 user_id = 1;
+inline void GetUserGroupsRequest::clear_user_id() {
+  user_id_ = 0;
+}
+inline ::PROTOBUF_NAMESPACE_ID::int32 GetUserGroupsRequest::_internal_user_id() const {
+  return user_id_;
+}
+inline ::PROTOBUF_NAMESPACE_ID::int32 GetUserGroupsRequest::user_id() const {
+  // @@protoc_insertion_point(field_get:GetUserGroupsRequest.user_id)
+  return _internal_user_id();
+}
+inline void GetUserGroupsRequest::_internal_set_user_id(::PROTOBUF_NAMESPACE_ID::int32 value) {
+  
+  user_id_ = value;
+}
+inline void GetUserGroupsRequest::set_user_id(::PROTOBUF_NAMESPACE_ID::int32 value) {
+  _internal_set_user_id(value);
+  // @@protoc_insertion_point(field_set:GetUserGroupsRequest.user_id)
+}
+
+// -------------------------------------------------------------------
+
+// GetUserGroupsResponse
+
+// int32 ret_code = 1;
+inline void GetUserGroupsResponse::clear_ret_code() {
+  ret_code_ = 0;
+}
+inline ::PROTOBUF_NAMESPACE_ID::int32 GetUserGroupsResponse::_internal_ret_code() const {
+  return ret_code_;
+}
+inline ::PROTOBUF_NAMESPACE_ID::int32 GetUserGroupsResponse::ret_code() const {
+  // @@protoc_insertion_point(field_get:GetUserGroupsResponse.ret_code)
+  return _internal_ret_code();
+}
+inline void GetUserGroupsResponse::_internal_set_ret_code(::PROTOBUF_NAMESPACE_ID::int32 value) {
+  
+  ret_code_ = value;
+}
+inline void GetUserGroupsResponse::set_ret_code(::PROTOBUF_NAMESPACE_ID::int32 value) {
+  _internal_set_ret_code(value);
+  // @@protoc_insertion_point(field_set:GetUserGroupsResponse.ret_code)
+}
+
+// string res_info = 2;
+inline void GetUserGroupsResponse::clear_res_info() {
+  res_info_.ClearToEmptyNoArena(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited());
+}
+inline const std::string& GetUserGroupsResponse::res_info() const {
+  // @@protoc_insertion_point(field_get:GetUserGroupsResponse.res_info)
+  return _internal_res_info();
+}
+inline void GetUserGroupsResponse::set_res_info(const std::string& value) {
+  _internal_set_res_info(value);
+  // @@protoc_insertion_point(field_set:GetUserGroupsResponse.res_info)
+}
+inline std::string* GetUserGroupsResponse::mutable_res_info() {
+  // @@protoc_insertion_point(field_mutable:GetUserGroupsResponse.res_info)
+  return _internal_mutable_res_info();
+}
+inline const std::string& GetUserGroupsResponse::_internal_res_info() const {
+  return res_info_.GetNoArena();
+}
+inline void GetUserGroupsResponse::_internal_set_res_info(const std::string& value) {
+  
+  res_info_.SetNoArena(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), value);
+}
+inline void GetUserGroupsResponse::set_res_info(std::string&& value) {
+  
+  res_info_.SetNoArena(
+    &::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), ::std::move(value));
+  // @@protoc_insertion_point(field_set_rvalue:GetUserGroupsResponse.res_info)
+}
+inline void GetUserGroupsResponse::set_res_info(const char* value) {
+  GOOGLE_DCHECK(value != nullptr);
+  
+  res_info_.SetNoArena(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), ::std::string(value));
+  // @@protoc_insertion_point(field_set_char:GetUserGroupsResponse.res_info)
+}
+inline void GetUserGroupsResponse::set_res_info(const char* value, size_t size) {
+  
+  res_info_.SetNoArena(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(),
+      ::std::string(reinterpret_cast<const char*>(value), size));
+  // @@protoc_insertion_point(field_set_pointer:GetUserGroupsResponse.res_info)
+}
+inline std::string* GetUserGroupsResponse::_internal_mutable_res_info() {
+  
+  return res_info_.MutableNoArena(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited());
+}
+inline std::string* GetUserGroupsResponse::release_res_info() {
+  // @@protoc_insertion_point(field_release:GetUserGroupsResponse.res_info)
+  
+  return res_info_.ReleaseNoArena(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited());
+}
+inline void GetUserGroupsResponse::set_allocated_res_info(std::string* res_info) {
+  if (res_info != nullptr) {
+    
+  } else {
+    
+  }
+  res_info_.SetAllocatedNoArena(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), res_info);
+  // @@protoc_insertion_point(field_set_allocated:GetUserGroupsResponse.res_info)
+}
+
+// repeated .GroupInfo groups = 3;
+inline int GetUserGroupsResponse::_internal_groups_size() const {
+  return groups_.size();
+}
+inline int GetUserGroupsResponse::groups_size() const {
+  return _internal_groups_size();
+}
+inline void GetUserGroupsResponse::clear_groups() {
+  groups_.Clear();
+}
+inline ::GroupInfo* GetUserGroupsResponse::mutable_groups(int index) {
+  // @@protoc_insertion_point(field_mutable:GetUserGroupsResponse.groups)
+  return groups_.Mutable(index);
+}
+inline ::PROTOBUF_NAMESPACE_ID::RepeatedPtrField< ::GroupInfo >*
+GetUserGroupsResponse::mutable_groups() {
+  // @@protoc_insertion_point(field_mutable_list:GetUserGroupsResponse.groups)
+  return &groups_;
+}
+inline const ::GroupInfo& GetUserGroupsResponse::_internal_groups(int index) const {
+  return groups_.Get(index);
+}
+inline const ::GroupInfo& GetUserGroupsResponse::groups(int index) const {
+  // @@protoc_insertion_point(field_get:GetUserGroupsResponse.groups)
+  return _internal_groups(index);
+}
+inline ::GroupInfo* GetUserGroupsResponse::_internal_add_groups() {
+  return groups_.Add();
+}
+inline ::GroupInfo* GetUserGroupsResponse::add_groups() {
+  // @@protoc_insertion_point(field_add:GetUserGroupsResponse.groups)
+  return _internal_add_groups();
+}
+inline const ::PROTOBUF_NAMESPACE_ID::RepeatedPtrField< ::GroupInfo >&
+GetUserGroupsResponse::groups() const {
+  // @@protoc_insertion_point(field_list:GetUserGroupsResponse.groups)
+  return groups_;
 }
 
 #ifdef __GNUC__
@@ -2269,9 +3228,30 @@ GetGroupUsersResponse::users() const {
 
 // -------------------------------------------------------------------
 
+// -------------------------------------------------------------------
+
+// -------------------------------------------------------------------
+
+// -------------------------------------------------------------------
+
 
 // @@protoc_insertion_point(namespace_scope)
 
+
+PROTOBUF_NAMESPACE_OPEN
+
+template <> struct is_proto_enum< ::GroupUserRole> : ::std::true_type {};
+template <>
+inline const EnumDescriptor* GetEnumDescriptor< ::GroupUserRole>() {
+  return ::GroupUserRole_descriptor();
+}
+template <> struct is_proto_enum< ::UserState> : ::std::true_type {};
+template <>
+inline const EnumDescriptor* GetEnumDescriptor< ::UserState>() {
+  return ::UserState_descriptor();
+}
+
+PROTOBUF_NAMESPACE_CLOSE
 
 // @@protoc_insertion_point(global_scope)
 
