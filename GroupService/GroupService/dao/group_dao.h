@@ -20,6 +20,12 @@ public:
     // 加入群组
     bool addGroup(int userid, int groupid, const std::string &role);
 
+    // 查询用户所在组的角色
+    std::string GroupDao::queryGroupUserRole(int userid, int groupid);
+
+    // 退出群组
+    bool quitGroup(int userid, int groupid);
+
     // 查询用户所在群组信息
     std::vector<Group> queryGroups(int userid);
 

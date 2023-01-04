@@ -9,6 +9,10 @@
 #include <corpc/common/log.h>
 #include "GroupService/interface/get_user_groups.h"
 #include "GroupService/pb/GroupService.pb.h"
+#include "GroupService/dao/group_dao.h"
+#include "GroupService/common/business_exception.h"
+#include "GroupService/common/const.h"
+#include "GroupService/common/error_code.h"
 
 
 namespace GroupService {
@@ -32,7 +36,35 @@ void GetUserGroupsInterface::run()
     // response_.set_ret_code(0);
     // response_.set_res_info("Succ");
     //
+    int userid = request_.user_id();
 
+    GroupDao dao;
+    for (auto &group : dao.queryGroups(userid)) {
+        ::GroupInfo *groupInfo = response_.add_groups();
+        groupInfo->set_id(group.getId());
+        groupInfo->set_name(group.getName());
+        groupInfo->set_desc(group.getDesc());
+
+        for (const auto &user : group.getUsers()) {
+            ::GroupUserInfo *groupUserInfo = groupInfo->add_users();
+            groupUserInfo->set_id(user.getId());
+            groupUserInfo->set_name(user.getName());
+
+            if (user.getState() == ONLINE_STATE) {
+                groupUserInfo->set_state(::UserState::ONLINE);
+            }
+            else if (user.getState() == OFFLINE_STATE) {
+                groupUserInfo->set_state(::UserState::OFFLINE);
+            }
+
+            if (user.getRole() == CREATOR_ROLE) {
+                groupUserInfo->set_role(::GroupUserRole::CREATOR);
+            }
+            else if (user.getRole() == NORMAL_ROLE) {
+                groupUserInfo->set_role(::GroupUserRole::NORMAL);
+            }
+        }
+    }
 }
 
 }

@@ -9,6 +9,10 @@
 #include <corpc/common/log.h>
 #include "GroupService/interface/quit_group.h"
 #include "GroupService/pb/GroupService.pb.h"
+#include "GroupService/dao/group_dao.h"
+#include "GroupService/common/business_exception.h"
+#include "GroupService/common/const.h"
+#include "GroupService/common/error_code.h"
 
 
 namespace GroupService {
@@ -32,7 +36,20 @@ void QuitGroupInterface::run()
     // response_.set_ret_code(0);
     // response_.set_res_info("Succ");
     //
+    int userid = request_.user_id();
+    int groupid = request_.group_id();
 
+    GroupDao dao;
+    std::string role = dao.queryGroupUserRole(userid, groupid);
+    if (role.empty()) {
+        throw BusinessException(ACCOUNT_NOT_IN_GROUP, getErrorMsg(ACCOUNT_NOT_IN_GROUP), __FILE__, __LINE__);
+    }
+    if (role == CREATOR_ROLE) {
+        throw BusinessException(ACCOUNT_IS_GROUP_CREATOR, getErrorMsg(ACCOUNT_IS_GROUP_CREATOR), __FILE__, __LINE__);
+    }
+    if (!dao.quitGroup(userid, groupid)) {
+        throw BusinessException(ACCOUNT_NOT_IN_GROUP, getErrorMsg(ACCOUNT_NOT_IN_GROUP), __FILE__, __LINE__);
+    }
 }
 
 }

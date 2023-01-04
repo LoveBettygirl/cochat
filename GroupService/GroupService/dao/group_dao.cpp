@@ -1,6 +1,7 @@
 #include <corpc/common/start.h>
 #include "GroupService/dao/group_dao.h"
 #include "GroupService/lib/connection_pool.h"
+#include "GroupService/common/const.h"
 
 namespace GroupService {
 
@@ -38,6 +39,34 @@ bool GroupDao::addGroup(int userid, int groupid, const std::string &role)
     char sql[1024] = {0};
     sprintf(sql, "insert into groupuser values(%d, %d, '%s')",
             groupid, userid, role.c_str());
+
+    return mysql_->update(sql);
+}
+
+std::string GroupDao::queryGroupUserRole(int userid, int groupid)
+{
+    // 1.组装sql语句
+    char sql[1024] = {0};
+    sprintf(sql, "select grouprole from groupuser where userid = %d and groupid = %d", userid, groupid);
+
+    std::string role;
+    MYSQL_RES *res = mysql_->query(sql);
+    if (res != nullptr) {
+        MYSQL_ROW row;
+        // 查出userid所有的群组信息
+        while ((row = mysql_fetch_row(res)) != nullptr) {
+            role = row[0];
+        }
+        mysql_free_result(res);
+    }
+    return role;
+}
+
+bool GroupDao::quitGroup(int userid, int groupid)
+{
+    // 1.组装sql语句
+    char sql[1024] = {0};
+    sprintf(sql, "delete from groupuser where userid = %d and groupid = %d", userid, groupid);
 
     return mysql_->update(sql);
 }

@@ -9,6 +9,11 @@
 #include <corpc/common/log.h>
 #include "GroupService/interface/create_group.h"
 #include "GroupService/pb/GroupService.pb.h"
+#include <string>
+#include "GroupService/dao/group_dao.h"
+#include "GroupService/common/business_exception.h"
+#include "GroupService/common/const.h"
+#include "GroupService/common/error_code.h"
 
 
 namespace GroupService {
@@ -32,7 +37,23 @@ void CreateGroupInterface::run()
     // response_.set_ret_code(0);
     // response_.set_res_info("Succ");
     //
+    int userid = request_.user_id();
+    std::string name = request_.group_name();
+    std::string desc = request_.group_desc();
 
+    // 存储新创建的群组信息
+    Group group(-1, name, desc);
+    GroupDao dao;
+    if (dao.createGroup(group)) {
+        // 存储群组创建人信息
+        if (!dao.addGroup(userid, group.getId(), CREATOR_ROLE)) {
+            throw BusinessException(ACCOUNT_IS_IN_GROUP, getErrorMsg(ACCOUNT_IS_IN_GROUP), __FILE__, __LINE__);
+        }
+        response_.set_group_id(group.getId());
+    }
+    else {
+        throw BusinessException(GROUP_IS_CREATED, getErrorMsg(GROUP_IS_CREATED), __FILE__, __LINE__);
+    }
 }
 
 }
