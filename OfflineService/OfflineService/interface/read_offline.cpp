@@ -9,6 +9,9 @@
 #include <corpc/common/log.h>
 #include "OfflineService/interface/read_offline.h"
 #include "OfflineService/pb/OfflineService.pb.h"
+#include "OfflineService/dao/offline_msg_dao.h"
+#include "OfflineService/common/business_exception.h"
+#include "OfflineService/common/error_code.h"
 
 
 namespace OfflineService {
@@ -32,7 +35,16 @@ void ReadOfflineInterface::run()
     // response_.set_ret_code(0);
     // response_.set_res_info("Succ");
     //
+    int userid = request_.user_id();
 
+    OfflineMsgDao dao;
+    for (const auto &msg : dao.query(userid)) {
+        response_.add_msg(msg.c_str());
+    }
+
+    if (!dao.remove(userid)) {
+        throw BusinessException(REMOVE_OFFLINE_MSG_FAILED, getErrorMsg(REMOVE_OFFLINE_MSG_FAILED), __FILE__, __LINE__);
+    }
 }
 
 }

@@ -9,6 +9,10 @@
 #include <corpc/common/log.h>
 #include "OfflineService/interface/write_offline.h"
 #include "OfflineService/pb/OfflineService.pb.h"
+#include "OfflineService/dao/offline_msg_dao.h"
+#include "OfflineService/common/business_exception.h"
+#include "OfflineService/common/error_code.h"
+#include <string>
 
 
 namespace OfflineService {
@@ -32,7 +36,13 @@ void WriteOfflineInterface::run()
     // response_.set_ret_code(0);
     // response_.set_res_info("Succ");
     //
+    int userid = request_.user_id();
+    std::string msg = request_.msg();
 
+    OfflineMsgDao dao;
+    if (!dao.insert(userid, msg)) {
+        throw BusinessException(WRITE_OFFLINE_MSG_FAILED, getErrorMsg(WRITE_OFFLINE_MSG_FAILED), __FILE__, __LINE__);
+    }
 }
 
 }
