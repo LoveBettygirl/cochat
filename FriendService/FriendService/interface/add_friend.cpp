@@ -35,7 +35,7 @@ void AddFriendInterface::run()
     // response_.set_ret_code(0);
     // response_.set_res_info("Succ");
     //
-    int userid = request_.my_id();
+    int userid = request_.user_id();
     int friendid = request_.friend_id();
 
     FriendDao dao;

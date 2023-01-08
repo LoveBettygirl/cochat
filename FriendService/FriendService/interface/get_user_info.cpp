@@ -12,6 +12,7 @@
 #include "FriendService/dao/user_dao.h"
 #include "FriendService/common/business_exception.h"
 #include "FriendService/common/error_code.h"
+#include "FriendService/common/const.h"
 
 
 namespace FriendService {
@@ -35,15 +36,23 @@ void GetUserInfoInterface::run()
     // response_.set_ret_code(0);
     // response_.set_res_info("Succ");
     //
-    int userid = request_.id();
+    int userid = request_.user_id();
+
     UserDao dao;
     User user = dao.queryInfo(userid);
-    if (user.getState() == "not_exist") {
+    if (user.getState() == NOT_EXIST_STATE) {
         throw BusinessException(ACCOUNT_NOT_EXIST, getErrorMsg(ACCOUNT_NOT_EXIST), __FILE__, __LINE__);
     }
-    response_.set_id(user.getId());
-    response_.set_name(user.getName());
-    response_.set_state(user.getState());
+    ::UserInfo *info = response_.mutable_user();
+    info->set_id(user.getId());
+    info->set_name(user.getName());
+
+    if (user.getState() == ONLINE_STATE) {
+        info->set_state(::UserState::ONLINE);
+    }
+    else if (user.getState() == OFFLINE_STATE) {
+        info->set_state(::UserState::OFFLINE);
+    }
 }
 
 }
