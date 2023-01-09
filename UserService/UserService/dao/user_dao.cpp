@@ -1,6 +1,7 @@
 #include <corpc/common/start.h>
 #include "UserService/dao/user_dao.h"
 #include "UserService/lib/connection_pool.h"
+#include "UserService/common/const.h"
 
 namespace UserService {
 
@@ -52,8 +53,8 @@ User UserDao::queryInfo(int id)
             return user;
         }
     }
-    redis_->set("state:" + std::to_string(id), "not_exist");
-    return User(id, "", "", "not_exist");
+    redis_->set("state:" + std::to_string(id), NOT_EXIST_STATE);
+    return User(id, "", "", NOT_EXIST_STATE);
 }
 
 // 查询用户状态信息
@@ -82,8 +83,8 @@ User UserDao::queryState(int id)
             return user;
         }
     }
-    redis_->set("state:" + std::to_string(id), "not_exist");
-    return User(id, "", "", "not_exist");
+    redis_->set("state:" + std::to_string(id), NOT_EXIST_STATE);
+    return User(id, "", "", NOT_EXIST_STATE);
 }
 
 // 更新用户的状态信息

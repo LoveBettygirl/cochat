@@ -35,8 +35,8 @@ void RegisterInterface::run()
     // response_.set_ret_code(0);
     // response_.set_res_info("Succ");
     //
-    std::string name = request_.name();
-    std::string pwd = request_.password();
+    std::string name = request_.user_name();
+    std::string pwd = request_.user_password();
 
     User user;
     user.setName(name);
@@ -44,7 +44,7 @@ void RegisterInterface::run()
     UserDao dao;
     if (dao.insert(user)) {
         // 注册成功
-        response_.set_id(user.getId());
+        response_.set_user_id(user.getId());
     }
     else {
         // 注册失败

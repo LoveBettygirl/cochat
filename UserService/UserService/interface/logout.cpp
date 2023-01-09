@@ -12,6 +12,7 @@
 #include "UserService/dao/user_dao.h"
 #include "UserService/common/business_exception.h"
 #include "UserService/common/error_code.h"
+#include "UserService/common/const.h"
 
 
 namespace UserService {
@@ -35,10 +36,10 @@ void LogoutInterface::run()
     // response_.set_ret_code(0);
     // response_.set_res_info("Succ");
     //
-    int id = request_.id();
+    int id = request_.user_id();
     UserDao dao;
     User user = dao.queryState(id);
-    if (user.getState() != "online") {
+    if (user.getState() != ONLINE_STATE) {
         throw BusinessException(ACCOUNT_LOGGED_OUT, getErrorMsg(ACCOUNT_LOGGED_OUT), __FILE__, __LINE__);
     }
     if (!dao.updateState(user)) {

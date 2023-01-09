@@ -190,32 +190,32 @@ class LoginRequest :
   // accessors -------------------------------------------------------
 
   enum : int {
-    kPasswordFieldNumber = 2,
-    kIdFieldNumber = 1,
+    kUserPasswordFieldNumber = 2,
+    kUserIdFieldNumber = 1,
   };
-  // bytes password = 2;
-  void clear_password();
-  const std::string& password() const;
-  void set_password(const std::string& value);
-  void set_password(std::string&& value);
-  void set_password(const char* value);
-  void set_password(const void* value, size_t size);
-  std::string* mutable_password();
-  std::string* release_password();
-  void set_allocated_password(std::string* password);
+  // bytes user_password = 2;
+  void clear_user_password();
+  const std::string& user_password() const;
+  void set_user_password(const std::string& value);
+  void set_user_password(std::string&& value);
+  void set_user_password(const char* value);
+  void set_user_password(const void* value, size_t size);
+  std::string* mutable_user_password();
+  std::string* release_user_password();
+  void set_allocated_user_password(std::string* user_password);
   private:
-  const std::string& _internal_password() const;
-  void _internal_set_password(const std::string& value);
-  std::string* _internal_mutable_password();
+  const std::string& _internal_user_password() const;
+  void _internal_set_user_password(const std::string& value);
+  std::string* _internal_mutable_user_password();
   public:
 
-  // int32 id = 1;
-  void clear_id();
-  ::PROTOBUF_NAMESPACE_ID::int32 id() const;
-  void set_id(::PROTOBUF_NAMESPACE_ID::int32 value);
+  // int32 user_id = 1;
+  void clear_user_id();
+  ::PROTOBUF_NAMESPACE_ID::int32 user_id() const;
+  void set_user_id(::PROTOBUF_NAMESPACE_ID::int32 value);
   private:
-  ::PROTOBUF_NAMESPACE_ID::int32 _internal_id() const;
-  void _internal_set_id(::PROTOBUF_NAMESPACE_ID::int32 value);
+  ::PROTOBUF_NAMESPACE_ID::int32 _internal_user_id() const;
+  void _internal_set_user_id(::PROTOBUF_NAMESPACE_ID::int32 value);
   public:
 
   // @@protoc_insertion_point(class_scope:LoginRequest)
@@ -223,8 +223,8 @@ class LoginRequest :
   class _Internal;
 
   ::PROTOBUF_NAMESPACE_ID::internal::InternalMetadataWithArena _internal_metadata_;
-  ::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr password_;
-  ::PROTOBUF_NAMESPACE_ID::int32 id_;
+  ::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr user_password_;
+  ::PROTOBUF_NAMESPACE_ID::int32 user_id_;
   mutable ::PROTOBUF_NAMESPACE_ID::internal::CachedSize _cached_size_;
   friend struct ::TableStruct_UserService_2eproto;
 };
@@ -482,39 +482,39 @@ class RegisterRequest :
   // accessors -------------------------------------------------------
 
   enum : int {
-    kNameFieldNumber = 1,
-    kPasswordFieldNumber = 2,
+    kUserNameFieldNumber = 1,
+    kUserPasswordFieldNumber = 2,
   };
-  // bytes name = 1;
-  void clear_name();
-  const std::string& name() const;
-  void set_name(const std::string& value);
-  void set_name(std::string&& value);
-  void set_name(const char* value);
-  void set_name(const void* value, size_t size);
-  std::string* mutable_name();
-  std::string* release_name();
-  void set_allocated_name(std::string* name);
+  // bytes user_name = 1;
+  void clear_user_name();
+  const std::string& user_name() const;
+  void set_user_name(const std::string& value);
+  void set_user_name(std::string&& value);
+  void set_user_name(const char* value);
+  void set_user_name(const void* value, size_t size);
+  std::string* mutable_user_name();
+  std::string* release_user_name();
+  void set_allocated_user_name(std::string* user_name);
   private:
-  const std::string& _internal_name() const;
-  void _internal_set_name(const std::string& value);
-  std::string* _internal_mutable_name();
+  const std::string& _internal_user_name() const;
+  void _internal_set_user_name(const std::string& value);
+  std::string* _internal_mutable_user_name();
   public:
 
-  // bytes password = 2;
-  void clear_password();
-  const std::string& password() const;
-  void set_password(const std::string& value);
-  void set_password(std::string&& value);
-  void set_password(const char* value);
-  void set_password(const void* value, size_t size);
-  std::string* mutable_password();
-  std::string* release_password();
-  void set_allocated_password(std::string* password);
+  // bytes user_password = 2;
+  void clear_user_password();
+  const std::string& user_password() const;
+  void set_user_password(const std::string& value);
+  void set_user_password(std::string&& value);
+  void set_user_password(const char* value);
+  void set_user_password(const void* value, size_t size);
+  std::string* mutable_user_password();
+  std::string* release_user_password();
+  void set_allocated_user_password(std::string* user_password);
   private:
-  const std::string& _internal_password() const;
-  void _internal_set_password(const std::string& value);
-  std::string* _internal_mutable_password();
+  const std::string& _internal_user_password() const;
+  void _internal_set_user_password(const std::string& value);
+  std::string* _internal_mutable_user_password();
   public:
 
   // @@protoc_insertion_point(class_scope:RegisterRequest)
@@ -522,8 +522,8 @@ class RegisterRequest :
   class _Internal;
 
   ::PROTOBUF_NAMESPACE_ID::internal::InternalMetadataWithArena _internal_metadata_;
-  ::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr name_;
-  ::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr password_;
+  ::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr user_name_;
+  ::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr user_password_;
   mutable ::PROTOBUF_NAMESPACE_ID::internal::CachedSize _cached_size_;
   friend struct ::TableStruct_UserService_2eproto;
 };
@@ -637,7 +637,7 @@ class RegisterResponse :
   enum : int {
     kResInfoFieldNumber = 2,
     kRetCodeFieldNumber = 1,
-    kIdFieldNumber = 3,
+    kUserIdFieldNumber = 3,
   };
   // string res_info = 2;
   void clear_res_info();
@@ -664,13 +664,13 @@ class RegisterResponse :
   void _internal_set_ret_code(::PROTOBUF_NAMESPACE_ID::int32 value);
   public:
 
-  // int32 id = 3;
-  void clear_id();
-  ::PROTOBUF_NAMESPACE_ID::int32 id() const;
-  void set_id(::PROTOBUF_NAMESPACE_ID::int32 value);
+  // int32 user_id = 3;
+  void clear_user_id();
+  ::PROTOBUF_NAMESPACE_ID::int32 user_id() const;
+  void set_user_id(::PROTOBUF_NAMESPACE_ID::int32 value);
   private:
-  ::PROTOBUF_NAMESPACE_ID::int32 _internal_id() const;
-  void _internal_set_id(::PROTOBUF_NAMESPACE_ID::int32 value);
+  ::PROTOBUF_NAMESPACE_ID::int32 _internal_user_id() const;
+  void _internal_set_user_id(::PROTOBUF_NAMESPACE_ID::int32 value);
   public:
 
   // @@protoc_insertion_point(class_scope:RegisterResponse)
@@ -680,7 +680,7 @@ class RegisterResponse :
   ::PROTOBUF_NAMESPACE_ID::internal::InternalMetadataWithArena _internal_metadata_;
   ::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr res_info_;
   ::PROTOBUF_NAMESPACE_ID::int32 ret_code_;
-  ::PROTOBUF_NAMESPACE_ID::int32 id_;
+  ::PROTOBUF_NAMESPACE_ID::int32 user_id_;
   mutable ::PROTOBUF_NAMESPACE_ID::internal::CachedSize _cached_size_;
   friend struct ::TableStruct_UserService_2eproto;
 };
@@ -792,15 +792,15 @@ class LogoutRequest :
   // accessors -------------------------------------------------------
 
   enum : int {
-    kIdFieldNumber = 1,
+    kUserIdFieldNumber = 1,
   };
-  // int32 id = 1;
-  void clear_id();
-  ::PROTOBUF_NAMESPACE_ID::int32 id() const;
-  void set_id(::PROTOBUF_NAMESPACE_ID::int32 value);
+  // int32 user_id = 1;
+  void clear_user_id();
+  ::PROTOBUF_NAMESPACE_ID::int32 user_id() const;
+  void set_user_id(::PROTOBUF_NAMESPACE_ID::int32 value);
   private:
-  ::PROTOBUF_NAMESPACE_ID::int32 _internal_id() const;
-  void _internal_set_id(::PROTOBUF_NAMESPACE_ID::int32 value);
+  ::PROTOBUF_NAMESPACE_ID::int32 _internal_user_id() const;
+  void _internal_set_user_id(::PROTOBUF_NAMESPACE_ID::int32 value);
   public:
 
   // @@protoc_insertion_point(class_scope:LogoutRequest)
@@ -808,7 +808,7 @@ class LogoutRequest :
   class _Internal;
 
   ::PROTOBUF_NAMESPACE_ID::internal::InternalMetadataWithArena _internal_metadata_;
-  ::PROTOBUF_NAMESPACE_ID::int32 id_;
+  ::PROTOBUF_NAMESPACE_ID::int32 user_id_;
   mutable ::PROTOBUF_NAMESPACE_ID::internal::CachedSize _cached_size_;
   friend struct ::TableStruct_UserService_2eproto;
 };
@@ -1044,84 +1044,84 @@ class UserServiceRpc_Stub : public UserServiceRpc {
 #endif  // __GNUC__
 // LoginRequest
 
-// int32 id = 1;
-inline void LoginRequest::clear_id() {
-  id_ = 0;
+// int32 user_id = 1;
+inline void LoginRequest::clear_user_id() {
+  user_id_ = 0;
 }
-inline ::PROTOBUF_NAMESPACE_ID::int32 LoginRequest::_internal_id() const {
-  return id_;
+inline ::PROTOBUF_NAMESPACE_ID::int32 LoginRequest::_internal_user_id() const {
+  return user_id_;
 }
-inline ::PROTOBUF_NAMESPACE_ID::int32 LoginRequest::id() const {
-  // @@protoc_insertion_point(field_get:LoginRequest.id)
-  return _internal_id();
+inline ::PROTOBUF_NAMESPACE_ID::int32 LoginRequest::user_id() const {
+  // @@protoc_insertion_point(field_get:LoginRequest.user_id)
+  return _internal_user_id();
 }
-inline void LoginRequest::_internal_set_id(::PROTOBUF_NAMESPACE_ID::int32 value) {
+inline void LoginRequest::_internal_set_user_id(::PROTOBUF_NAMESPACE_ID::int32 value) {
   
-  id_ = value;
+  user_id_ = value;
 }
-inline void LoginRequest::set_id(::PROTOBUF_NAMESPACE_ID::int32 value) {
-  _internal_set_id(value);
-  // @@protoc_insertion_point(field_set:LoginRequest.id)
+inline void LoginRequest::set_user_id(::PROTOBUF_NAMESPACE_ID::int32 value) {
+  _internal_set_user_id(value);
+  // @@protoc_insertion_point(field_set:LoginRequest.user_id)
 }
 
-// bytes password = 2;
-inline void LoginRequest::clear_password() {
-  password_.ClearToEmptyNoArena(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited());
+// bytes user_password = 2;
+inline void LoginRequest::clear_user_password() {
+  user_password_.ClearToEmptyNoArena(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited());
 }
-inline const std::string& LoginRequest::password() const {
-  // @@protoc_insertion_point(field_get:LoginRequest.password)
-  return _internal_password();
+inline const std::string& LoginRequest::user_password() const {
+  // @@protoc_insertion_point(field_get:LoginRequest.user_password)
+  return _internal_user_password();
 }
-inline void LoginRequest::set_password(const std::string& value) {
-  _internal_set_password(value);
-  // @@protoc_insertion_point(field_set:LoginRequest.password)
+inline void LoginRequest::set_user_password(const std::string& value) {
+  _internal_set_user_password(value);
+  // @@protoc_insertion_point(field_set:LoginRequest.user_password)
 }
-inline std::string* LoginRequest::mutable_password() {
-  // @@protoc_insertion_point(field_mutable:LoginRequest.password)
-  return _internal_mutable_password();
+inline std::string* LoginRequest::mutable_user_password() {
+  // @@protoc_insertion_point(field_mutable:LoginRequest.user_password)
+  return _internal_mutable_user_password();
 }
-inline const std::string& LoginRequest::_internal_password() const {
-  return password_.GetNoArena();
+inline const std::string& LoginRequest::_internal_user_password() const {
+  return user_password_.GetNoArena();
 }
-inline void LoginRequest::_internal_set_password(const std::string& value) {
+inline void LoginRequest::_internal_set_user_password(const std::string& value) {
   
-  password_.SetNoArena(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), value);
+  user_password_.SetNoArena(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), value);
 }
-inline void LoginRequest::set_password(std::string&& value) {
+inline void LoginRequest::set_user_password(std::string&& value) {
   
-  password_.SetNoArena(
+  user_password_.SetNoArena(
     &::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), ::std::move(value));
-  // @@protoc_insertion_point(field_set_rvalue:LoginRequest.password)
+  // @@protoc_insertion_point(field_set_rvalue:LoginRequest.user_password)
 }
-inline void LoginRequest::set_password(const char* value) {
+inline void LoginRequest::set_user_password(const char* value) {
   GOOGLE_DCHECK(value != nullptr);
   
-  password_.SetNoArena(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), ::std::string(value));
-  // @@protoc_insertion_point(field_set_char:LoginRequest.password)
+  user_password_.SetNoArena(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), ::std::string(value));
+  // @@protoc_insertion_point(field_set_char:LoginRequest.user_password)
 }
-inline void LoginRequest::set_password(const void* value, size_t size) {
+inline void LoginRequest::set_user_password(const void* value, size_t size) {
   
-  password_.SetNoArena(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(),
+  user_password_.SetNoArena(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(),
       ::std::string(reinterpret_cast<const char*>(value), size));
-  // @@protoc_insertion_point(field_set_pointer:LoginRequest.password)
+  // @@protoc_insertion_point(field_set_pointer:LoginRequest.user_password)
 }
-inline std::string* LoginRequest::_internal_mutable_password() {
+inline std::string* LoginRequest::_internal_mutable_user_password() {
   
-  return password_.MutableNoArena(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited());
+  return user_password_.MutableNoArena(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited());
 }
-inline std::string* LoginRequest::release_password() {
-  // @@protoc_insertion_point(field_release:LoginRequest.password)
+inline std::string* LoginRequest::release_user_password() {
+  // @@protoc_insertion_point(field_release:LoginRequest.user_password)
   
-  return password_.ReleaseNoArena(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited());
+  return user_password_.ReleaseNoArena(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited());
 }
-inline void LoginRequest::set_allocated_password(std::string* password) {
-  if (password != nullptr) {
+inline void LoginRequest::set_allocated_user_password(std::string* user_password) {
+  if (user_password != nullptr) {
     
   } else {
     
   }
-  password_.SetAllocatedNoArena(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), password);
-  // @@protoc_insertion_point(field_set_allocated:LoginRequest.password)
+  user_password_.SetAllocatedNoArena(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), user_password);
+  // @@protoc_insertion_point(field_set_allocated:LoginRequest.user_password)
 }
 
 // -------------------------------------------------------------------
@@ -1212,124 +1212,124 @@ inline void LoginResponse::set_allocated_res_info(std::string* res_info) {
 
 // RegisterRequest
 
-// bytes name = 1;
-inline void RegisterRequest::clear_name() {
-  name_.ClearToEmptyNoArena(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited());
+// bytes user_name = 1;
+inline void RegisterRequest::clear_user_name() {
+  user_name_.ClearToEmptyNoArena(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited());
 }
-inline const std::string& RegisterRequest::name() const {
-  // @@protoc_insertion_point(field_get:RegisterRequest.name)
-  return _internal_name();
+inline const std::string& RegisterRequest::user_name() const {
+  // @@protoc_insertion_point(field_get:RegisterRequest.user_name)
+  return _internal_user_name();
 }
-inline void RegisterRequest::set_name(const std::string& value) {
-  _internal_set_name(value);
-  // @@protoc_insertion_point(field_set:RegisterRequest.name)
+inline void RegisterRequest::set_user_name(const std::string& value) {
+  _internal_set_user_name(value);
+  // @@protoc_insertion_point(field_set:RegisterRequest.user_name)
 }
-inline std::string* RegisterRequest::mutable_name() {
-  // @@protoc_insertion_point(field_mutable:RegisterRequest.name)
-  return _internal_mutable_name();
+inline std::string* RegisterRequest::mutable_user_name() {
+  // @@protoc_insertion_point(field_mutable:RegisterRequest.user_name)
+  return _internal_mutable_user_name();
 }
-inline const std::string& RegisterRequest::_internal_name() const {
-  return name_.GetNoArena();
+inline const std::string& RegisterRequest::_internal_user_name() const {
+  return user_name_.GetNoArena();
 }
-inline void RegisterRequest::_internal_set_name(const std::string& value) {
+inline void RegisterRequest::_internal_set_user_name(const std::string& value) {
   
-  name_.SetNoArena(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), value);
+  user_name_.SetNoArena(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), value);
 }
-inline void RegisterRequest::set_name(std::string&& value) {
+inline void RegisterRequest::set_user_name(std::string&& value) {
   
-  name_.SetNoArena(
+  user_name_.SetNoArena(
     &::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), ::std::move(value));
-  // @@protoc_insertion_point(field_set_rvalue:RegisterRequest.name)
+  // @@protoc_insertion_point(field_set_rvalue:RegisterRequest.user_name)
 }
-inline void RegisterRequest::set_name(const char* value) {
+inline void RegisterRequest::set_user_name(const char* value) {
   GOOGLE_DCHECK(value != nullptr);
   
-  name_.SetNoArena(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), ::std::string(value));
-  // @@protoc_insertion_point(field_set_char:RegisterRequest.name)
+  user_name_.SetNoArena(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), ::std::string(value));
+  // @@protoc_insertion_point(field_set_char:RegisterRequest.user_name)
 }
-inline void RegisterRequest::set_name(const void* value, size_t size) {
+inline void RegisterRequest::set_user_name(const void* value, size_t size) {
   
-  name_.SetNoArena(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(),
+  user_name_.SetNoArena(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(),
       ::std::string(reinterpret_cast<const char*>(value), size));
-  // @@protoc_insertion_point(field_set_pointer:RegisterRequest.name)
+  // @@protoc_insertion_point(field_set_pointer:RegisterRequest.user_name)
 }
-inline std::string* RegisterRequest::_internal_mutable_name() {
+inline std::string* RegisterRequest::_internal_mutable_user_name() {
   
-  return name_.MutableNoArena(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited());
+  return user_name_.MutableNoArena(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited());
 }
-inline std::string* RegisterRequest::release_name() {
-  // @@protoc_insertion_point(field_release:RegisterRequest.name)
+inline std::string* RegisterRequest::release_user_name() {
+  // @@protoc_insertion_point(field_release:RegisterRequest.user_name)
   
-  return name_.ReleaseNoArena(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited());
+  return user_name_.ReleaseNoArena(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited());
 }
-inline void RegisterRequest::set_allocated_name(std::string* name) {
-  if (name != nullptr) {
+inline void RegisterRequest::set_allocated_user_name(std::string* user_name) {
+  if (user_name != nullptr) {
     
   } else {
     
   }
-  name_.SetAllocatedNoArena(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), name);
-  // @@protoc_insertion_point(field_set_allocated:RegisterRequest.name)
+  user_name_.SetAllocatedNoArena(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), user_name);
+  // @@protoc_insertion_point(field_set_allocated:RegisterRequest.user_name)
 }
 
-// bytes password = 2;
-inline void RegisterRequest::clear_password() {
-  password_.ClearToEmptyNoArena(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited());
+// bytes user_password = 2;
+inline void RegisterRequest::clear_user_password() {
+  user_password_.ClearToEmptyNoArena(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited());
 }
-inline const std::string& RegisterRequest::password() const {
-  // @@protoc_insertion_point(field_get:RegisterRequest.password)
-  return _internal_password();
+inline const std::string& RegisterRequest::user_password() const {
+  // @@protoc_insertion_point(field_get:RegisterRequest.user_password)
+  return _internal_user_password();
 }
-inline void RegisterRequest::set_password(const std::string& value) {
-  _internal_set_password(value);
-  // @@protoc_insertion_point(field_set:RegisterRequest.password)
+inline void RegisterRequest::set_user_password(const std::string& value) {
+  _internal_set_user_password(value);
+  // @@protoc_insertion_point(field_set:RegisterRequest.user_password)
 }
-inline std::string* RegisterRequest::mutable_password() {
-  // @@protoc_insertion_point(field_mutable:RegisterRequest.password)
-  return _internal_mutable_password();
+inline std::string* RegisterRequest::mutable_user_password() {
+  // @@protoc_insertion_point(field_mutable:RegisterRequest.user_password)
+  return _internal_mutable_user_password();
 }
-inline const std::string& RegisterRequest::_internal_password() const {
-  return password_.GetNoArena();
+inline const std::string& RegisterRequest::_internal_user_password() const {
+  return user_password_.GetNoArena();
 }
-inline void RegisterRequest::_internal_set_password(const std::string& value) {
+inline void RegisterRequest::_internal_set_user_password(const std::string& value) {
   
-  password_.SetNoArena(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), value);
+  user_password_.SetNoArena(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), value);
 }
-inline void RegisterRequest::set_password(std::string&& value) {
+inline void RegisterRequest::set_user_password(std::string&& value) {
   
-  password_.SetNoArena(
+  user_password_.SetNoArena(
     &::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), ::std::move(value));
-  // @@protoc_insertion_point(field_set_rvalue:RegisterRequest.password)
+  // @@protoc_insertion_point(field_set_rvalue:RegisterRequest.user_password)
 }
-inline void RegisterRequest::set_password(const char* value) {
+inline void RegisterRequest::set_user_password(const char* value) {
   GOOGLE_DCHECK(value != nullptr);
   
-  password_.SetNoArena(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), ::std::string(value));
-  // @@protoc_insertion_point(field_set_char:RegisterRequest.password)
+  user_password_.SetNoArena(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), ::std::string(value));
+  // @@protoc_insertion_point(field_set_char:RegisterRequest.user_password)
 }
-inline void RegisterRequest::set_password(const void* value, size_t size) {
+inline void RegisterRequest::set_user_password(const void* value, size_t size) {
   
-  password_.SetNoArena(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(),
+  user_password_.SetNoArena(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(),
       ::std::string(reinterpret_cast<const char*>(value), size));
-  // @@protoc_insertion_point(field_set_pointer:RegisterRequest.password)
+  // @@protoc_insertion_point(field_set_pointer:RegisterRequest.user_password)
 }
-inline std::string* RegisterRequest::_internal_mutable_password() {
+inline std::string* RegisterRequest::_internal_mutable_user_password() {
   
-  return password_.MutableNoArena(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited());
+  return user_password_.MutableNoArena(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited());
 }
-inline std::string* RegisterRequest::release_password() {
-  // @@protoc_insertion_point(field_release:RegisterRequest.password)
+inline std::string* RegisterRequest::release_user_password() {
+  // @@protoc_insertion_point(field_release:RegisterRequest.user_password)
   
-  return password_.ReleaseNoArena(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited());
+  return user_password_.ReleaseNoArena(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited());
 }
-inline void RegisterRequest::set_allocated_password(std::string* password) {
-  if (password != nullptr) {
+inline void RegisterRequest::set_allocated_user_password(std::string* user_password) {
+  if (user_password != nullptr) {
     
   } else {
     
   }
-  password_.SetAllocatedNoArena(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), password);
-  // @@protoc_insertion_point(field_set_allocated:RegisterRequest.password)
+  user_password_.SetAllocatedNoArena(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), user_password);
+  // @@protoc_insertion_point(field_set_allocated:RegisterRequest.user_password)
 }
 
 // -------------------------------------------------------------------
@@ -1416,48 +1416,48 @@ inline void RegisterResponse::set_allocated_res_info(std::string* res_info) {
   // @@protoc_insertion_point(field_set_allocated:RegisterResponse.res_info)
 }
 
-// int32 id = 3;
-inline void RegisterResponse::clear_id() {
-  id_ = 0;
+// int32 user_id = 3;
+inline void RegisterResponse::clear_user_id() {
+  user_id_ = 0;
 }
-inline ::PROTOBUF_NAMESPACE_ID::int32 RegisterResponse::_internal_id() const {
-  return id_;
+inline ::PROTOBUF_NAMESPACE_ID::int32 RegisterResponse::_internal_user_id() const {
+  return user_id_;
 }
-inline ::PROTOBUF_NAMESPACE_ID::int32 RegisterResponse::id() const {
-  // @@protoc_insertion_point(field_get:RegisterResponse.id)
-  return _internal_id();
+inline ::PROTOBUF_NAMESPACE_ID::int32 RegisterResponse::user_id() const {
+  // @@protoc_insertion_point(field_get:RegisterResponse.user_id)
+  return _internal_user_id();
 }
-inline void RegisterResponse::_internal_set_id(::PROTOBUF_NAMESPACE_ID::int32 value) {
+inline void RegisterResponse::_internal_set_user_id(::PROTOBUF_NAMESPACE_ID::int32 value) {
   
-  id_ = value;
+  user_id_ = value;
 }
-inline void RegisterResponse::set_id(::PROTOBUF_NAMESPACE_ID::int32 value) {
-  _internal_set_id(value);
-  // @@protoc_insertion_point(field_set:RegisterResponse.id)
+inline void RegisterResponse::set_user_id(::PROTOBUF_NAMESPACE_ID::int32 value) {
+  _internal_set_user_id(value);
+  // @@protoc_insertion_point(field_set:RegisterResponse.user_id)
 }
 
 // -------------------------------------------------------------------
 
 // LogoutRequest
 
-// int32 id = 1;
-inline void LogoutRequest::clear_id() {
-  id_ = 0;
+// int32 user_id = 1;
+inline void LogoutRequest::clear_user_id() {
+  user_id_ = 0;
 }
-inline ::PROTOBUF_NAMESPACE_ID::int32 LogoutRequest::_internal_id() const {
-  return id_;
+inline ::PROTOBUF_NAMESPACE_ID::int32 LogoutRequest::_internal_user_id() const {
+  return user_id_;
 }
-inline ::PROTOBUF_NAMESPACE_ID::int32 LogoutRequest::id() const {
-  // @@protoc_insertion_point(field_get:LogoutRequest.id)
-  return _internal_id();
+inline ::PROTOBUF_NAMESPACE_ID::int32 LogoutRequest::user_id() const {
+  // @@protoc_insertion_point(field_get:LogoutRequest.user_id)
+  return _internal_user_id();
 }
-inline void LogoutRequest::_internal_set_id(::PROTOBUF_NAMESPACE_ID::int32 value) {
+inline void LogoutRequest::_internal_set_user_id(::PROTOBUF_NAMESPACE_ID::int32 value) {
   
-  id_ = value;
+  user_id_ = value;
 }
-inline void LogoutRequest::set_id(::PROTOBUF_NAMESPACE_ID::int32 value) {
-  _internal_set_id(value);
-  // @@protoc_insertion_point(field_set:LogoutRequest.id)
+inline void LogoutRequest::set_user_id(::PROTOBUF_NAMESPACE_ID::int32 value) {
+  _internal_set_user_id(value);
+  // @@protoc_insertion_point(field_set:LogoutRequest.user_id)
 }
 
 // -------------------------------------------------------------------

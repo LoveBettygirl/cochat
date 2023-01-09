@@ -3,8 +3,8 @@ syntax = "proto3";
 option cc_generic_services = true;
 
 message LoginRequest {
-    int32 id = 1;
-    bytes password = 2;
+    int32 user_id = 1;
+    bytes user_password = 2;
 }
 
 message LoginResponse {
@@ -13,18 +13,18 @@ message LoginResponse {
 }
 
 message RegisterRequest {
-    bytes name = 1;
-    bytes password = 2;
+    bytes user_name = 1;
+    bytes user_password = 2;
 }
 
 message RegisterResponse {
     int32 ret_code = 1;
     string res_info = 2;
-    int32 id = 3;
+    int32 user_id = 3;
 }
 
 message LogoutRequest {
-    int32 id = 1;
+    int32 user_id = 1;
 }
 
 message LogoutResponse {
