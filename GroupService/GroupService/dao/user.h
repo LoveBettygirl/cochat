@@ -2,13 +2,14 @@
 #define GROUPSERVICE_DAO_USER_H
 
 #include <string>
+#include "GroupService/common/const.h"
 
 namespace GroupService {
 
 // User表的ORM类
 class User {
 public:
-    User(int id = -1, const std::string &name = "", const std::string &pwd = "", const std::string &state = "offline")
+    User(int id = -1, const std::string &name = "", const std::string &pwd = "", const std::string &state = OFFLINE_STATE)
         : id(id), name(name), password(pwd), state(state) {}
     
     void setId(int id) { this->id = id; }
