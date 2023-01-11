@@ -1,0 +1,28 @@
+syntax = "proto3";
+
+option cc_generic_services = true;
+
+message OneChatRequest {
+    int32 to_user_id = 1;
+    bytes msg = 2;
+}
+
+message OneChatResponse {
+    int32 ret_code = 1;
+    string res_info = 2;
+}
+
+message GroupChatRequest {
+    int32 to_group_id = 1;
+    bytes msg = 2;
+}
+
+message GroupChatResponse {
+    int32 ret_code = 1;
+    string res_info = 2;
+}
+
+service ChatServiceRpc {
+    rpc OneChat(OneChatRequest) returns(OneChatResponse);
+    rpc GroupChat(GroupChatRequest) returns(GroupChatResponse);
+}
