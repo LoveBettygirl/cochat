@@ -74,3 +74,17 @@ redis:
   max_free_time: 60
   # 最大连接超时时间(ms)
   max_connect_timeout: 100
+
+rocketmq_producer:
+  ip: 127.0.0.1
+  port: 9876
+  group: send
+  send_msg_timeout: 1000
+  send_msg_retries: 2
+
+rocketmq_consumer:
+  ip: 127.0.0.1
+  port: 9876
+  group: save_offline_msg
+  message_model: clustering
+  consume_thread_count: 1

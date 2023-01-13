@@ -5,4 +5,4 @@
 
 file(GLOB_RECURSE SRC_LIST *.cpp *.cc *.h *.S)
 add_executable(ChatService ${SRC_LIST})
-target_link_libraries(ChatService corpc pthread yaml-cpp protobuf dl zookeeper_mt)
+target_link_libraries(ChatService corpc pthread yaml-cpp protobuf dl zookeeper_mt mysqlclient hiredis rocketmq z rt)
