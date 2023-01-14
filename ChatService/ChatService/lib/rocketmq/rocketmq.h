@@ -67,10 +67,10 @@ public:
     void start();
 
     // 发送消息
-    void send(const std::string &topic, const std::string &data);
+    bool send(const std::string &topic, const std::string &data);
 
     // 发送消息
-    void send(const std::string &topic, const std::string &tag, const std::string &data);
+    bool send(const std::string &topic, const std::string &tag, const std::string &data);
 
     void shutdown();
 

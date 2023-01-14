@@ -69,7 +69,7 @@ std::string RocketMQProducer::randomString(std::string::size_type len)
     return result;
 }
 
-void RocketMQProducer::send(const std::string &topic, const std::string &data)
+bool RocketMQProducer::send(const std::string &topic, const std::string &data)
 {
     for (int i = 0; i < gRocketMQProducerConfig->sendMsgRetries; i++) {
         std::string tag = "*", key = randomString(32);
@@ -79,7 +79,7 @@ void RocketMQProducer::send(const std::string &topic, const std::string &data)
             rocketmq::SendResult sendResult = producer_->send(msg);
             if (sendResult.getSendStatus() == rocketmq::SEND_OK) {
                 USER_LOG_INFO << "[RocketMQ] send msg success: topic: " << topic << " tag: " << tag << " key: " << key << " data: " << data;
-                break;
+                return true;
             }
             USER_LOG_ERROR << "[RocketMQ] send msg failed: topic: " << topic << " tag: " << tag << " key: " << key << " data: " << data;
         }
@@ -87,9 +87,10 @@ void RocketMQProducer::send(const std::string &topic, const std::string &data)
             USER_LOG_ERROR << "[RocketMQ] send msg failed: topic: " << topic << " tag: " << tag << " key: " << key << " data: " << data << " reason: " << e.what();
         }
     }
+    return false;
 }
 
-void RocketMQProducer::send(const std::string &topic, const std::string &tag, const std::string &data)
+bool RocketMQProducer::send(const std::string &topic, const std::string &tag, const std::string &data)
 {
     for (int i = 0; i < gRocketMQProducerConfig->sendMsgRetries; i++) {
         std::string key = randomString(32);
@@ -99,7 +100,7 @@ void RocketMQProducer::send(const std::string &topic, const std::string &tag, co
             rocketmq::SendResult sendResult = producer_->send(msg);
             if (sendResult.getSendStatus() == rocketmq::SEND_OK) {
                 USER_LOG_INFO << "[RocketMQ] send msg success: topic: " << topic << " tag: " << tag << " key: " << key << " data: " << data;
-                break;
+                return true;
             }
             USER_LOG_ERROR << "[RocketMQ] send msg failed: topic: " << topic << " tag: " << tag << " key: " << key << " data: " << data;
         }
@@ -107,6 +108,7 @@ void RocketMQProducer::send(const std::string &topic, const std::string &tag, co
             USER_LOG_ERROR << "[RocketMQ] send msg failed: topic: " << topic << " tag: " << tag << " key: " << key << " data: " << data << " reason: " << e.what();
         }
     }
+    return false;
 }
 
 void RocketMQProducer::shutdown()
