@@ -112,7 +112,7 @@ Group GroupDao::queryGroup(int groupid)
     return group;
 }
 
-// 查询用户所在群组信息
+// 查询用户所有群组信息
 std::vector<Group> GroupDao::queryGroups(int userid)
 {
     /**
@@ -160,25 +160,6 @@ std::vector<Group> GroupDao::queryGroups(int userid)
         }
     }
     return groupVec;
-}
-
-// 根据指定的groupid查询群组用户列表
-std::vector<int> GroupDao::queryGroupUsers(int userid, int groupid)
-{
-    char sql[1024] = {0};
-    sprintf(sql, "select userid from groupuser where groupid = %d and \
-        exists(select 1 from groupuser where groupid = %d and userid = %d)", groupid, groupid, userid);
-
-    std::vector<int> idVec;
-    MYSQL_RES *res = mysql_->query(sql);
-    if (res != nullptr) {
-        MYSQL_ROW row;
-        while ((row = mysql_fetch_row(res)) != nullptr) {
-            idVec.push_back(atoi(row[0]));
-        }
-        mysql_free_result(res);
-    }
-    return idVec;
 }
 
 }

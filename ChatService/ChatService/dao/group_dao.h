@@ -26,14 +26,11 @@ public:
     // 退出群组
     bool quitGroup(int userid, int groupid);
 
-    // 查询用户所在群组信息
+    // 查询用户所有群组信息
     std::vector<Group> queryGroups(int userid);
 
     // 根据id查询群组
     Group queryGroup(int groupid);
-
-    // 根据指定的groupid查询群组用户列表
-    std::vector<int> queryGroupUsers(int userid, int groupid);
 
 private:
     MySQL::ptr mysql_;
