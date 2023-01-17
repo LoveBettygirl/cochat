@@ -12,13 +12,13 @@ class OfflineMessageDao {
 public:
 
     // 存储用户的离线信息
-    bool insert(const std::string &key, int userid, const std::string &msg);
+    bool insertMessage(const std::string &key, int userid, const std::string &msg);
 
     // 删除用户的所有离线消息
-    bool remove(int userid);
+    bool removeMessage(int userid);
 
     // 查询用户的离线消息
-    std::vector<std::string> query(int userid);
+    std::vector<std::string> queryMessage(int userid);
 
 private:
     MySQL::ptr mysql_;

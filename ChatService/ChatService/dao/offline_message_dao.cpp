@@ -12,7 +12,7 @@ OfflineMessageDao::OfflineMessageDao()
 }
 
 // 存储用户的离线信息
-bool OfflineMessageDao::insert(const std::string &key, int userid, const std::string &msg)
+bool OfflineMessageDao::insertMessage(const std::string &key, int userid, const std::string &msg)
 {
     // 1. 组装sql语句
     char sql[1024] = {0};
@@ -22,7 +22,7 @@ bool OfflineMessageDao::insert(const std::string &key, int userid, const std::st
 }
 
 // 删除用户的所有离线消息
-bool OfflineMessageDao::remove(int userid)
+bool OfflineMessageDao::removeMessage(int userid)
 {
     // 1. 组装sql语句
     char sql[1024] = {0};
@@ -32,7 +32,7 @@ bool OfflineMessageDao::remove(int userid)
 }
 
 // 查询用户的离线消息
-std::vector<std::string> OfflineMessageDao::query(int userid)
+std::vector<std::string> OfflineMessageDao::queryMessage(int userid)
 {
     // 1. 组装sql语句
     char sql[1024] = {0};

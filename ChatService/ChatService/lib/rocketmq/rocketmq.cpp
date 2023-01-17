@@ -1,9 +1,9 @@
 #include "ChatService/lib/rocketmq/rocketmq.h"
 #include <corpc/common/log.h>
-#include <random>
 #include <algorithm>
 #include <string>
 #include <cctype>
+#include "ChatService/utils/id_generator.h"
 
 namespace ChatService {
 
@@ -51,28 +51,10 @@ void RocketMQProducer::start()
     USER_LOG_INFO << "[RocketMQ] start producer";
 }
 
-std::string RocketMQProducer::randomString(std::string::size_type len)
-{
-    static std::string alphaNumeric("0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ");
-    std::string result;
-    result.reserve(len);
-    std::random_device rd;
-    std::mt19937 generator(rd());
-    std::string source(alphaNumeric);
-    std::string::size_type generated = 0;
-    while (generated < len) {
-        std::shuffle(source.begin(), source.end(), generator);
-        std::string::size_type delta = std::min({len - generated, source.length()});
-        result.append(source.substr(0, delta));
-        generated += delta;
-    }
-    return result;
-}
-
 bool RocketMQProducer::send(const std::string &topic, const std::string &data)
 {
     for (int i = 0; i < gRocketMQProducerConfig->sendMsgRetries; i++) {
-        std::string tag = "*", key = randomString(32);
+        std::string tag = "*", key = "Key-" + std::to_string(IDGenerator::getInstance()->getUID(data));
         try {
             rocketmq::MQMessage msg(topic, tag, key, data);
             // 同步生产消息
@@ -93,7 +75,7 @@ bool RocketMQProducer::send(const std::string &topic, const std::string &data)
 bool RocketMQProducer::send(const std::string &topic, const std::string &tag, const std::string &data)
 {
     for (int i = 0; i < gRocketMQProducerConfig->sendMsgRetries; i++) {
-        std::string key = randomString(32);
+        std::string key = "Key-" + std::to_string(IDGenerator::getInstance()->getUID(data));
         try {
             rocketmq::MQMessage msg(topic, tag, key, data);
             // 同步生产消息

@@ -9,6 +9,12 @@
 #include <corpc/common/log.h>
 #include "ChatService/interface/read_offline_message.h"
 #include "ChatService/pb/ChatService.pb.h"
+#include "ChatService/dao/user_dao.h"
+#include "ChatService/dao/offline_message_dao.h"
+#include "ChatService/common/business_exception.h"
+#include "ChatService/common/const.h"
+#include "ChatService/common/error_code.h"
+#include <string>
 
 
 namespace ChatService {
@@ -32,7 +38,24 @@ void ReadOfflineMessageInterface::run()
     // response_.set_ret_code(0);
     // response_.set_res_info("Succ");
     //
+    int userid = request_.user_id();
 
+    UserDao userDao;
+    User user = userDao.queryUserState(userid);
+    if (user.getState() == NOT_EXIST_STATE) {
+        throw BusinessException(ACCOUNT_NOT_EXIST, getErrorMsg(ACCOUNT_NOT_EXIST), __FILE__, __LINE__);
+    }
+
+    OfflineMessageDao dao;
+    std::vector<std::string> msgs = dao.queryMessage(userid);
+    for (const auto &msg : msgs) {
+        response_.add_msgs(msg.c_str());
+    }
+
+    // 查询完离线消息，就删除掉
+    if (!dao.removeMessage(userid)) {
+        throw BusinessException(ACCOUNT_NOT_EXIST, getErrorMsg(ACCOUNT_NOT_EXIST), __FILE__, __LINE__);
+    }
 }
 
 }

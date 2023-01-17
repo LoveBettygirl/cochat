@@ -9,9 +9,18 @@
 #include <corpc/common/log.h>
 #include "ChatService/interface/one_chat.h"
 #include "ChatService/pb/ChatService.pb.h"
+#include "ChatService/lib/rocketmq/rocketmq.h"
+#include "ChatService/dao/user_dao.h"
+#include "ChatService/dao/friend_dao.h"
+#include "ChatService/common/business_exception.h"
+#include "ChatService/common/const.h"
+#include "ChatService/common/error_code.h"
+#include <string>
 
 
 namespace ChatService {
+
+extern RocketMQProducer::ptr gProducer;
 
 OneChatInterface::OneChatInterface(const ::OneChatRequest &request, ::OneChatResponse &response)
     : request_(request), 
@@ -32,7 +41,29 @@ void OneChatInterface::run()
     // response_.set_ret_code(0);
     // response_.set_res_info("Succ");
     //
+    int fromUserId = request_.to_user_id();
+    int toUserId = request_.to_user_id();
+    std::string msg = request_.msg();
 
+    FriendDao friendDao;
+    if (!friendDao.queryFriend(fromUserId, toUserId)) {
+        throw BusinessException(USER_NOT_IN_FRIEND_RELATION, getErrorMsg(USER_NOT_IN_FRIEND_RELATION), __FILE__, __LINE__);
+    }
+
+    UserDao userDao;
+    User user = userDao.queryState(toUserId);
+    if (user.getState() == ONLINE_STATE) {
+        // 用户在线，发送给消息队列的SEND_CHAT_MSG_TOPIC
+        if (!gProducer->send(SEND_CHAT_MSG_TOPIC, std::to_string(toUserId), msg)) {
+            throw BusinessException(SEND_CHAT_MSG_FAILED, getErrorMsg(SEND_CHAT_MSG_FAILED), __FILE__, __LINE__);
+        }
+    }
+    else if (user.getState() == OFFLINE_STATE) {
+        // 用户不在线，发送给消息队列的SAVE_OFFLINE_MSG_TOPIC，异步进行离线消息存储
+        if (!gProducer->send(SEND_CHAT_MSG_TOPIC, std::to_string(toUserId), msg)) {
+            throw BusinessException(SAVE_OFFLINE_MSG_FAILED, getErrorMsg(SAVE_OFFLINE_MSG_FAILED), __FILE__, __LINE__);
+        }
+    }
 }
 
 }

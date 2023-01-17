@@ -9,9 +9,19 @@
 #include <corpc/common/log.h>
 #include "ChatService/interface/group_chat.h"
 #include "ChatService/pb/ChatService.pb.h"
+#include "ChatService/lib/rocketmq/rocketmq.h"
+#include "ChatService/dao/group_dao.h"
+#include "ChatService/dao/user_dao.h"
+#include "ChatService/common/business_exception.h"
+#include "ChatService/common/const.h"
+#include "ChatService/common/error_code.h"
+#include <vector>
+#include <string>
 
 
 namespace ChatService {
+
+extern RocketMQProducer::ptr gProducer;
 
 GroupChatInterface::GroupChatInterface(const ::GroupChatRequest &request, ::GroupChatResponse &response)
     : request_(request), 
@@ -32,7 +42,30 @@ void GroupChatInterface::run()
     // response_.set_ret_code(0);
     // response_.set_res_info("Succ");
     //
+    int fromUserId = request_.from_user_id();
+    int toGroupId = request_.to_group_id();
+    std::string msg = request_.msg();
 
+    GroupDao dao;
+    if (dao.queryGroupUserRole(fromUserId, toGroupId).empty()) {
+        throw BusinessException(USER_NOT_IN_GROUP, getErrorMsg(USER_NOT_IN_GROUP), __FILE__, __LINE__);
+    }
+    Group group = dao.queryGroup(toGroupId);
+    for (const auto &user : group.getUsers()) {
+        int userid = user.getId();
+        if (user.getState() == ONLINE_STATE) {
+            // 用户在线，发送给消息队列的SEND_CHAT_MSG_TOPIC
+            if (!gProducer->send(SEND_CHAT_MSG_TOPIC, std::to_string(userid), msg)) {
+                throw BusinessException(SEND_CHAT_MSG_FAILED, getErrorMsg(SEND_CHAT_MSG_FAILED), __FILE__, __LINE__);
+            }
+        }
+        else if (user.getState() == OFFLINE_STATE) {
+            // 用户不在线，发送给消息队列的SAVE_OFFLINE_MSG_TOPIC，异步进行离线消息存储
+            if (!gProducer->send(SEND_CHAT_MSG_TOPIC, std::to_string(userid), msg)) {
+                throw BusinessException(SAVE_OFFLINE_MSG_FAILED, getErrorMsg(SAVE_OFFLINE_MSG_FAILED), __FILE__, __LINE__);
+            }  
+        }
+    }
 }
 
 }
