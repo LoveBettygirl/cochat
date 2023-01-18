@@ -22,7 +22,7 @@ bool FriendDao::insertFriend(int userid, int friendid)
     char sql[1024] = {0};
     sprintf(sql, "insert into friend values(%d, %d)", userid, friendid);
 
-    return mysql_->update(sql);
+    return mysql_->update(sql) > 0;
 }
 
 // 删除好友关系
@@ -32,7 +32,7 @@ bool FriendDao::deleteFriend(int userid, int friendid)
     char sql[1024] = {0};
     sprintf(sql, "delete from friend where userid = %d and friendid = %d", userid, friendid);
 
-    return mysql_->update(sql);
+    return mysql_->update(sql) > 0;
 }
 
 // 判断是否具有好友关系
@@ -75,7 +75,7 @@ std::vector<User> FriendDao::queryFriendList(int userid)
             user.setName(row[1]);
             user.setState(row[2]);
             vec.emplace_back(user);
-            redis_->set("state:" + std::to_string(user.getId()), user.getState());
+            redis_->set(USER_STATE_CACHE_PREFIX + std::to_string(user.getId()), user.getState());
         }
         mysql_free_result(res);
         return vec;

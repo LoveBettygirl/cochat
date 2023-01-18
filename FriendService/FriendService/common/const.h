@@ -9,6 +9,8 @@ const std::string ONLINE_STATE = "online";
 const std::string OFFLINE_STATE = "offline";
 const std::string NOT_EXIST_STATE = "not_exist"; // 仅用作缓存，防止缓存穿透
 
+const std::string USER_STATE_CACHE_PREFIX = "user_state:";
+
 }
 
 #endif

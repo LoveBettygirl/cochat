@@ -8,16 +8,18 @@ namespace FriendService {
 
 enum {
     SUCCESS, 
-    RELATION_IS_ADDED, // 已经加好友，不能重复加好友
-    RELATION_NOT_EXIST, // 没有好友关系，不能删除好友
-    ACCOUNT_NOT_EXIST, // 用户不存在
+    FRIEND_RELATION_IS_ADDED, // 已经加好友，不能重复加好友
+    FRIEND_RELATION_NOT_EXIST, // 没有好友关系，不能删除好友
+    CURRENT_USER_NOT_EXIST, // 当前用户不存在
+    FRIEND_USER_NOT_EXIST, // 好友用户不存在
 };
 
 const std::unordered_map<int, std::string> code2msg = {
     {SUCCESS, "OK"},
-    {RELATION_IS_ADDED, "The relation is added"},
-    {RELATION_NOT_EXIST, "The relation is not exist"},
-    {ACCOUNT_NOT_EXIST, "The account is not exist"},
+    {FRIEND_RELATION_IS_ADDED, "The friend relation is added"},
+    {FRIEND_RELATION_NOT_EXIST, "The friend relation is not exist"},
+    {CURRENT_USER_NOT_EXIST, "The current user is not exist"},
+    {FRIEND_USER_NOT_EXIST, "The friend user is not exist"},
 };
 
 const std::string UNKNOWN_ERROR = "Unknown error";

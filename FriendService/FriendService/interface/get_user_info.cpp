@@ -41,7 +41,7 @@ void GetUserInfoInterface::run()
     UserDao dao;
     User user = dao.queryUserInfo(userid);
     if (user.getState() == NOT_EXIST_STATE) {
-        throw BusinessException(ACCOUNT_NOT_EXIST, getErrorMsg(ACCOUNT_NOT_EXIST), __FILE__, __LINE__);
+        throw BusinessException(CURRENT_USER_NOT_EXIST, getErrorMsg(CURRENT_USER_NOT_EXIST), __FILE__, __LINE__);
     }
     ::UserInfo *info = response_.mutable_user();
     info->set_id(user.getId());

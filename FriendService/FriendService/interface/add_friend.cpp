@@ -10,6 +10,7 @@
 #include "FriendService/interface/add_friend.h"
 #include "FriendService/pb/FriendService.pb.h"
 #include "FriendService/dao/friend_dao.h"
+#include "FriendService/dao/user_dao.h"
 #include "FriendService/common/business_exception.h"
 #include "FriendService/common/error_code.h"
 
@@ -38,11 +39,21 @@ void AddFriendInterface::run()
     int userid = request_.user_id();
     int friendid = request_.friend_id();
 
-    FriendDao dao;
+    UserDao userDao;
+    User user = userDao.queryUserInfo(userid);
+    if (user.getState() == NOT_EXIST_STATE) {
+        throw BusinessException(CURRENT_USER_NOT_EXIST, getErrorMsg(CURRENT_USER_NOT_EXIST), __FILE__, __LINE__);
+    }
+    User friendUser = userDao.queryUserInfo(friendid);
+    if (friendUser.getState() == NOT_EXIST_STATE) {
+        throw BusinessException(FRIEND_USER_NOT_EXIST, getErrorMsg(FRIEND_USER_NOT_EXIST), __FILE__, __LINE__);
+    }
+
+    FriendDao friendDao;
     // 存储好友信息
-    if (!dao.insertFriend(userid, friendid)) {
+    if (!friendDao.insertFriend(userid, friendid)) {
         // 加好友失败，不能重复添加
-        throw BusinessException(RELATION_IS_ADDED, getErrorMsg(RELATION_IS_ADDED), __FILE__, __LINE__);
+        throw BusinessException(FRIEND_RELATION_IS_ADDED, getErrorMsg(FRIEND_RELATION_IS_ADDED), __FILE__, __LINE__);
     }
 }
 

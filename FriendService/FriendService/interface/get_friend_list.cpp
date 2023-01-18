@@ -10,6 +10,7 @@
 #include "FriendService/interface/get_friend_list.h"
 #include "FriendService/pb/FriendService.pb.h"
 #include "FriendService/dao/friend_dao.h"
+#include "FriendService/dao/user_dao.h"
 #include "FriendService/common/business_exception.h"
 #include "FriendService/common/error_code.h"
 #include "FriendService/common/const.h"
@@ -38,9 +39,16 @@ void GetFriendListInterface::run()
     // response_.set_res_info("Succ");
     //
     int userid = request_.user_id();
+
+    UserDao userDao;
+    User user = userDao.queryUserInfo(userid);
+    if (user.getState() == NOT_EXIST_STATE) {
+        throw BusinessException(CURRENT_USER_NOT_EXIST, getErrorMsg(CURRENT_USER_NOT_EXIST), __FILE__, __LINE__);
+    }
+
     // 获取好友列表信息
-    FriendDao dao;
-    std::vector<User> users = dao.queryFriendList(userid);
+    FriendDao friendDao;
+    std::vector<User> users = friendDao.queryFriendList(userid);
     for (const auto &user : users) {
         ::UserInfo *info = response_.add_friends();
         info->set_id(user.getId());

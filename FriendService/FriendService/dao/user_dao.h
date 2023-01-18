@@ -23,7 +23,7 @@ public:
     User queryUserState(int id);
 
     // 更新用户的状态信息
-    bool updateUserState(User user);
+    bool updateUserState(const User &user);
 
 private:
     MySQL::ptr mysql_;

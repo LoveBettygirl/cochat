@@ -36,8 +36,8 @@ public:
     // 连接数据库
     bool connect();
 
-    // 更新操作
-    bool update(const std::string &sql);
+    // 更新操作，返回被影响的行数，有错误返回-1
+    int update(const std::string &sql);
 
     // 查询操作
     MYSQL_RES *query(const std::string &sql);
