@@ -35,6 +35,27 @@ bool FriendDao::deleteFriend(int userid, int friendid)
     return mysql_->update(sql);
 }
 
+// 判断是否具有好友关系
+bool FriendDao::queryFriend(int userid, int friendid)
+{
+    // 1. 组装sql语句
+    char sql[1024] = {0};
+    sprintf(sql, "select 1 from friend where userid=%d and friendid=%d", userid, friendid);
+
+    MYSQL_RES *res = mysql_->query(sql);
+    if (res != nullptr) {
+        MYSQL_ROW row;
+        int has = 0;
+        while ((row = mysql_fetch_row(res)) != nullptr) {
+            has = atoi(row[0]);
+        }
+        mysql_free_result(res);
+        return has;
+    }
+
+    return false;
+}
+
 // 返回用户好友列表
 std::vector<User> FriendDao::queryFriendList(int userid)
 {

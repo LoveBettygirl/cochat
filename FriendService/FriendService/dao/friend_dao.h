@@ -19,6 +19,9 @@ public:
     // 删除好友关系
     bool deleteFriend(int userid, int friendid);
 
+    // 判断是否具有好友关系
+    bool queryFriend(int userid, int friendid);
+
     // 返回用户好友列表
     std::vector<User> queryFriendList(int userid);
 

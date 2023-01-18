@@ -17,7 +17,7 @@ UserDao::UserDao()
 }
 
 // User表的增加方法
-bool UserDao::insert(User &user)
+bool UserDao::insertUser(User &user)
 {
     // 1. 组装sql语句
     char sql[1024] = {0};
@@ -33,7 +33,7 @@ bool UserDao::insert(User &user)
 }
 
 // 根据用户号码查询用户信息，此逻辑不走缓存
-User UserDao::queryInfo(int id)
+User UserDao::queryUserInfo(int id)
 {
     // 1. 组装sql语句
     char sql[1024] = {0};
@@ -58,7 +58,7 @@ User UserDao::queryInfo(int id)
 }
 
 // 查询用户状态信息
-User UserDao::queryState(int id)
+User UserDao::queryUserState(int id)
 {
     std::string state = redis_->get("state:" + std::to_string(id));
     if (!state.empty()) {
@@ -88,7 +88,7 @@ User UserDao::queryState(int id)
 }
 
 // 更新用户的状态信息
-bool UserDao::updateState(User user)
+bool UserDao::updateUserState(User user)
 {
     // 1. 组装sql语句
     char sql[1024] = {0};

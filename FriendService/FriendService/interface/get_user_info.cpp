@@ -39,7 +39,7 @@ void GetUserInfoInterface::run()
     int userid = request_.user_id();
 
     UserDao dao;
-    User user = dao.queryInfo(userid);
+    User user = dao.queryUserInfo(userid);
     if (user.getState() == NOT_EXIST_STATE) {
         throw BusinessException(ACCOUNT_NOT_EXIST, getErrorMsg(ACCOUNT_NOT_EXIST), __FILE__, __LINE__);
     }

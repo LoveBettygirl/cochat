@@ -14,16 +14,16 @@ public:
     UserDao();
 
     // User表的增加方法
-    bool insert(User &user);
+    bool insertUser(User &user);
 
     // 根据用户号码查询用户信息，此逻辑不走缓存
-    User queryInfo(int id);
+    User queryUserInfo(int id);
 
     // 查询用户状态信息
-    User queryState(int id);
+    User queryUserState(int id);
 
     // 更新用户的状态信息
-    bool updateState(User user);
+    bool updateUserState(User user);
 
 private:
     MySQL::ptr mysql_;
