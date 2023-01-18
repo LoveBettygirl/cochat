@@ -87,4 +87,4 @@ rocketmq_consumer:
   port: 9876
   group: save_offline_msg
   message_model: clustering
-  consume_thread_count: 1
+  consume_thread_count: 2

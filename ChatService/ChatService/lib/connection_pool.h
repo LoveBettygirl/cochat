@@ -11,11 +11,12 @@
 #include <condition_variable>
 #include <yaml-cpp/yaml.h>
 #include <corpc/common/log.h>
+#include <corpc/common/noncopyable.h>
 
 namespace ChatService {
 
 template <typename T>
-class ConnectionPool {
+class ConnectionPool : corpc::Noncopyable {
 public:
     static ConnectionPool<T> *getInstance() {
         static ConnectionPool<T> pool;
@@ -86,8 +87,6 @@ public:
     }
 
 private:
-    ConnectionPool() {}
-
     // 运行在独立的线程，专门负责生产新的连接
     void produceConnection() {
         while (true) {

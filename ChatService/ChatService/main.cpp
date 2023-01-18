@@ -10,6 +10,7 @@
 #include <google/protobuf/service.h>
 #include <corpc/common/start.h>
 #include "ChatService/service/ChatService.h"
+#include "ChatService/mq/mq.h"
 
 
 int main(int argc, char* argv[])
@@ -22,6 +23,9 @@ int main(int argc, char* argv[])
     }
 
     corpc::initConfig(argv[1]);
+
+    ChatService::initMqProducer(corpc::getConfig()->getYamlNode("rocketmq_producer"));
+    ChatService::initSaveOfflineMqConsumer(corpc::getConfig()->getYamlNode("rocketmq_consumer"));
 
     REGISTER_SERVICE(ChatService::ChatServiceRpcImpl);
 

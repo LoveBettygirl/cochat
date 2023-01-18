@@ -38,19 +38,19 @@ class RocketMQMsgListener : public rocketmq::MessageListenerConcurrently {
 public:
     typedef std::shared_ptr<RocketMQMsgListener> ptr;
 
-    RocketMQMsgListener(std::function<void(const std::string &, const std::string &)> cb) : callback_(cb) {}
+    RocketMQMsgListener(std::function<void(const std::string &, const std::string &, const std::string &)> cb) : callback_(cb) {}
     virtual ~RocketMQMsgListener() {}
 
     virtual rocketmq::ConsumeStatus consumeMessage(const std::vector<rocketmq::MQMessageExt> &msgs) {
         for (int i = 0; i < msgs.size(); i++) {
             USER_LOG_INFO << "recv msg: topic: " << msgs[i].getTopic() << " key: "  << msgs[i].getKeys() << " tag: " << msgs[i].getTags() << " body: "<<  msgs[i].getBody();
-            callback_(msgs[i].getTags(), msgs[i].getBody());
+            callback_(msgs[i].getKeys(), msgs[i].getTags(), msgs[i].getBody());
         }
         return rocketmq::CONSUME_SUCCESS;
     }
 
 private:
-    std::function<void(const std::string &, const std::string &)> callback_;
+    std::function<void(const std::string &, const std::string &, const std::string &)> callback_;
 };
 
 class RocketMQProducer {
