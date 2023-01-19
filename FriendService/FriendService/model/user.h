@@ -1,5 +1,5 @@
-#ifndef FRIENDSERVICE_DAO_USER_H
-#define FRIENDSERVICE_DAO_USER_H
+#ifndef FRIENDSERVICE_MODEL_USER_H
+#define FRIENDSERVICE_MODEL_USER_H
 
 #include <string>
 #include "FriendService/common/const.h"

@@ -102,4 +102,22 @@ bool UserDao::updateUserState(const User &user)
     return true;
 }
 
+// 用户登录，缓存用户登录的ProxyServer地址
+bool UserDao::saveUserHost(int id, corpc::NetAddress::ptr host)
+{
+    return redis_->set(USER_HOST_CACHE_PREFIX + std::to_string(id), host->toString());
+}
+
+// 查询用户登录的ProxyServer地址
+corpc::NetAddress::ptr UserDao::quetyUserHost(int id)
+{
+    std::string host = redis_->get(USER_HOST_CACHE_PREFIX + std::to_string(id));
+    return !host.empty() ? std::make_shared<corpc::IPAddress>(host) : std::make_shared<corpc::IPAddress>(0);
+}
+
+bool UserDao::removeUserHost(int id)
+{
+    return redis_->del(USER_HOST_CACHE_PREFIX + std::to_string(id));
+}
+
 }

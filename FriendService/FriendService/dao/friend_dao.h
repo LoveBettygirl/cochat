@@ -4,7 +4,7 @@
 #include <vector>
 #include "FriendService/lib/mysql/mysql.h"
 #include "FriendService/lib/redis/redis.h"
-#include "FriendService/dao/user.h"
+#include "FriendService/model/user.h"
 
 namespace FriendService {
 
