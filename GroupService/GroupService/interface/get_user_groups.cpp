@@ -13,6 +13,7 @@
 #include "GroupService/common/business_exception.h"
 #include "GroupService/common/const.h"
 #include "GroupService/common/error_code.h"
+#include "GroupService/dao/user_dao.h"
 
 
 namespace GroupService {
@@ -38,8 +39,14 @@ void GetUserGroupsInterface::run()
     //
     int userid = request_.user_id();
 
-    GroupDao dao;
-    for (auto &group : dao.queryGroups(userid)) {
+    UserDao userDao;
+    User user = userDao.queryUserInfo(userid);
+    if (user.getState() == NOT_EXIST_STATE) {
+        throw BusinessException(CURRENT_USER_NOT_EXIST, getErrorMsg(CURRENT_USER_NOT_EXIST), __FILE__, __LINE__);
+    }
+
+    GroupDao groupDao;
+    for (auto &group : groupDao.queryGroups(userid)) {
         ::GroupInfo *groupInfo = response_.add_groups();
         groupInfo->set_id(group.getId());
         groupInfo->set_name(group.getName());

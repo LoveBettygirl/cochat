@@ -1,7 +1,7 @@
-#ifndef GROUPSERVICE_DAO_GROUP_USER_H
-#define GROUPSERVICE_DAO_GROUP_USER_H
+#ifndef GROUPSERVICE_MODEL_GROUP_USER_H
+#define GROUPSERVICE_MODEL_GROUP_USER_H
 
-#include "GroupService/dao/user.h"
+#include "GroupService/model/user.h"
 
 namespace GroupService {
 

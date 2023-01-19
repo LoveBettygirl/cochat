@@ -13,6 +13,7 @@
 #include "GroupService/common/business_exception.h"
 #include "GroupService/common/const.h"
 #include "GroupService/common/error_code.h"
+#include "GroupService/dao/user_dao.h"
 
 
 namespace GroupService {
@@ -39,16 +40,28 @@ void QuitGroupInterface::run()
     int userid = request_.user_id();
     int groupid = request_.group_id();
 
-    GroupDao dao;
-    std::string role = dao.queryGroupUserRole(userid, groupid);
+    UserDao userDao;
+    User user = userDao.queryUserInfo(userid);
+    if (user.getState() == NOT_EXIST_STATE) {
+        throw BusinessException(CURRENT_USER_NOT_EXIST, getErrorMsg(CURRENT_USER_NOT_EXIST), __FILE__, __LINE__);
+    }
+
+    GroupDao groupDao;
+    Group group = groupDao.queryGroup(groupid);
+    // 群组是否存在
+    if (group.getId() == -1) {
+        throw BusinessException(GROUP_NOT_EXIST, getErrorMsg(GROUP_NOT_EXIST), __FILE__, __LINE__);
+    }
+
+    std::string role = groupDao.queryGroupUserRole(userid, groupid);
     if (role.empty()) {
-        throw BusinessException(ACCOUNT_NOT_IN_GROUP, getErrorMsg(ACCOUNT_NOT_IN_GROUP), __FILE__, __LINE__);
+        throw BusinessException(USER_NOT_IN_GROUP, getErrorMsg(USER_NOT_IN_GROUP), __FILE__, __LINE__);
     }
     if (role == CREATOR_ROLE) {
-        throw BusinessException(ACCOUNT_IS_GROUP_CREATOR, getErrorMsg(ACCOUNT_IS_GROUP_CREATOR), __FILE__, __LINE__);
+        throw BusinessException(USER_IS_GROUP_CREATOR, getErrorMsg(USER_IS_GROUP_CREATOR), __FILE__, __LINE__);
     }
-    if (!dao.quitGroup(userid, groupid)) {
-        throw BusinessException(ACCOUNT_NOT_IN_GROUP, getErrorMsg(ACCOUNT_NOT_IN_GROUP), __FILE__, __LINE__);
+    if (!groupDao.quitGroup(userid, groupid)) {
+        throw BusinessException(USER_NOT_IN_GROUP, getErrorMsg(USER_NOT_IN_GROUP), __FILE__, __LINE__);
     }
 }
 

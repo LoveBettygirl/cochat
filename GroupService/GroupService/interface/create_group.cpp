@@ -14,6 +14,7 @@
 #include "GroupService/common/business_exception.h"
 #include "GroupService/common/const.h"
 #include "GroupService/common/error_code.h"
+#include "GroupService/dao/user_dao.h"
 
 
 namespace GroupService {
@@ -41,18 +42,24 @@ void CreateGroupInterface::run()
     std::string name = request_.group_name();
     std::string desc = request_.group_desc();
 
+    UserDao userDao;
+    User user = userDao.queryUserInfo(userid);
+    if (user.getState() == NOT_EXIST_STATE) {
+        throw BusinessException(CURRENT_USER_NOT_EXIST, getErrorMsg(CURRENT_USER_NOT_EXIST), __FILE__, __LINE__);
+    }
+
     // 存储新创建的群组信息
     Group group(-1, name, desc);
     GroupDao dao;
     if (dao.createGroup(group)) {
         // 存储群组创建人信息
         if (!dao.addGroup(userid, group.getId(), CREATOR_ROLE)) {
-            throw BusinessException(ACCOUNT_IS_IN_GROUP, getErrorMsg(ACCOUNT_IS_IN_GROUP), __FILE__, __LINE__);
+            throw BusinessException(USER_IS_IN_GROUP, getErrorMsg(USER_IS_IN_GROUP), __FILE__, __LINE__);
         }
         response_.set_group_id(group.getId());
     }
     else {
-        throw BusinessException(GROUP_IS_CREATED, getErrorMsg(GROUP_IS_CREATED), __FILE__, __LINE__);
+        throw BusinessException(GROUP_IS_EXIST, getErrorMsg(GROUP_IS_EXIST), __FILE__, __LINE__);
     }
 }
 

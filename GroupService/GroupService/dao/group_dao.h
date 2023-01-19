@@ -1,7 +1,7 @@
 #ifndef GROUPSERVICE_DAO_GROUP_DAO_H
 #define GROUPSERVICE_DAO_GROUP_DAO_H
 
-#include "GroupService/dao/group.h"
+#include "GroupService/model/group.h"
 #include <string>
 #include <vector>
 #include "GroupService/lib/mysql/mysql.h"
@@ -31,9 +31,6 @@ public:
 
     // 根据id查询群组
     Group queryGroup(int groupid);
-
-    // 根据指定的groupid查询群组用户列表
-    std::vector<int> queryGroupUsers(int userid, int groupid);
 
 private:
     MySQL::ptr mysql_;

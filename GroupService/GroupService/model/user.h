@@ -1,5 +1,5 @@
-#ifndef GROUPSERVICE_DAO_USER_H
-#define GROUPSERVICE_DAO_USER_H
+#ifndef GROUPSERVICE_MODEL_USER_H
+#define GROUPSERVICE_MODEL_USER_H
 
 #include <string>
 #include "GroupService/common/const.h"

@@ -24,7 +24,7 @@ bool GroupDao::createGroup(Group &group)
     sprintf(sql, "insert into allgroup(groupname, groupdesc) values('%s', '%s')",
             group.getName().c_str(), group.getDesc().c_str());
 
-    if (mysql_->update(sql)) {
+    if (mysql_->update(sql) > 0) {
         group.setId(mysql_insert_id(mysql_->getConnection()));
         return true;
     }
@@ -40,7 +40,7 @@ bool GroupDao::addGroup(int userid, int groupid, const std::string &role)
     sprintf(sql, "insert into groupuser values(%d, %d, '%s')",
             groupid, userid, role.c_str());
 
-    return mysql_->update(sql);
+    return mysql_->update(sql) > 0;
 }
 
 std::string GroupDao::queryGroupUserRole(int userid, int groupid)
@@ -68,7 +68,7 @@ bool GroupDao::quitGroup(int userid, int groupid)
     char sql[1024] = {0};
     sprintf(sql, "delete from groupuser where userid = %d and groupid = %d", userid, groupid);
 
-    return mysql_->update(sql);
+    return mysql_->update(sql) > 0;
 }
 
 // 根据id查询群组
@@ -105,7 +105,7 @@ Group GroupDao::queryGroup(int groupid)
             user.setState(row[2]);
             user.setRole(row[3]);
             group.getUsers().push_back(user);
-            redis_->set("state:" + std::to_string(user.getId()), user.getState());
+            redis_->set(USER_STATE_CACHE_PREFIX + std::to_string(user.getId()), user.getState());
         }
         mysql_free_result(res);
     }
@@ -154,31 +154,12 @@ std::vector<Group> GroupDao::queryGroups(int userid)
                 user.setState(row[2]);
                 user.setRole(row[3]);
                 group.getUsers().push_back(user);
-                redis_->set("state:" + std::to_string(user.getId()), user.getState());
+                redis_->set(USER_STATE_CACHE_PREFIX + std::to_string(user.getId()), user.getState());
             }
             mysql_free_result(res);
         }
     }
     return groupVec;
-}
-
-// 根据指定的groupid查询群组用户列表
-std::vector<int> GroupDao::queryGroupUsers(int userid, int groupid)
-{
-    char sql[1024] = {0};
-    sprintf(sql, "select userid from groupuser where groupid = %d and \
-        exists(select 1 from groupuser where groupid = %d and userid = %d)", groupid, groupid, userid);
-
-    std::vector<int> idVec;
-    MYSQL_RES *res = mysql_->query(sql);
-    if (res != nullptr) {
-        MYSQL_ROW row;
-        while ((row = mysql_fetch_row(res)) != nullptr) {
-            idVec.push_back(atoi(row[0]));
-        }
-        mysql_free_result(res);
-    }
-    return idVec;
 }
 
 }

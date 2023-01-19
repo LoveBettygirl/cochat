@@ -38,10 +38,10 @@ void GetGroupInfoInterface::run()
     //
     int groupid = request_.group_id();
 
-    GroupDao dao;
-    Group group = dao.queryGroup(groupid);
+    GroupDao groupDao;
+    Group group = groupDao.queryGroup(groupid);
     if (group.getId() == -1) {
-        throw BusinessException(GROUP_IS_NOT_EXIST, getErrorMsg(GROUP_IS_NOT_EXIST), __FILE__, __LINE__);
+        throw BusinessException(GROUP_NOT_EXIST, getErrorMsg(GROUP_NOT_EXIST), __FILE__, __LINE__);
     }
     ::GroupInfo *groupInfo = response_.mutable_group_info();
     groupInfo->set_id(group.getId());

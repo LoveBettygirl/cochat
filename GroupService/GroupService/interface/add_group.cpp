@@ -13,6 +13,7 @@
 #include "GroupService/common/business_exception.h"
 #include "GroupService/common/const.h"
 #include "GroupService/common/error_code.h"
+#include "GroupService/dao/user_dao.h"
 
 
 namespace GroupService {
@@ -39,9 +40,20 @@ void AddGroupInterface::run()
     int userid = request_.user_id();
     int groupid = request_.group_id();
 
-    GroupDao dao;
-    if (!dao.addGroup(userid, groupid, NORMAL_ROLE)) {
-        throw BusinessException(ACCOUNT_IS_IN_GROUP, getErrorMsg(ACCOUNT_IS_IN_GROUP), __FILE__, __LINE__);
+    UserDao userDao;
+    User user = userDao.queryUserInfo(userid);
+    if (user.getState() == NOT_EXIST_STATE) {
+        throw BusinessException(CURRENT_USER_NOT_EXIST, getErrorMsg(CURRENT_USER_NOT_EXIST), __FILE__, __LINE__);
+    }
+
+    GroupDao groupDao;
+    Group group = groupDao.queryGroup(groupid);
+    // 群组是否存在
+    if (group.getId() == -1) {
+        throw BusinessException(GROUP_NOT_EXIST, getErrorMsg(GROUP_NOT_EXIST), __FILE__, __LINE__);
+    }
+    if (!groupDao.addGroup(userid, groupid, NORMAL_ROLE)) {
+        throw BusinessException(USER_IS_IN_GROUP, getErrorMsg(USER_IS_IN_GROUP), __FILE__, __LINE__);
     }
 }
 
