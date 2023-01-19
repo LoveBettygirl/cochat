@@ -12,13 +12,13 @@ OfflineMessageDao::OfflineMessageDao()
 }
 
 // 存储用户的离线信息
-bool OfflineMessageDao::insertMessage(const std::string &key, int userid, const std::string &msg)
+bool OfflineMessageDao::insertMessage(int userid, const std::string &msg)
 {
     // 1. 组装sql语句
     char sql[1024] = {0};
-    sprintf(sql, "insert into offlinemessage values('%s', %d, '%s')", key.c_str(), userid, msg.c_str());
+    sprintf(sql, "insert into offlinemessage values(%d, '%s')", userid, msg.c_str());
 
-    return mysql_->update(sql);
+    return mysql_->update(sql) > 0;
 }
 
 // 删除用户的所有离线消息
@@ -28,7 +28,7 @@ bool OfflineMessageDao::removeMessage(int userid)
     char sql[1024] = {0};
     sprintf(sql, "delete from offlinemessage where userid=%d", userid);
 
-    return mysql_->update(sql);
+    return mysql_->update(sql) >= 0;
 }
 
 // 查询用户的离线消息
@@ -43,7 +43,6 @@ std::vector<std::string> OfflineMessageDao::queryMessage(int userid)
     if (res != nullptr) {
         // 把userid用户的所有离线消息放入vec中返回
         MYSQL_ROW row;
-        // 把userid用户的所有离线消息放入vec中返回
         while ((row = mysql_fetch_row(res)) != nullptr) {
             vec.push_back(row[0]);
         }

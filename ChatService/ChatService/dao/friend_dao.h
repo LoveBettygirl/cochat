@@ -4,7 +4,7 @@
 #include <vector>
 #include "ChatService/lib/mysql/mysql.h"
 #include "ChatService/lib/redis/redis.h"
-#include "ChatService/dao/user.h"
+#include "ChatService/model/user.h"
 
 namespace ChatService {
 

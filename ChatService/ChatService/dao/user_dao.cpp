@@ -24,7 +24,7 @@ bool UserDao::insertUser(User &user)
     sprintf(sql, "insert into user(name, password, state) values('%s', '%s', '%s')",
         user.getName().c_str(), user.getPwd().c_str(), user.getState().c_str());
 
-    if (mysql_->update(sql)) {
+    if (mysql_->update(sql) > 0) {
         // 获取插入成功的用户数据生成的主键id
         user.setId(mysql_insert_id(mysql_->getConnection()));
         return true;
@@ -53,14 +53,14 @@ User UserDao::queryUserInfo(int id)
             return user;
         }
     }
-    redis_->set("state:" + std::to_string(id), NOT_EXIST_STATE);
+    redis_->set(USER_STATE_CACHE_PREFIX + std::to_string(id), NOT_EXIST_STATE);
     return User(id, "", "", NOT_EXIST_STATE);
 }
 
 // 查询用户状态信息
 User UserDao::queryUserState(int id)
 {
-    std::string state = redis_->get("state:" + std::to_string(id));
+    std::string state = redis_->get(USER_STATE_CACHE_PREFIX + std::to_string(id));
     if (!state.empty()) {
         return User(id, "", "", state);
     }
@@ -79,27 +79,45 @@ User UserDao::queryUserState(int id)
 
             mysql_free_result(res);
 
-            redis_->set("state:" + std::to_string(user.getId()), user.getState());
+            redis_->set(USER_STATE_CACHE_PREFIX + std::to_string(user.getId()), user.getState());
             return user;
         }
     }
-    redis_->set("state:" + std::to_string(id), NOT_EXIST_STATE);
+    redis_->set(USER_STATE_CACHE_PREFIX + std::to_string(id), NOT_EXIST_STATE);
     return User(id, "", "", NOT_EXIST_STATE);
 }
 
 // 更新用户的状态信息
-bool UserDao::updateUserState(User user)
+bool UserDao::updateUserState(const User &user)
 {
     // 1. 组装sql语句
     char sql[1024] = {0};
     sprintf(sql, "update user set state = '%s' where id = '%d'", user.getState().c_str(), user.getId());
 
-    if (!mysql_->update(sql)) {
+    if (mysql_->update(sql) <= 0) {
         return false;
     }
     // TODO: 加锁、解锁
-    redis_->del("state:" + std::to_string(user.getId()));
+    redis_->del(USER_STATE_CACHE_PREFIX + std::to_string(user.getId()));
     return true;
+}
+
+// 用户登录，缓存用户登录的ProxyServer地址
+bool UserDao::saveUserHost(int id, corpc::NetAddress::ptr host)
+{
+    return redis_->set(USER_HOST_CACHE_PREFIX + std::to_string(id), host->toString());
+}
+
+// 查询用户登录的ProxyServer地址
+corpc::NetAddress::ptr UserDao::quetyUserHost(int id)
+{
+    std::string host = redis_->get(USER_HOST_CACHE_PREFIX + std::to_string(id));
+    return !host.empty() ? std::make_shared<corpc::IPAddress>(host) : std::make_shared<corpc::IPAddress>(0);
+}
+
+bool UserDao::removeUserHost(int id)
+{
+    return redis_->del(USER_HOST_CACHE_PREFIX + std::to_string(id));
 }
 
 }

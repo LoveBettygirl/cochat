@@ -1,7 +1,7 @@
 #ifndef CHATSERVICE_DAO_GROUP_DAO_H
 #define CHATSERVICE_DAO_GROUP_DAO_H
 
-#include "ChatService/dao/group.h"
+#include "ChatService/model/group.h"
 #include <string>
 #include <vector>
 #include "ChatService/lib/mysql/mysql.h"

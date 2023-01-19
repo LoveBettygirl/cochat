@@ -47,11 +47,11 @@ void SaveOfflineMessageInterface::run()
     UserDao userDao;
     User user = userDao.queryUserState(userid);
     if (user.getState() == NOT_EXIST_STATE) {
-        throw BusinessException(ACCOUNT_NOT_EXIST, getErrorMsg(ACCOUNT_NOT_EXIST), __FILE__, __LINE__);
+        throw BusinessException(CURRENT_USER_NOT_EXIST, getErrorMsg(CURRENT_USER_NOT_EXIST), __FILE__, __LINE__);
     }
 
     // 异步存储离线消息
-    if (!gProducer->send(SEND_CHAT_MSG_TOPIC, std::to_string(userid), msg)) {
+    if (!gProducer->send(SAVE_OFFLINE_MSG_TOPIC, std::to_string(userid), msg)) {
         throw BusinessException(SAVE_OFFLINE_MSG_FAILED, getErrorMsg(SAVE_OFFLINE_MSG_FAILED), __FILE__, __LINE__);
     } 
 }

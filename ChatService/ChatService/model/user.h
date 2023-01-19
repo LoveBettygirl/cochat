@@ -1,5 +1,5 @@
-#ifndef CHATSERVICE_DAO_USER_H
-#define CHATSERVICE_DAO_USER_H
+#ifndef CHATSERVICE_MODEL_USER_H
+#define CHATSERVICE_MODEL_USER_H
 
 #include <string>
 #include "ChatService/common/const.h"

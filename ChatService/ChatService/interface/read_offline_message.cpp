@@ -43,18 +43,19 @@ void ReadOfflineMessageInterface::run()
     UserDao userDao;
     User user = userDao.queryUserState(userid);
     if (user.getState() == NOT_EXIST_STATE) {
-        throw BusinessException(ACCOUNT_NOT_EXIST, getErrorMsg(ACCOUNT_NOT_EXIST), __FILE__, __LINE__);
+        throw BusinessException(CURRENT_USER_NOT_EXIST, getErrorMsg(CURRENT_USER_NOT_EXIST), __FILE__, __LINE__);
     }
 
-    OfflineMessageDao dao;
-    std::vector<std::string> msgs = dao.queryMessage(userid);
-    for (const auto &msg : msgs) {
-        response_.add_msgs(msg.c_str());
-    }
+    OfflineMessageDao offlineMessageDao;
+    std::vector<std::string> msgs = offlineMessageDao.queryMessage(userid);
 
     // 查询完离线消息，就删除掉
-    if (!dao.removeMessage(userid)) {
-        throw BusinessException(ACCOUNT_NOT_EXIST, getErrorMsg(ACCOUNT_NOT_EXIST), __FILE__, __LINE__);
+    if (!offlineMessageDao.removeMessage(userid)) {
+        throw BusinessException(REMOVE_OFFLINE_MSG_FAILED, getErrorMsg(REMOVE_OFFLINE_MSG_FAILED), __FILE__, __LINE__);
+    }
+
+    for (const auto &msg : msgs) {
+        response_.add_msgs(msg.c_str());
     }
 }
 

@@ -1,7 +1,7 @@
-#ifndef CHATSERVICE_DAO_GROUP_USER_H
-#define CHATSERVICE_DAO_GROUP_USER_H
+#ifndef CHATSERVICE_MODEL_GROUP_USER_H
+#define CHATSERVICE_MODEL_GROUP_USER_H
 
-#include "ChatService/dao/user.h"
+#include "ChatService/model/user.h"
 
 namespace ChatService {
 

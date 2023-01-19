@@ -16,6 +16,7 @@
 #include "ChatService/common/const.h"
 #include "ChatService/common/error_code.h"
 #include <string>
+#include <corpc/net/tcp/tcp_client.h>
 
 
 namespace ChatService {
@@ -45,22 +46,35 @@ void OneChatInterface::run()
     int toUserId = request_.to_user_id();
     std::string msg = request_.msg();
 
+    UserDao userDao;
+    User user = userDao.queryUserState(toUserId);
+    if (user.getState() == NOT_EXIST_STATE) {
+        throw BusinessException(CURRENT_USER_NOT_EXIST, getErrorMsg(CURRENT_USER_NOT_EXIST), __FILE__, __LINE__);
+    }
+    User friendUser = userDao.queryUserInfo(toUserId);
+    if (friendUser.getState() == NOT_EXIST_STATE) {
+        throw BusinessException(FRIEND_USER_NOT_EXIST, getErrorMsg(FRIEND_USER_NOT_EXIST), __FILE__, __LINE__);
+    }
+
     FriendDao friendDao;
     if (!friendDao.queryFriend(fromUserId, toUserId)) {
         throw BusinessException(USER_NOT_IN_FRIEND_RELATION, getErrorMsg(USER_NOT_IN_FRIEND_RELATION), __FILE__, __LINE__);
     }
 
-    UserDao userDao;
-    User user = userDao.queryState(toUserId);
     if (user.getState() == ONLINE_STATE) {
-        // 用户在线，发送给消息队列的SEND_CHAT_MSG_TOPIC
-        if (!gProducer->send(SEND_CHAT_MSG_TOPIC, std::to_string(toUserId), msg)) {
-            throw BusinessException(SEND_CHAT_MSG_FAILED, getErrorMsg(SEND_CHAT_MSG_FAILED), __FILE__, __LINE__);
+        // 用户在线，转发给对应的ProxyServer
+        corpc::NetAddress::ptr addr = userDao.quetyUserHost(toUserId);
+        if (addr->toString() == "0.0.0.0:0") {
+            throw BusinessException(FORWARD_CHAT_MSG_FAILED, getErrorMsg(FORWARD_CHAT_MSG_FAILED), __FILE__, __LINE__);
+        }
+        corpc::TcpClient::ptr client = std::make_shared<corpc::TcpClient>(addr);
+        if (client->sendData(msg)) {
+            throw BusinessException(FORWARD_CHAT_MSG_FAILED, getErrorMsg(FORWARD_CHAT_MSG_FAILED), __FILE__, __LINE__);
         }
     }
     else if (user.getState() == OFFLINE_STATE) {
         // 用户不在线，发送给消息队列的SAVE_OFFLINE_MSG_TOPIC，异步进行离线消息存储
-        if (!gProducer->send(SEND_CHAT_MSG_TOPIC, std::to_string(toUserId), msg)) {
+        if (!gProducer->send(SAVE_OFFLINE_MSG_TOPIC, std::to_string(toUserId), msg)) {
             throw BusinessException(SAVE_OFFLINE_MSG_FAILED, getErrorMsg(SAVE_OFFLINE_MSG_FAILED), __FILE__, __LINE__);
         }
     }

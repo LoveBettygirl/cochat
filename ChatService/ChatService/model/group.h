@@ -1,7 +1,7 @@
-#ifndef CHATSERVICE_DAO_GROUP_H
-#define CHATSERVICE_DAO_GROUP_H
+#ifndef CHATSERVICE_MODEL_GROUP_H
+#define CHATSERVICE_MODEL_GROUP_H
 
-#include "ChatService/dao/group_user.h"
+#include "ChatService/model/group_user.h"
 #include <string>
 #include <vector>
 
