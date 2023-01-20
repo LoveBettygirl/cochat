@@ -42,6 +42,10 @@ void CreateGroupInterface::run()
     std::string name = request_.group_name();
     std::string desc = request_.group_desc();
 
+    if (name.empty()) {
+        throw BusinessException(GROUP_NAME_IS_EMPTY, getErrorMsg(GROUP_NAME_IS_EMPTY), __FILE__, __LINE__);
+    }
+
     UserDao userDao;
     User user = userDao.queryUserInfo(userid);
     if (user.getState() == NOT_EXIST_STATE) {

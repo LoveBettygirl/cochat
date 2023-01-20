@@ -14,6 +14,7 @@ enum {
     USER_IS_GROUP_CREATOR, // 用户是这个群的创建者，无法退出
     GROUP_IS_EXIST, // 此群已存在，无法创建
     GROUP_NOT_EXIST, // 此群不存在
+    GROUP_NAME_IS_EMPTY, // 创建群输入的名字为空
 };
 
 const std::unordered_map<int, std::string> code2msg = {
@@ -24,6 +25,7 @@ const std::unordered_map<int, std::string> code2msg = {
     {USER_IS_GROUP_CREATOR, "The user is the group creator"},
     {GROUP_IS_EXIST, "The group is exist"},
     {GROUP_NOT_EXIST, "The group is not exist"},
+    {GROUP_NAME_IS_EMPTY, "The group name is empty"},
 };
 
 const std::string UNKNOWN_ERROR = "Unknown error";

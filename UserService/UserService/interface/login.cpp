@@ -38,6 +38,15 @@ void LoginInterface::run()
     //
     int id = request_.user_id();
     std::string pwd = request_.user_password();
+    std::string host = request_.auth_info();
+    corpc::NetAddress::ptr addr = std::make_shared<corpc::IPAddress>(host);
+
+    if (pwd.empty()) {
+        throw BusinessException(USER_PWD_IS_EMPTY, getErrorMsg(USER_PWD_IS_EMPTY), __FILE__, __LINE__);
+    }
+    if (addr->toString() == "0.0.0.0:0") {
+        throw BusinessException(ILLEGAL_USER_HOST, getErrorMsg(ILLEGAL_USER_HOST), __FILE__, __LINE__);
+    }
 
     UserDao dao;
     User user = dao.queryUserInfo(id);
@@ -51,12 +60,14 @@ void LoginInterface::run()
             // 登录成功，更新用户状态信息offline -> online
             user.setState(ONLINE_STATE);
             dao.updateUserState(user);
+            dao.saveUserHost(id, addr);
         }
     }
     else {
         // 该用户不存在，登录失败
         if (user.getState() != NOT_EXIST_STATE) {
             dao.updateUserState(user);
+            dao.removeUserHost(id);
         }
         throw BusinessException(INVALID_USER_ID_OR_PWD, getErrorMsg(INVALID_USER_ID_OR_PWD), __FILE__, __LINE__);
     }

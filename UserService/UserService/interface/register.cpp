@@ -38,6 +38,13 @@ void RegisterInterface::run()
     std::string name = request_.user_name();
     std::string pwd = request_.user_password();
 
+    if (name.empty()) {
+        throw BusinessException(USER_NAME_IS_EMPTY, getErrorMsg(USER_NAME_IS_EMPTY), __FILE__, __LINE__);
+    }
+    if (pwd.empty()) {
+        throw BusinessException(USER_PWD_IS_EMPTY, getErrorMsg(USER_PWD_IS_EMPTY), __FILE__, __LINE__);
+    }
+
     User user;
     user.setName(name);
     user.setPwd(pwd);

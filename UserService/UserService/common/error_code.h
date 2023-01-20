@@ -15,6 +15,9 @@ enum {
     USER_LOGGED_OUT, // 账号已经注销
     USER_LOGOUT_FAILED, // 注销失败
     USER_IS_REGISTERED, // 用户已经注册，不能重复注册
+    USER_PWD_IS_EMPTY, // 用户登录或注册输入的密码为空
+    USER_NAME_IS_EMPTY, // 用户注册输入的名字为空
+    ILLEGAL_USER_HOST, // 用户登录输入的地址为空
 };
 
 const std::unordered_map<int, std::string> code2msg = {
@@ -26,6 +29,9 @@ const std::unordered_map<int, std::string> code2msg = {
     {USER_LOGGED_OUT, "The user is logged out"},
     {USER_LOGOUT_FAILED, "Logout failed"},
     {USER_IS_REGISTERED, "The user is registered"},
+    {USER_PWD_IS_EMPTY, "The user pwd is empty"},
+    {USER_NAME_IS_EMPTY, "The user name is empty"},
+    {ILLEGAL_USER_HOST, "The user host is illegal"},
 };
 
 const std::string UNKNOWN_ERROR = "Unknown error";
