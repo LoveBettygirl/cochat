@@ -37,7 +37,7 @@ public:
     bool connect();
 
     // 更新操作
-    bool update(const std::string &sql);
+    int update(const std::string &sql);
 
     // 查询操作
     MYSQL_RES *query(const std::string &sql);

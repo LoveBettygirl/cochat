@@ -40,25 +40,25 @@ void LoginInterface::run()
     std::string pwd = request_.user_password();
 
     UserDao dao;
-    User user = dao.queryInfo(id);
+    User user = dao.queryUserInfo(id);
     if (user.getId() == id && user.getPwd() == pwd) {
         if (user.getState() == ONLINE_STATE) {
             // 该用户已经登录，不允许重复登录
-            dao.updateState(user);
-            throw BusinessException(ACCOUNT_LOGGED_IN, getErrorMsg(ACCOUNT_LOGGED_IN), __FILE__, __LINE__);
+            dao.updateUserState(user);
+            throw BusinessException(USER_LOGGED_IN, getErrorMsg(USER_LOGGED_IN), __FILE__, __LINE__);
         }
         else {
             // 登录成功，更新用户状态信息offline -> online
             user.setState(ONLINE_STATE);
-            dao.updateState(user);
+            dao.updateUserState(user);
         }
     }
     else {
         // 该用户不存在，登录失败
         if (user.getState() != NOT_EXIST_STATE) {
-            dao.updateState(user);
+            dao.updateUserState(user);
         }
-        throw BusinessException(INVALID_ID_OR_PWD, getErrorMsg(INVALID_ID_OR_PWD), __FILE__, __LINE__);
+        throw BusinessException(INVALID_USER_ID_OR_PWD, getErrorMsg(INVALID_USER_ID_OR_PWD), __FILE__, __LINE__);
     }
 }
 

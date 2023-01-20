@@ -45,13 +45,13 @@ bool MySQL::connect()
     return true;
 }
 
-bool MySQL::update(const std::string &sql)
+int MySQL::update(const std::string &sql)
 {
     if (mysql_query(mysql_, sql.c_str())) {
         USER_LOG_ERROR << "MySQL update error: " << sql;
-        return false;
+        return -1;
     }
-    return true;
+    return mysql_affected_rows(mysql_);
 }
 
 MYSQL_RES *MySQL::query(const std::string &sql)

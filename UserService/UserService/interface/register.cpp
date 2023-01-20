@@ -42,13 +42,13 @@ void RegisterInterface::run()
     user.setName(name);
     user.setPwd(pwd);
     UserDao dao;
-    if (dao.insert(user)) {
+    if (dao.insertUser(user)) {
         // 注册成功
         response_.set_user_id(user.getId());
     }
     else {
         // 注册失败
-        throw BusinessException(REGISTER_FAILED, getErrorMsg(REGISTER_FAILED), __FILE__, __LINE__);
+        throw BusinessException(USER_IS_REGISTERED, getErrorMsg(USER_IS_REGISTERED), __FILE__, __LINE__);
     }
 }
 

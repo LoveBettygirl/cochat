@@ -1,5 +1,5 @@
-#ifndef USERSERVICE_DAO_USER_H
-#define USERSERVICE_DAO_USER_H
+#ifndef USERSERVICE_MODEL_USER_H
+#define USERSERVICE_MODEL_USER_H
 
 #include <string>
 #include "UserService/common/const.h"

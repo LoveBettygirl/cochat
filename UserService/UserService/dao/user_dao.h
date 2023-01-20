@@ -4,7 +4,8 @@
 #include <string>
 #include "UserService/lib/mysql/mysql.h"
 #include "UserService/lib/redis/redis.h"
-#include "UserService/dao/user.h"
+#include "UserService/model/user.h"
+#include <corpc/net/net_address.h>
 
 namespace UserService {
 
@@ -14,16 +15,25 @@ public:
     UserDao();
 
     // User表的增加方法
-    bool insert(User &user);
+    bool insertUser(User &user);
 
     // 根据用户号码查询用户信息，此逻辑不走缓存
-    User queryInfo(int id);
+    User queryUserInfo(int id);
 
     // 查询用户状态信息
-    User queryState(int id);
+    User queryUserState(int id);
 
     // 更新用户的状态信息
-    bool updateState(User user);
+    bool updateUserState(const User &user);
+
+    // 用户登录，缓存用户登录的ProxyServer地址
+    bool saveUserHost(int id, corpc::NetAddress::ptr host);
+
+    // 查询用户登录的ProxyServer地址
+    corpc::NetAddress::ptr quetyUserHost(int id);
+
+    // 用户注销，删除缓存的ProxyServer信息
+    bool removeUserHost(int id);
 
 private:
     MySQL::ptr mysql_;
