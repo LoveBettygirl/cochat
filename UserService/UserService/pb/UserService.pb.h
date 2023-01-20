@@ -191,6 +191,7 @@ class LoginRequest :
 
   enum : int {
     kUserPasswordFieldNumber = 2,
+    kAuthInfoFieldNumber = 3,
     kUserIdFieldNumber = 1,
   };
   // bytes user_password = 2;
@@ -209,6 +210,22 @@ class LoginRequest :
   std::string* _internal_mutable_user_password();
   public:
 
+  // bytes auth_info = 3;
+  void clear_auth_info();
+  const std::string& auth_info() const;
+  void set_auth_info(const std::string& value);
+  void set_auth_info(std::string&& value);
+  void set_auth_info(const char* value);
+  void set_auth_info(const void* value, size_t size);
+  std::string* mutable_auth_info();
+  std::string* release_auth_info();
+  void set_allocated_auth_info(std::string* auth_info);
+  private:
+  const std::string& _internal_auth_info() const;
+  void _internal_set_auth_info(const std::string& value);
+  std::string* _internal_mutable_auth_info();
+  public:
+
   // int32 user_id = 1;
   void clear_user_id();
   ::PROTOBUF_NAMESPACE_ID::int32 user_id() const;
@@ -224,6 +241,7 @@ class LoginRequest :
 
   ::PROTOBUF_NAMESPACE_ID::internal::InternalMetadataWithArena _internal_metadata_;
   ::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr user_password_;
+  ::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr auth_info_;
   ::PROTOBUF_NAMESPACE_ID::int32 user_id_;
   mutable ::PROTOBUF_NAMESPACE_ID::internal::CachedSize _cached_size_;
   friend struct ::TableStruct_UserService_2eproto;
@@ -1122,6 +1140,66 @@ inline void LoginRequest::set_allocated_user_password(std::string* user_password
   }
   user_password_.SetAllocatedNoArena(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), user_password);
   // @@protoc_insertion_point(field_set_allocated:LoginRequest.user_password)
+}
+
+// bytes auth_info = 3;
+inline void LoginRequest::clear_auth_info() {
+  auth_info_.ClearToEmptyNoArena(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited());
+}
+inline const std::string& LoginRequest::auth_info() const {
+  // @@protoc_insertion_point(field_get:LoginRequest.auth_info)
+  return _internal_auth_info();
+}
+inline void LoginRequest::set_auth_info(const std::string& value) {
+  _internal_set_auth_info(value);
+  // @@protoc_insertion_point(field_set:LoginRequest.auth_info)
+}
+inline std::string* LoginRequest::mutable_auth_info() {
+  // @@protoc_insertion_point(field_mutable:LoginRequest.auth_info)
+  return _internal_mutable_auth_info();
+}
+inline const std::string& LoginRequest::_internal_auth_info() const {
+  return auth_info_.GetNoArena();
+}
+inline void LoginRequest::_internal_set_auth_info(const std::string& value) {
+  
+  auth_info_.SetNoArena(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), value);
+}
+inline void LoginRequest::set_auth_info(std::string&& value) {
+  
+  auth_info_.SetNoArena(
+    &::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), ::std::move(value));
+  // @@protoc_insertion_point(field_set_rvalue:LoginRequest.auth_info)
+}
+inline void LoginRequest::set_auth_info(const char* value) {
+  GOOGLE_DCHECK(value != nullptr);
+  
+  auth_info_.SetNoArena(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), ::std::string(value));
+  // @@protoc_insertion_point(field_set_char:LoginRequest.auth_info)
+}
+inline void LoginRequest::set_auth_info(const void* value, size_t size) {
+  
+  auth_info_.SetNoArena(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(),
+      ::std::string(reinterpret_cast<const char*>(value), size));
+  // @@protoc_insertion_point(field_set_pointer:LoginRequest.auth_info)
+}
+inline std::string* LoginRequest::_internal_mutable_auth_info() {
+  
+  return auth_info_.MutableNoArena(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited());
+}
+inline std::string* LoginRequest::release_auth_info() {
+  // @@protoc_insertion_point(field_release:LoginRequest.auth_info)
+  
+  return auth_info_.ReleaseNoArena(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited());
+}
+inline void LoginRequest::set_allocated_auth_info(std::string* auth_info) {
+  if (auth_info != nullptr) {
+    
+  } else {
+    
+  }
+  auth_info_.SetAllocatedNoArena(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), auth_info);
+  // @@protoc_insertion_point(field_set_allocated:LoginRequest.auth_info)
 }
 
 // -------------------------------------------------------------------

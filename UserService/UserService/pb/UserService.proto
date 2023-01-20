@@ -5,6 +5,7 @@ option cc_generic_services = true;
 message LoginRequest {
     int32 user_id = 1;
     bytes user_password = 2;
+    bytes auth_info = 3;
 }
 
 message LoginResponse {

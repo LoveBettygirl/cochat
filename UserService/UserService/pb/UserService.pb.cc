@@ -134,6 +134,7 @@ const ::PROTOBUF_NAMESPACE_ID::uint32 TableStruct_UserService_2eproto::offsets[]
   ~0u,  // no _weak_field_map_
   PROTOBUF_FIELD_OFFSET(::LoginRequest, user_id_),
   PROTOBUF_FIELD_OFFSET(::LoginRequest, user_password_),
+  PROTOBUF_FIELD_OFFSET(::LoginRequest, auth_info_),
   ~0u,  // no _has_bits_
   PROTOBUF_FIELD_OFFSET(::LoginResponse, _internal_metadata_),
   ~0u,  // no _extensions_
@@ -172,11 +173,11 @@ const ::PROTOBUF_NAMESPACE_ID::uint32 TableStruct_UserService_2eproto::offsets[]
 };
 static const ::PROTOBUF_NAMESPACE_ID::internal::MigrationSchema schemas[] PROTOBUF_SECTION_VARIABLE(protodesc_cold) = {
   { 0, -1, sizeof(::LoginRequest)},
-  { 7, -1, sizeof(::LoginResponse)},
-  { 14, -1, sizeof(::RegisterRequest)},
-  { 21, -1, sizeof(::RegisterResponse)},
-  { 29, -1, sizeof(::LogoutRequest)},
-  { 35, -1, sizeof(::LogoutResponse)},
+  { 8, -1, sizeof(::LoginResponse)},
+  { 15, -1, sizeof(::RegisterRequest)},
+  { 22, -1, sizeof(::RegisterResponse)},
+  { 30, -1, sizeof(::LogoutRequest)},
+  { 36, -1, sizeof(::LogoutResponse)},
 };
 
 static ::PROTOBUF_NAMESPACE_ID::Message const * const file_default_instances[] = {
@@ -189,19 +190,20 @@ static ::PROTOBUF_NAMESPACE_ID::Message const * const file_default_instances[] =
 };
 
 const char descriptor_table_protodef_UserService_2eproto[] PROTOBUF_SECTION_VARIABLE(protodesc_cold) =
-  "\n\021UserService.proto\"6\n\014LoginRequest\022\017\n\007u"
-  "ser_id\030\001 \001(\005\022\025\n\ruser_password\030\002 \001(\014\"3\n\rL"
-  "oginResponse\022\020\n\010ret_code\030\001 \001(\005\022\020\n\010res_in"
-  "fo\030\002 \001(\t\";\n\017RegisterRequest\022\021\n\tuser_name"
-  "\030\001 \001(\014\022\025\n\ruser_password\030\002 \001(\014\"G\n\020Registe"
-  "rResponse\022\020\n\010ret_code\030\001 \001(\005\022\020\n\010res_info\030"
-  "\002 \001(\t\022\017\n\007user_id\030\003 \001(\005\" \n\rLogoutRequest\022"
-  "\017\n\007user_id\030\001 \001(\005\"4\n\016LogoutResponse\022\020\n\010re"
-  "t_code\030\001 \001(\005\022\020\n\010res_info\030\002 \001(\t2\224\001\n\016UserS"
-  "erviceRpc\022&\n\005Login\022\r.LoginRequest\032\016.Logi"
-  "nResponse\022/\n\010Register\022\020.RegisterRequest\032"
-  "\021.RegisterResponse\022)\n\006Logout\022\016.LogoutReq"
-  "uest\032\017.LogoutResponseB\003\200\001\001b\006proto3"
+  "\n\021UserService.proto\"I\n\014LoginRequest\022\017\n\007u"
+  "ser_id\030\001 \001(\005\022\025\n\ruser_password\030\002 \001(\014\022\021\n\ta"
+  "uth_info\030\003 \001(\014\"3\n\rLoginResponse\022\020\n\010ret_c"
+  "ode\030\001 \001(\005\022\020\n\010res_info\030\002 \001(\t\";\n\017RegisterR"
+  "equest\022\021\n\tuser_name\030\001 \001(\014\022\025\n\ruser_passwo"
+  "rd\030\002 \001(\014\"G\n\020RegisterResponse\022\020\n\010ret_code"
+  "\030\001 \001(\005\022\020\n\010res_info\030\002 \001(\t\022\017\n\007user_id\030\003 \001("
+  "\005\" \n\rLogoutRequest\022\017\n\007user_id\030\001 \001(\005\"4\n\016L"
+  "ogoutResponse\022\020\n\010ret_code\030\001 \001(\005\022\020\n\010res_i"
+  "nfo\030\002 \001(\t2\224\001\n\016UserServiceRpc\022&\n\005Login\022\r."
+  "LoginRequest\032\016.LoginResponse\022/\n\010Register"
+  "\022\020.RegisterRequest\032\021.RegisterResponse\022)\n"
+  "\006Logout\022\016.LogoutRequest\032\017.LogoutResponse"
+  "B\003\200\001\001b\006proto3"
   ;
 static const ::PROTOBUF_NAMESPACE_ID::internal::DescriptorTable*const descriptor_table_UserService_2eproto_deps[1] = {
 };
@@ -216,7 +218,7 @@ static ::PROTOBUF_NAMESPACE_ID::internal::SCCInfoBase*const descriptor_table_Use
 static ::PROTOBUF_NAMESPACE_ID::internal::once_flag descriptor_table_UserService_2eproto_once;
 static bool descriptor_table_UserService_2eproto_initialized = false;
 const ::PROTOBUF_NAMESPACE_ID::internal::DescriptorTable descriptor_table_UserService_2eproto = {
-  &descriptor_table_UserService_2eproto_initialized, descriptor_table_protodef_UserService_2eproto, "UserService.proto", 514,
+  &descriptor_table_UserService_2eproto_initialized, descriptor_table_protodef_UserService_2eproto, "UserService.proto", 533,
   &descriptor_table_UserService_2eproto_once, descriptor_table_UserService_2eproto_sccs, descriptor_table_UserService_2eproto_deps, 6, 0,
   schemas, file_default_instances, TableStruct_UserService_2eproto::offsets,
   file_level_metadata_UserService_2eproto, 6, file_level_enum_descriptors_UserService_2eproto, file_level_service_descriptors_UserService_2eproto,
@@ -246,6 +248,10 @@ LoginRequest::LoginRequest(const LoginRequest& from)
   if (!from._internal_user_password().empty()) {
     user_password_.AssignWithDefault(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), from.user_password_);
   }
+  auth_info_.UnsafeSetDefault(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited());
+  if (!from._internal_auth_info().empty()) {
+    auth_info_.AssignWithDefault(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), from.auth_info_);
+  }
   user_id_ = from.user_id_;
   // @@protoc_insertion_point(copy_constructor:LoginRequest)
 }
@@ -253,6 +259,7 @@ LoginRequest::LoginRequest(const LoginRequest& from)
 void LoginRequest::SharedCtor() {
   ::PROTOBUF_NAMESPACE_ID::internal::InitSCC(&scc_info_LoginRequest_UserService_2eproto.base);
   user_password_.UnsafeSetDefault(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited());
+  auth_info_.UnsafeSetDefault(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited());
   user_id_ = 0;
 }
 
@@ -263,6 +270,7 @@ LoginRequest::~LoginRequest() {
 
 void LoginRequest::SharedDtor() {
   user_password_.DestroyNoArena(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited());
+  auth_info_.DestroyNoArena(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited());
 }
 
 void LoginRequest::SetCachedSize(int size) const {
@@ -281,6 +289,7 @@ void LoginRequest::Clear() {
   (void) cached_has_bits;
 
   user_password_.ClearToEmptyNoArena(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited());
+  auth_info_.ClearToEmptyNoArena(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited());
   user_id_ = 0;
   _internal_metadata_.Clear();
 }
@@ -303,6 +312,14 @@ const char* LoginRequest::_InternalParse(const char* ptr, ::PROTOBUF_NAMESPACE_I
       case 2:
         if (PROTOBUF_PREDICT_TRUE(static_cast<::PROTOBUF_NAMESPACE_ID::uint8>(tag) == 18)) {
           auto str = _internal_mutable_user_password();
+          ptr = ::PROTOBUF_NAMESPACE_ID::internal::InlineGreedyStringParser(str, ptr, ctx);
+          CHK_(ptr);
+        } else goto handle_unusual;
+        continue;
+      // bytes auth_info = 3;
+      case 3:
+        if (PROTOBUF_PREDICT_TRUE(static_cast<::PROTOBUF_NAMESPACE_ID::uint8>(tag) == 26)) {
+          auto str = _internal_mutable_auth_info();
           ptr = ::PROTOBUF_NAMESPACE_ID::internal::InlineGreedyStringParser(str, ptr, ctx);
           CHK_(ptr);
         } else goto handle_unusual;
@@ -345,6 +362,12 @@ failure:
         2, this->_internal_user_password(), target);
   }
 
+  // bytes auth_info = 3;
+  if (this->auth_info().size() > 0) {
+    target = stream->WriteBytesMaybeAliased(
+        3, this->_internal_auth_info(), target);
+  }
+
   if (PROTOBUF_PREDICT_FALSE(_internal_metadata_.have_unknown_fields())) {
     target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormat::InternalSerializeUnknownFieldsToArray(
         _internal_metadata_.unknown_fields(), target, stream);
@@ -366,6 +389,13 @@ size_t LoginRequest::ByteSizeLong() const {
     total_size += 1 +
       ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::BytesSize(
         this->_internal_user_password());
+  }
+
+  // bytes auth_info = 3;
+  if (this->auth_info().size() > 0) {
+    total_size += 1 +
+      ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::BytesSize(
+        this->_internal_auth_info());
   }
 
   // int32 user_id = 1;
@@ -410,6 +440,10 @@ void LoginRequest::MergeFrom(const LoginRequest& from) {
 
     user_password_.AssignWithDefault(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), from.user_password_);
   }
+  if (from.auth_info().size() > 0) {
+
+    auth_info_.AssignWithDefault(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), from.auth_info_);
+  }
   if (from.user_id() != 0) {
     _internal_set_user_id(from._internal_user_id());
   }
@@ -437,6 +471,8 @@ void LoginRequest::InternalSwap(LoginRequest* other) {
   using std::swap;
   _internal_metadata_.Swap(&other->_internal_metadata_);
   user_password_.Swap(&other->user_password_, &::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(),
+    GetArenaNoVirtual());
+  auth_info_.Swap(&other->auth_info_, &::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(),
     GetArenaNoVirtual());
   swap(user_id_, other->user_id_);
 }
