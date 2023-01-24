@@ -49,6 +49,7 @@ void LogoutInterface::run()
         // 注销失败
         throw BusinessException(USER_LOGOUT_FAILED, getErrorMsg(USER_LOGOUT_FAILED), __FILE__, __LINE__);
     }
+    dao.removeUserHost(id);
 }
 
 }

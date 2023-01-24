@@ -44,6 +44,9 @@ void LoginInterface::run()
     if (pwd.empty()) {
         throw BusinessException(USER_PWD_IS_EMPTY, getErrorMsg(USER_PWD_IS_EMPTY), __FILE__, __LINE__);
     }
+    if (!corpc::IPAddress::checkValidIPAddr(addr->toString())) {
+        throw BusinessException(ILLEGAL_USER_HOST, getErrorMsg(ILLEGAL_USER_HOST), __FILE__, __LINE__);
+    }
     if (addr->toString() == "0.0.0.0:0") {
         throw BusinessException(ILLEGAL_USER_HOST, getErrorMsg(ILLEGAL_USER_HOST), __FILE__, __LINE__);
     }
@@ -72,7 +75,6 @@ void LoginInterface::run()
         // 该用户不存在，登录失败
         if (user.getState() != NOT_EXIST_STATE) {
             dao.updateUserState(user);
-            dao.removeUserHost(id);
         }
         throw BusinessException(INVALID_USER_ID_OR_PWD, getErrorMsg(INVALID_USER_ID_OR_PWD), __FILE__, __LINE__);
     }
