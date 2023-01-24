@@ -50,7 +50,12 @@ void LoginInterface::run()
 
     UserDao dao;
     User user = dao.queryUserInfo(id);
-    if (user.getId() == id && user.getPwd() == pwd) {
+    std::string salt = user.getSalt();
+    std::reverse(salt.begin(), salt.end());
+    std::string newPwd = pwd + salt;
+    corpc::MD5 md5;
+    newPwd = md5.getResultString(newPwd);
+    if (user.getId() == id && user.getPwd() == newPwd) {
         if (user.getState() == ONLINE_STATE) {
             // 该用户已经登录，不允许重复登录
             dao.updateUserState(user);

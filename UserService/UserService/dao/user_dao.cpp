@@ -21,8 +21,8 @@ bool UserDao::insertUser(User &user)
 {
     // 1. 组装sql语句
     char sql[1024] = {0};
-    sprintf(sql, "insert into user(name, password, state) values('%s', '%s', '%s')",
-        user.getName().c_str(), user.getPwd().c_str(), user.getState().c_str());
+    sprintf(sql, "insert into user(name, password, salt, state) values('%s', '%s', '%s', '%s')",
+        user.getName().c_str(), user.getPwd().c_str(), user.getSalt().c_str(), user.getState().c_str());
 
     if (mysql_->update(sql) > 0) {
         // 获取插入成功的用户数据生成的主键id
@@ -47,14 +47,15 @@ User UserDao::queryUserInfo(int id)
             user.setId(atoi(row[0]));
             user.setName(row[1]);
             user.setPwd(row[2]);
-            user.setState(row[3]);
+            user.setSalt(row[3]);
+            user.setState(row[4]);
 
             mysql_free_result(res);
             return user;
         }
     }
     redis_->set(USER_STATE_CACHE_PREFIX + std::to_string(id), NOT_EXIST_STATE);
-    return User(id, "", "", NOT_EXIST_STATE);
+    return User(id, "", "", "", NOT_EXIST_STATE);
 }
 
 // 查询用户状态信息
@@ -62,7 +63,7 @@ User UserDao::queryUserState(int id)
 {
     std::string state = redis_->get(USER_STATE_CACHE_PREFIX + std::to_string(id));
     if (!state.empty()) {
-        return User(id, "", "", state);
+        return User(id, "", "", "", state);
     }
 
     // 1. 组装sql语句
@@ -84,7 +85,7 @@ User UserDao::queryUserState(int id)
         }
     }
     redis_->set(USER_STATE_CACHE_PREFIX + std::to_string(id), NOT_EXIST_STATE);
-    return User(id, "", "", NOT_EXIST_STATE);
+    return User(id, "", "", "", NOT_EXIST_STATE);
 }
 
 // 更新用户的状态信息

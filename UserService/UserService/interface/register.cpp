@@ -12,6 +12,7 @@
 #include "UserService/dao/user_dao.h"
 #include "UserService/common/business_exception.h"
 #include "UserService/common/error_code.h"
+#include "UserService/utils/random_string.h"
 
 
 namespace UserService {
@@ -45,9 +46,16 @@ void RegisterInterface::run()
         throw BusinessException(USER_PWD_IS_EMPTY, getErrorMsg(USER_PWD_IS_EMPTY), __FILE__, __LINE__);
     }
 
+    std::string salt = randomString(32), reverseSalt = salt;
+    std::reverse(reverseSalt.begin(), reverseSalt.end());
+    std::string newPwd = pwd + salt;
+    corpc::MD5 md5;
+    newPwd = md5.getResultString(newPwd);
+
     User user;
     user.setName(name);
-    user.setPwd(pwd);
+    user.setPwd(newPwd);
+    user.setSalt(salt);
     UserDao dao;
     if (dao.insertUser(user)) {
         // 注册成功
