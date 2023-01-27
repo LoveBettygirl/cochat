@@ -18,11 +18,14 @@
 #include <vector>
 #include <string>
 #include <corpc/net/tcp/tcp_client.h>
+#include "ChatService/lib/json.hpp"
 
 
 namespace ChatService {
 
 extern RocketMQProducer::ptr gProducer;
+
+using json = nlohmann::json;
 
 GroupChatInterface::GroupChatInterface(const ::GroupChatRequest &request, ::GroupChatResponse &response)
     : request_(request), 
@@ -70,11 +73,21 @@ void GroupChatInterface::run()
         if (user.getState() == ONLINE_STATE) {
             // 用户在线，转发给对应的ProxyServer
             corpc::NetAddress::ptr addr = userDao.quetyUserHost(userid);
+            if (!corpc::IPAddress::checkValidIPAddr(addr->toString())) {
+                throw BusinessException(ILLEGAL_USER_HOST, getErrorMsg(ILLEGAL_USER_HOST), __FILE__, __LINE__);
+            }
             if (addr->toString() == "0.0.0.0:0") {
                 throw BusinessException(FORWARD_CHAT_MSG_FAILED, getErrorMsg(FORWARD_CHAT_MSG_FAILED), __FILE__, __LINE__);
             }
+
+            // 生成转发的消息
+            json js;
+            js["msgid"] = FORWARDED_MSG;
+            js["to"] = user.getId();
+            js["msg"] = msg;
+
             corpc::TcpClient::ptr client = std::make_shared<corpc::TcpClient>(addr);
-            if (client->sendData(msg)) {
+            if (client->sendData(js.dump())) {
                 throw BusinessException(FORWARD_CHAT_MSG_FAILED, getErrorMsg(FORWARD_CHAT_MSG_FAILED), __FILE__, __LINE__);
             }
         }
