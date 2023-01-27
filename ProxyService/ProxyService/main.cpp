@@ -15,9 +15,9 @@ void resetHandler(int)
 int main(int argc, char *argv[])
 {
     if (argc != 2) {
-        printf("Start GroupService server error, input argc is not 2!");
-        printf("Start GroupService like this: \n");
-        printf("./GroupService GroupService.yml\n");
+        printf("Start ProxyService server error, input argc is not 2!");
+        printf("Start ProxyService like this: \n");
+        printf("./ProxyService ProxyService.yml\n");
         return 0;
     }
 
