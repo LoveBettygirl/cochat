@@ -1,0 +1,52 @@
+syntax = "proto3";
+
+option cc_generic_services = true;
+
+message OneChatRequest {
+    int32 from_user_id = 1;
+    int32 to_user_id = 2;
+    bytes msg = 3;
+}
+
+message OneChatResponse {
+    int32 ret_code = 1;
+    string res_info = 2;
+}
+
+message GroupChatRequest {
+    int32 from_user_id = 1;
+    int32 to_group_id = 2;
+    bytes msg = 3;
+}
+
+message GroupChatResponse {
+    int32 ret_code = 1;
+    string res_info = 2;
+}
+
+message ReadOfflineMessageRequest {
+    int32 user_id = 1;
+}
+
+message ReadOfflineMessageResponse {
+    int32 ret_code = 1;
+    string res_info = 2;
+    repeated bytes msgs = 3;
+}
+
+message SaveOfflineMessageRequest {
+    int32 user_id = 1;
+    bytes msg = 2;
+}
+
+message SaveOfflineMessageResponse {
+    int32 ret_code = 1;
+    string res_info = 2;
+}
+
+service ChatServiceRpc {
+    rpc OneChat(OneChatRequest) returns(OneChatResponse);
+    rpc GroupChat(GroupChatRequest) returns(GroupChatResponse);
+    rpc ReadOfflineMessage(ReadOfflineMessageRequest) returns(ReadOfflineMessageResponse);
+    rpc SaveOfflineMessage(SaveOfflineMessageRequest) returns(SaveOfflineMessageResponse);
+}
