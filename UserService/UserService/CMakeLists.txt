@@ -5,4 +5,4 @@
 
 file(GLOB_RECURSE SRC_LIST *.cpp *.cc *.h *.S)
 add_executable(UserService ${SRC_LIST})
-target_link_libraries(UserService corpc pthread yaml-cpp protobuf dl zookeeper_mt)
+target_link_libraries(UserService corpc pthread yaml-cpp protobuf dl zookeeper_mt mysqlclient hiredis)
