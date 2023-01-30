@@ -41,8 +41,8 @@ zk_config:
   timeout: 30000
 
 server:
-  ip: 0.0.0.0
-  port: 39999
+  ip: 127.0.0.1
+  port: 13000
   server_type: rpc
   rpc_protocol: PB
 
