@@ -21,7 +21,7 @@ public:
     bool addGroup(int userid, int groupid, const std::string &role);
 
     // 查询用户所在组的角色
-    std::string GroupDao::queryGroupUserRole(int userid, int groupid);
+    std::string queryGroupUserRole(int userid, int groupid);
 
     // 退出群组
     bool quitGroup(int userid, int groupid);

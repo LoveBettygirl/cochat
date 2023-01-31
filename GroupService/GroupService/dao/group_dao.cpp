@@ -95,7 +95,7 @@ Group GroupDao::queryGroup(int groupid)
     sprintf(sql, "select a.id,a.name,a.state,b.grouprole from user a \
             inner join groupuser b on b.userid = a.id where b.groupid=%d", group.getId());
 
-    MYSQL_RES *res = mysql_->query(sql);
+    res = mysql_->query(sql);
     if (res != nullptr) {
         MYSQL_ROW row;
         while ((row = mysql_fetch_row(res)) != nullptr) {

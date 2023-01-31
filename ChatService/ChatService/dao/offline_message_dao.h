@@ -10,6 +10,7 @@ namespace ChatService {
 // 提供离线消息表的操作接口方法
 class OfflineMessageDao {
 public:
+    OfflineMessageDao();
 
     // 存储用户的离线信息
     bool insertMessage(int userid, const std::string &msg);

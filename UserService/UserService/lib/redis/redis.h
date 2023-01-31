@@ -3,6 +3,7 @@
 
 #include <hiredis/hiredis.h>
 #include <cstring>
+#include <ctime>
 #include <string>
 #include <memory>
 #include <yaml-cpp/yaml.h>
@@ -41,9 +42,19 @@ public:
 
     bool flushdb();
 
+    // 刷新连接时间
+    void refreshAliveTime() { aliveTime_ = clock(); }
+
+    // 返回存活的时间
+    clock_t getAliveTime() { return clock() - aliveTime_; }
+
+    // 获取实际连接
+    redisContext *getConnection() const { return cacheContext_; }
+
 private:
     // hiredis同步上下文对象，负责缓存
     redisContext *cacheContext_;
+    clock_t aliveTime_; // 记录进入空闲状态后的存活时间
 };
 
 }

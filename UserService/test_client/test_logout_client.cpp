@@ -25,7 +25,7 @@ void testClient()
     rpcController.SetTimeout(5000);
 
     ::LogoutRequest rpcReq;
-    ::LogoutReponse rpcRes;
+    ::LogoutResponse rpcRes;
 
     std::cout << "Send to UserService server " << addr->toString() << ", request body: " << rpcReq.ShortDebugString() << std::endl;
     stub.Logout(&rpcController, &rpcReq, &rpcRes, NULL);

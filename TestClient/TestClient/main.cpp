@@ -2,15 +2,23 @@
 #include <iostream>
 #include <regex>
 #include <getopt.h>
-using namespace std;
 
 int port = 2000;
-string ip = "127.0.0.1";
+std::string ip = "127.0.0.1";
+
+void showUsage()
+{
+    std::cout << "Options:" << std::endl;
+    std::cout << " -a, --address=IP_ADDRESS   The IP address of the server." << std::endl;
+    std::cout << " -p, --port=PORT            The port of the server." << std::endl;
+    std::cout << " -h, --help                 Print this message and exit." << std::endl;
+    exit(-1);
+}
 
 void parseArgs(int argc, char *argv[])
 {
     int c;
-    regex r("^(1\\d{2}|2[0-4]\\d|25[0-5]|[1-9]\\d|\\d)\\."
+    std::regex r("^(1\\d{2}|2[0-4]\\d|25[0-5]|[1-9]\\d|\\d)\\."
             "(1\\d{2}|2[0-4]\\d|25[0-5]|[1-9]\\d|\\d)\\."
             "(1\\d{2}|2[0-4]\\d|25[0-5]|[1-9]\\d|\\d)\\."
             "(1\\d{2}|2[0-4]\\d|25[0-5]|[1-9]\\d|\\d)$");
@@ -33,9 +41,9 @@ void parseArgs(int argc, char *argv[])
 
         switch (c) {
         case 'a':
-            ip = string(optarg);
+            ip = std::string(optarg);
             if (!regex_match(ip, r)) {
-                cerr << "Invaild IP address format." << endl;
+                std::cerr << "Invaild IP address format." << std::endl;
                 exit(-1);
             }
             break;
@@ -43,7 +51,7 @@ void parseArgs(int argc, char *argv[])
         case 'p':
             port = atoi(optarg);
             if (port < 0 || port > 65535) {
-                cerr << "The port " << port << " out of range." << endl;
+                std::cerr << "The port " << port << " out of range." << std::endl;
                 exit(-1);
             }
             break;
@@ -66,7 +74,7 @@ int main(int argc, char *argv[])
 {
     parseArgs(argc, argv);
 
-    TestClient::ChatClient client(config.ip, config.port);
+    TestClient::ChatClient client(ip, port);
     client.start();
 
     return 0;

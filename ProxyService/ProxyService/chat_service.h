@@ -7,10 +7,7 @@
 #include <string>
 #include <corpc/net/tcp/tcp_connection.h>
 #include "ProxyService/lib/json.hpp"
-#include "ProxyService/pb/ChatService.pb.h"
-#include "ProxyService/pb/UserService.pb.h"
-#include "ProxyService/pb/GroupService.pb.h"
-#include "ProxyService/pb/FriendService.pb.h"
+#include "ProxyService/pb/ProxyService.pb.h"
 #include "ProxyService/cypher/rsa.h"
 #include "ProxyService/cypher/aes.h"
 #include <corpc/net/service_register.h>

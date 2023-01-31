@@ -27,7 +27,7 @@ public:
     std::shared_ptr<T> getConnection() {
         std::unique_lock<std::mutex> lock(queueMutex_);
         while (connectionQueue_.empty()) {
-            if (cv_status::timeout == condition_.wait_for(lock, chrono::milliseconds(connectionTimeout_))) {
+            if (std::cv_status::timeout == condition_.wait_for(lock, std::chrono::milliseconds(connectionTimeout_))) {
                 if (connectionQueue_.empty()) {
                     USER_LOG_ERROR << "get connection timeout...";
                     return nullptr;
@@ -76,12 +76,12 @@ public:
         }
 
         // 启动一个新线程，作为连接生产者
-        std::thread connect_producer(bind(&ConnectPool<T>::produceConnection, this));
+        std::thread connect_producer(std::bind(&ConnectionPool<T>::produceConnection, this));
         connect_producer.detach();
 
         // 启动新线程扫描空闲连接，超过max freetime时间的空闲连接，进行连接回收
-        std::thread scanner(bind(&ConnectPool<T>::scanConnection, this));
-        scaner.detach();
+        std::thread scanner(std::bind(&ConnectionPool<T>::scanConnection, this));
+        scanner.detach();
 
         started_ = 1;
     }
@@ -113,14 +113,14 @@ private:
     void scanConnection() {
         while (true) {
             // 通过sleep模型定时效果
-            this_thread::sleep_for(chrono::seconds(maxFreeTime));
+            std::this_thread::sleep_for(std::chrono::seconds(maxFreeTime_));
 
             // 扫描队列，释放多余连接
             std::unique_lock<std::mutex> lock(queueMutex_);
             while (connectionCnt_ > initSize_)
             {
                 T *p = connectionQueue_.front();
-                if (p->getAliveTime() > maxFreeTime * 1000) {
+                if (p->getAliveTime() > maxFreeTime_ * 1000) {
                     connectionQueue_.pop();
                     delete p; //释放连接
                     connectionCnt_--;

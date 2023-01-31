@@ -316,6 +316,22 @@ void ChatClient::addfriend(int clientfd, std::string str)
     }
     sem_wait(&rwsem_); // 等待信号量，子线程处理完注册消息会通知
 }
+// "delfriend" command handler
+void ChatClient::delfriend(int clientfd, std::string str)
+{
+    int friendid = atoi(str.c_str());
+    json js;
+    js["msgid"] = DEL_FRIEND_MSG;
+    js["id"] = currentUser_.getId();
+    js["friendid"] = friendid;
+    std::string buffer = js.dump();
+
+    int len = sendMsg(clientfd, buffer);
+    if (len == -1) {
+        std::cerr << "send delfriend msg error -> " << buffer << std::endl;
+    }
+    sem_wait(&rwsem_); // 等待信号量，子线程处理完注册消息会通知
+}
 // "chat" command handler
 void ChatClient::chat(int clientfd, std::string str)
 {
@@ -381,6 +397,22 @@ void ChatClient::addgroup(int clientfd, std::string str)
     int len = sendMsg(clientfd, buffer);
     if (-1 == len) {
         std::cerr << "send addgroup msg error -> " << buffer << std::endl;
+    }
+    sem_wait(&rwsem_); // 等待信号量，子线程处理完注册消息会通知
+}
+// "quitgroup" command handler
+void ChatClient::quitgroup(int clientfd, std::string str)
+{
+    int groupid = atoi(str.c_str());
+    json js;
+    js["msgid"] = QUIT_GROUP_MSG;
+    js["id"] = currentUser_.getId();
+    js["groupid"] = groupid;
+    std::string buffer = js.dump();
+
+    int len = sendMsg(clientfd, buffer);
+    if (-1 == len) {
+        std::cerr << "send quitgroup msg error -> " << buffer << std::endl;
     }
     sem_wait(&rwsem_); // 等待信号量，子线程处理完注册消息会通知
 }
