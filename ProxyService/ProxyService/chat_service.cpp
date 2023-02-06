@@ -38,12 +38,14 @@ ChatService::ChatService()
 
     msgHandlerMap_.insert({FORWARDED_MSG, std::bind(&ChatService::forwarded, this, std::placeholders::_1, std::placeholders::_2)});
 
+    msgHandlerMap_.insert({GET_USER_INFO_MSG, std::bind(&ChatService::getUserInfo, this, std::placeholders::_1, std::placeholders::_2)});
+
     center_ = corpc::ServiceRegister::queryRegister(corpc::getConfig()->serviceRegister);
 
-    readRsaKey(corpc::getConfig()->getYamlNode("rsa")["private_key_path"].as<std::string>(), rsaPrivateKey);
-    readRsaKey(corpc::getConfig()->getYamlNode("rsa")["public_key_path"].as<std::string>(), rsaPublicKey);
+    readRsaKey(corpc::getConfig()->getYamlNode("rsa")["private_key_path"].as<std::string>(), rsaPrivateKey_);
+    readRsaKey(corpc::getConfig()->getYamlNode("rsa")["public_key_path"].as<std::string>(), rsaPublicKey_);
 
-    rsa = std::make_shared<RSATool>(rsaPrivateKey, true);
+    rsa_ = std::make_shared<RSATool>(rsaPrivateKey_, true);
 }
 
 void ChatService::readRsaKey(const std::string &fileName, std::string &pemFile)
@@ -53,82 +55,126 @@ void ChatService::readRsaKey(const std::string &fileName, std::string &pemFile)
         USER_LOG_FATAL << "pem file not exist";
     }
 
-    std::string temp;
-    while (std::getline(in, temp)) {
-        pemFile += temp + "\n";
-    }
+    std::stringstream ss;
+    ss << in.rdbuf();
+    pemFile = ss.str();
 }
 
-void ChatService::sendPubKeyToClient(const corpc::TcpConnection::ptr &conn)
+void ChatService::dealWithClient(const corpc::TcpConnection::ptr &conn, int pkType, const std::string &data)
 {
-    if (userCipherMap_.find(conn) == userCipherMap_.end()) {
-        userCipherMap_.insert({conn, nullptr});
-    }
-    sendMsg(conn, rsaPublicKey);
-}
-
-void ChatService::dealWithClient(const corpc::TcpConnection::ptr &conn, const std::string &data)
-{
-    auto it = userCipherMap_.find(conn);
-    if (it != userCipherMap_.end() && it->second == nullptr) {
-        std::string aesKey = rsa->privateDecrypt(data);
-        userCipherMap_[conn] = std::make_shared<AESTool>(aesKey);
+    if (pkType == CLIENT_CONNECTION) {
+        {
+            std::unique_lock<std::mutex> lock(cipherMutex_);
+            if (userCipherMap_.find(conn) == userCipherMap_.end()) {
+                userCipherMap_.insert({conn, nullptr});
+            }
+        }
+        sendMsg(conn, SERVER_PUBKEY, rsaPublicKey_);
         return;
     }
+    else if (pkType == CLIENT_KEY) {
+        std::unique_lock<std::mutex> lock(cipherMutex_);
+        auto it = userCipherMap_.find(conn);
+        if (it != userCipherMap_.end() && it->second == nullptr) {
+            std::string aesKey = rsa_->privateDecrypt(data);
+            userCipherMap_[conn] = std::make_shared<AESTool>(aesKey);
+        }
+        return;
+    }
+    else if (pkType == CLIENT_MSG || pkType == SERVER_FORWARD_MSG) {
+        // 解码数据
+        std::string strs = data;
+        if (pkType == CLIENT_MSG) {
+            std::unique_lock<std::mutex> lock(cipherMutex_);
+            strs = userCipherMap_[conn]->decrypt(data);
+        }
 
-    // 解码数据
-    std::string strs = userCipherMap_[conn]->decrypt(data);
-
-    // 数据的反序列化
-    json js = json::parse(strs);
-    // 目的：完全解耦网络模块和业务模块的代码，充分利用oop，C++中的接口就是抽象基类
-    auto msgHandler = ChatService::instance()->getHandler(js["msgid"].get<int>());
-    // 回调消息绑定好的事件处理器，来执行相应的业务处理
-    msgHandler(conn, js);
+        // 数据的反序列化
+        json js = json::parse(strs);
+        // 目的：完全解耦网络模块和业务模块的代码，充分利用oop，C++中的接口就是抽象基类
+        auto msgHandler = ChatService::instance()->getHandler(js["msgid"].get<int>());
+        // 回调消息绑定好的事件处理器，来执行相应的业务处理
+        msgHandler(conn, js);
+    }
+    else if (pkType == HEARTBEAT) {
+        sendMsg(conn, HEARTBEAT, "");
+    }
 }
 
-void ChatService::sendMsg(const corpc::TcpConnection::ptr &conn, const std::string &data)
+void ChatService::sendMsg(const corpc::TcpConnection::ptr &conn, int pkType, const std::string &data)
 {
-    std::string encrypted = userCipherMap_[conn]->encrypt(data);
+    std::string encrypted = data;
+    
+    if (pkType == CLIENT_MSG) {
+        std::unique_lock<std::mutex> lock(cipherMutex_);
+        encrypted = userCipherMap_[conn]->encrypt(data);
+    }
 
-    int pkLen = 12 + encrypted.size();
+    int pkLen = 13 + encrypted.size();
     char *buf = reinterpret_cast<char *>(malloc(pkLen));
     char *temp = buf;
 
     int magicBegin = htonl(MAGIC_BEGIN);
     memcpy(temp, &magicBegin, sizeof(int32_t));
+    temp += sizeof(int32_t);
 
-    int encryptedSize = htonl(encrypted.size());
-    memcpy(temp, &encryptedSize, sizeof(int32_t));
+    int encryptedSize = 1 + encrypted.size();
+    int encryptedSizeNet = htonl(encryptedSize);
+    memcpy(temp, &encryptedSizeNet, sizeof(int32_t));
+    temp += sizeof(int32_t);
 
-    memcpy(temp, &*encrypted.begin(), encryptedSize);
+    char pkTypeChar = pkType;
+    memcpy(temp, &pkTypeChar, sizeof(pkTypeChar));
+    temp += sizeof(pkTypeChar);
+
+    if (encrypted.size()) {
+        memcpy(temp, &*encrypted.begin(), encrypted.size());
+        temp += encrypted.size();
+    }
 
     int magicEnd = htonl(MAGIC_END);
     memcpy(temp, &magicEnd, sizeof(int32_t));
+    temp += sizeof(int32_t);
 
-    conn->send(temp, pkLen);
+    conn->send(buf, pkLen);
 }
 
-void ChatService::sendMsgInCor(const corpc::TcpConnection::ptr &conn, const std::string &data)
+void ChatService::sendMsgInCor(const corpc::TcpConnection::ptr &conn, int pkType, const std::string &data)
 {
-    std::string encrypted = userCipherMap_[conn]->encrypt(data);
+    std::string encrypted;
+    
+    if (pkType == CLIENT_MSG) {
+        std::unique_lock<std::mutex> lock(cipherMutex_);
+        encrypted = userCipherMap_[conn]->encrypt(data);
+    }
 
-    int pkLen = 12 + encrypted.size();
+    int pkLen = 13 + encrypted.size();
     char *buf = reinterpret_cast<char *>(malloc(pkLen));
     char *temp = buf;
 
     int magicBegin = htonl(MAGIC_BEGIN);
     memcpy(temp, &magicBegin, sizeof(int32_t));
+    temp += sizeof(int32_t);
 
-    int encryptedSize = htonl(encrypted.size());
-    memcpy(temp, &encryptedSize, sizeof(int32_t));
+    int encryptedSize = 1 + encrypted.size();
+    int encryptedSizeNet = htonl(encryptedSize);
+    memcpy(temp, &encryptedSizeNet, sizeof(int32_t));
+    temp += sizeof(int32_t);
 
-    memcpy(temp, &*encrypted.begin(), encryptedSize);
+    char pkTypeChar = pkType;
+    memcpy(temp, &pkTypeChar, sizeof(pkTypeChar));
+    temp += sizeof(pkTypeChar);
+
+    if (encrypted.size()) {
+        memcpy(temp, &*encrypted.begin(), encrypted.size());
+        temp += encrypted.size();
+    }
 
     int magicEnd = htonl(MAGIC_END);
     memcpy(temp, &magicEnd, sizeof(int32_t));
+    temp += sizeof(int32_t);
 
-    conn->sendInCor(temp, pkLen);
+    conn->send(buf, pkLen);
 }
 
 // 获取消息对应的处理器
@@ -172,15 +218,17 @@ void ChatService::login(const corpc::TcpConnection::ptr &conn, json &js)
             userConnMap_.insert({id, conn});
         }
 
-        response["id"] = id;
-
         // 查询用户信息
         UserInfoRequest userInfoReq;
         UserInfoResponse userInfoRes;
         userInfoReq.set_user_id(id);
         int ret = doGetUserInfoReq(userInfoReq, userInfoRes);
         if (userInfoRes.ret_code() == ProxyService::SUCCESS) {
+            response["id"] = id;
             response["name"] = userInfoRes.user().name();
+            std::string state = UserState_descriptor()->FindValueByNumber(userInfoRes.user().state())->name();
+            std::transform(state.begin(), state.end(), state.begin(), tolower);
+            response["state"] = state;
         }
         else {
             response["errno"] = userInfoRes.ret_code();
@@ -218,7 +266,9 @@ void ChatService::login(const corpc::TcpConnection::ptr &conn, json &js)
                 json js;
                 js["id"] = user.id();
                 js["name"] = user.name();
-                js["state"] = user.state();
+                std::string state = UserState_descriptor()->FindValueByNumber(user.state())->name();
+                std::transform(state.begin(), state.end(), state.begin(), tolower);
+                js["state"] = state;
                 vec2.push_back(js);
             }
             response["friends"] = vec2;
@@ -246,8 +296,12 @@ void ChatService::login(const corpc::TcpConnection::ptr &conn, json &js)
                     json js;
                     js["id"] = user.id();
                     js["name"] = user.name();
-                    js["state"] = user.state();
-                    js["role"] = user.role();
+                    std::string state = UserState_descriptor()->FindValueByNumber(user.state())->name();
+                    std::transform(state.begin(), state.end(), state.begin(), tolower);
+                    js["state"] = state;
+                    std::string role = GroupUserRole_descriptor()->FindValueByNumber(user.role())->name();
+                    std::transform(role.begin(), role.end(), role.begin(), tolower);
+                    js["role"] = role;
                     userV.push_back(js);
                 }
                 grpjson["users"] = userV;
@@ -261,7 +315,7 @@ void ChatService::login(const corpc::TcpConnection::ptr &conn, json &js)
         }
     }
 
-    sendMsg(conn, response.dump());
+    sendMsg(conn, CLIENT_MSG, response.dump());
 }
 
 // 处理注册业务
@@ -285,7 +339,7 @@ void ChatService::reg(const corpc::TcpConnection::ptr &conn, json &js)
     response["msgid"] = REG_MSG_ACK;
     response["errno"] = registerRes.ret_code();
     response["errmsg"] = registerRes.res_info();
-    sendMsg(conn, response.dump());
+    sendMsg(conn, CLIENT_MSG, response.dump());
 }
 
 void ChatService::oneChat(const corpc::TcpConnection::ptr &conn, json &js)
@@ -302,10 +356,11 @@ void ChatService::oneChat(const corpc::TcpConnection::ptr &conn, json &js)
         if (it != userConnMap_.end()) {
             // toid登录在本机，转发消息
             // 服务器主动推送消息给toid用户
-            sendMsgInCor(it->second, js.dump());
+            // lock.unlock();
+            sendMsgInCor(it->second, CLIENT_MSG, js.dump());
             response["errno"] = ProxyService::SUCCESS;
             response["errmsg"] = ProxyService::getErrorMsg(SUCCESS);
-            sendMsg(conn, response.dump());
+            sendMsg(conn, CLIENT_MSG, response.dump());
             return;
         }
     }
@@ -318,7 +373,7 @@ void ChatService::oneChat(const corpc::TcpConnection::ptr &conn, json &js)
     int ret = doOneChatReq(oneChatReq, oneChatRes);
     response["errno"] = oneChatRes.ret_code();
     response["errmsg"] = oneChatRes.res_info();
-    sendMsg(conn, response.dump());
+    sendMsg(conn, CLIENT_MSG, response.dump());
 }
 
 // 添加好友业务
@@ -342,7 +397,7 @@ void ChatService::addFriend(const corpc::TcpConnection::ptr &conn, json &js)
     if (addFriendRes.ret_code() == ProxyService::SUCCESS) {
         FriendListRequest friendListReq;
         FriendListResponse friendListRes;
-        friendListReq.set_user_id(friendid);
+        friendListReq.set_user_id(userid);
         int ret = doGetFriendListReq(friendListReq, friendListRes);
         if (friendListRes.ret_code() == ProxyService::SUCCESS) {
             std::vector<json> vec2;
@@ -350,7 +405,9 @@ void ChatService::addFriend(const corpc::TcpConnection::ptr &conn, json &js)
                 json js;
                 js["id"] = user.id();
                 js["name"] = user.name();
-                js["state"] = user.state();
+                std::string state = UserState_descriptor()->FindValueByNumber(user.state())->name();
+                std::transform(state.begin(), state.end(), state.begin(), tolower);
+                js["state"] = state;
                 vec2.push_back(js);
             }
             response["friends"] = vec2;
@@ -360,7 +417,7 @@ void ChatService::addFriend(const corpc::TcpConnection::ptr &conn, json &js)
             response["errmsg"] = friendListRes.res_info();
         }
     }
-    sendMsg(conn, response.dump());
+    sendMsg(conn, CLIENT_MSG, response.dump());
 }
 
 // 删除好友业务
@@ -383,7 +440,7 @@ void ChatService::deleteFriend(const corpc::TcpConnection::ptr &conn, json &js)
     if (delFriendRes.ret_code() == ProxyService::SUCCESS) {
         FriendListRequest friendListReq;
         FriendListResponse friendListRes;
-        friendListReq.set_user_id(friendid);
+        friendListReq.set_user_id(userid);
         int ret = doGetFriendListReq(friendListReq, friendListRes);
         if (friendListRes.ret_code() == ProxyService::SUCCESS) {
             std::vector<json> vec2;
@@ -391,7 +448,9 @@ void ChatService::deleteFriend(const corpc::TcpConnection::ptr &conn, json &js)
                 json js;
                 js["id"] = user.id();
                 js["name"] = user.name();
-                js["state"] = user.state();
+                std::string state = UserState_descriptor()->FindValueByNumber(user.state())->name();
+                std::transform(state.begin(), state.end(), state.begin(), tolower);
+                js["state"] = state;
                 vec2.push_back(js);
             }
             response["friends"] = vec2;
@@ -401,7 +460,7 @@ void ChatService::deleteFriend(const corpc::TcpConnection::ptr &conn, json &js)
             response["errmsg"] = friendListRes.res_info();
         }
     }
-    sendMsg(conn, response.dump());
+    sendMsg(conn, CLIENT_MSG, response.dump());
 }
 
 // 处理客户端异常退出
@@ -416,7 +475,10 @@ void ChatService::clientCloseException(const corpc::TcpConnection::ptr &conn)
                 // 从map表删除用户的连接信息
                 userid = it->first;
                 userConnMap_.erase(it);
-                userCipherMap_.erase(userCipherMap_.find(conn));
+                {
+                    std::unique_lock<std::mutex> lock2(cipherMutex_);
+                    userCipherMap_.erase(userCipherMap_.find(conn));
+                }
                 break;
             }
         }
@@ -445,6 +507,7 @@ void ChatService::reset()
         int ret = doLogoutReq(logoutReq, logoutRes);
     }
     userConnMap_.clear();
+    std::unique_lock<std::mutex> lock2(cipherMutex_);
     userCipherMap_.clear();
 }
 
@@ -468,33 +531,42 @@ void ChatService::createGroup(const corpc::TcpConnection::ptr &conn, json &js)
     response["errno"] = createGroupRes.ret_code();
     response["errmsg"] = createGroupRes.res_info();
     if (createGroupRes.ret_code() == ProxyService::SUCCESS) {
-        GetGroupInfoRequest getGroupInfoReq;
-        GetGroupInfoResponse getGroupInfoRes;
-        getGroupInfoReq.set_group_id(createGroupRes.group_id());
-        ret = doGetGroupInfoReq(getGroupInfoReq, getGroupInfoRes);
-        if (getGroupInfoRes.ret_code() == ProxyService::SUCCESS) {
-            json groupjs;
-            groupjs["id"] = getGroupInfoRes.group_info().id();
-            groupjs["groupname"] = getGroupInfoRes.group_info().name();
-            groupjs["groupdesc"] = getGroupInfoRes.group_info().desc();
-            std::vector<json> userV;
-            for (auto &user : getGroupInfoRes.group_info().users()) {
-                json js;
-                js["id"] = user.id();
-                js["name"] = user.name();
-                js["state"] = user.state();
-                js["role"] = user.role();
-                userV.push_back(js);
+        GetUserGroupsRequest userGroupsReq;
+        GetUserGroupsResponse userGroupsRes;
+        userGroupsReq.set_user_id(userid);
+        ret = doGetUserGroupsReq(userGroupsReq, userGroupsRes);
+        if (userGroupsRes.ret_code() == ProxyService::SUCCESS) {
+            // group:[{groupid:[xxx, xxx, xxx, xxx]}]
+            std::vector<json> groupV;
+            for (auto &group : userGroupsRes.groups()) {
+                json grpjson;
+                grpjson["id"] = group.id();
+                grpjson["groupname"] = group.name();
+                grpjson["groupdesc"] = group.desc();
+                std::vector<json> userV;
+                for (auto &user : group.users()) {
+                    json js;
+                    js["id"] = user.id();
+                    js["name"] = user.name();
+                    std::string state = UserState_descriptor()->FindValueByNumber(user.state())->name();
+                    std::transform(state.begin(), state.end(), state.begin(), tolower);
+                    js["state"] = state;
+                    std::string role = GroupUserRole_descriptor()->FindValueByNumber(user.role())->name();
+                    std::transform(role.begin(), role.end(), role.begin(), tolower);
+                    js["role"] = role;
+                    userV.push_back(js);
+                }
+                grpjson["users"] = userV;
+                groupV.push_back(grpjson);
             }
-            groupjs["users"] = userV;
-            response["group"] = groupjs;
+            response["groups"] = groupV;
         }
         else {
-            response["errno"] = getGroupInfoRes.ret_code();
-            response["errmsg"] = getGroupInfoRes.res_info();
+            response["errno"] = userGroupsRes.ret_code();
+            response["errmsg"] = userGroupsRes.res_info();
         }
     }
-    sendMsg(conn, response.dump());
+    sendMsg(conn, CLIENT_MSG, response.dump());
 }
 
 // 加入群组业务
@@ -515,29 +587,42 @@ void ChatService::addGroup(const corpc::TcpConnection::ptr &conn, json &js)
     response["errno"] = addGroupRes.ret_code();
     response["errmsg"] = addGroupRes.res_info();
     if (addGroupRes.ret_code() == ProxyService::SUCCESS) {
-        GetGroupInfoRequest getGroupInfoReq;
-        GetGroupInfoResponse getGroupInfoRes;
-        getGroupInfoReq.set_group_id(groupid);
-        ret = doGetGroupInfoReq(getGroupInfoReq, getGroupInfoRes);
-        if (getGroupInfoRes.ret_code() == ProxyService::SUCCESS) {
-            json groupjs;
-            groupjs["id"] = getGroupInfoRes.group_info().id();
-            groupjs["groupname"] = getGroupInfoRes.group_info().name();
-            groupjs["groupdesc"] = getGroupInfoRes.group_info().desc();
-            std::vector<json> userV;
-            for (auto &user : getGroupInfoRes.group_info().users()) {
-                json js;
-                js["id"] = user.id();
-                js["name"] = user.name();
-                js["state"] = user.state();
-                js["role"] = user.role();
-                userV.push_back(js);
+        GetUserGroupsRequest userGroupsReq;
+        GetUserGroupsResponse userGroupsRes;
+        userGroupsReq.set_user_id(userid);
+        ret = doGetUserGroupsReq(userGroupsReq, userGroupsRes);
+        if (userGroupsRes.ret_code() == ProxyService::SUCCESS) {
+            // group:[{groupid:[xxx, xxx, xxx, xxx]}]
+            std::vector<json> groupV;
+            for (auto &group : userGroupsRes.groups()) {
+                json grpjson;
+                grpjson["id"] = group.id();
+                grpjson["groupname"] = group.name();
+                grpjson["groupdesc"] = group.desc();
+                std::vector<json> userV;
+                for (auto &user : group.users()) {
+                    json js;
+                    js["id"] = user.id();
+                    js["name"] = user.name();
+                    std::string state = UserState_descriptor()->FindValueByNumber(user.state())->name();
+                    std::transform(state.begin(), state.end(), state.begin(), tolower);
+                    js["state"] = state;
+                    std::string role = GroupUserRole_descriptor()->FindValueByNumber(user.role())->name();
+                    std::transform(role.begin(), role.end(), role.begin(), tolower);
+                    js["role"] = role;
+                    userV.push_back(js);
+                }
+                grpjson["users"] = userV;
+                groupV.push_back(grpjson);
             }
-            groupjs["users"] = userV;
-            response["group"] = groupjs;
+            response["groups"] = groupV;
+        }
+        else {
+            response["errno"] = userGroupsRes.ret_code();
+            response["errmsg"] = userGroupsRes.res_info();
         }
     }
-    sendMsg(conn, response.dump());
+    sendMsg(conn, CLIENT_MSG, response.dump());
 }
 
 // 退出群组业务
@@ -558,29 +643,42 @@ void ChatService::quitGroup(const corpc::TcpConnection::ptr &conn, json &js)
     response["errno"] = quitGroupRes.ret_code();
     response["errmsg"] = quitGroupRes.res_info();
     if (quitGroupRes.ret_code() == ProxyService::SUCCESS) {
-        GetGroupInfoRequest getGroupInfoReq;
-        GetGroupInfoResponse getGroupInfoRes;
-        getGroupInfoReq.set_group_id(groupid);
-        ret = doGetGroupInfoReq(getGroupInfoReq, getGroupInfoRes);
-        if (getGroupInfoRes.ret_code() == ProxyService::SUCCESS) {
-            json groupjs;
-            groupjs["id"] = getGroupInfoRes.group_info().id();
-            groupjs["groupname"] = getGroupInfoRes.group_info().name();
-            groupjs["groupdesc"] = getGroupInfoRes.group_info().desc();
-            std::vector<json> userV;
-            for (auto &user : getGroupInfoRes.group_info().users()) {
-                json js;
-                js["id"] = user.id();
-                js["name"] = user.name();
-                js["state"] = user.state();
-                js["role"] = user.role();
-                userV.push_back(js);
+        GetUserGroupsRequest userGroupsReq;
+        GetUserGroupsResponse userGroupsRes;
+        userGroupsReq.set_user_id(userid);
+        ret = doGetUserGroupsReq(userGroupsReq, userGroupsRes);
+        if (userGroupsRes.ret_code() == ProxyService::SUCCESS) {
+            // group:[{groupid:[xxx, xxx, xxx, xxx]}]
+            std::vector<json> groupV;
+            for (auto &group : userGroupsRes.groups()) {
+                json grpjson;
+                grpjson["id"] = group.id();
+                grpjson["groupname"] = group.name();
+                grpjson["groupdesc"] = group.desc();
+                std::vector<json> userV;
+                for (auto &user : group.users()) {
+                    json js;
+                    js["id"] = user.id();
+                    js["name"] = user.name();
+                    std::string state = UserState_descriptor()->FindValueByNumber(user.state())->name();
+                    std::transform(state.begin(), state.end(), state.begin(), tolower);
+                    js["state"] = state;
+                    std::string role = GroupUserRole_descriptor()->FindValueByNumber(user.role())->name();
+                    std::transform(role.begin(), role.end(), role.begin(), tolower);
+                    js["role"] = role;
+                    userV.push_back(js);
+                }
+                grpjson["users"] = userV;
+                groupV.push_back(grpjson);
             }
-            groupjs["users"] = userV;
-            response["group"] = groupjs;
+            response["groups"] = groupV;
+        }
+        else {
+            response["errno"] = userGroupsRes.ret_code();
+            response["errmsg"] = userGroupsRes.res_info();
         }
     }
-    sendMsg(conn, response.dump());
+    sendMsg(conn, CLIENT_MSG, response.dump());
 }
 
 // 群组聊天业务
@@ -594,13 +692,14 @@ void ChatService::groupChat(const corpc::TcpConnection::ptr &conn, json &js)
     GroupChatResponse groupChatRes;
     groupChatReq.set_from_user_id(userid);
     groupChatReq.set_to_group_id(groupid);
+    groupChatReq.set_msg(js.dump());
     int ret = doGroupChatReq(groupChatReq, groupChatRes);
 
     json response;
     response["msgid"] = GROUP_CHAT_MSG_ACK;
     response["errno"] = groupChatRes.ret_code();
     response["errmsg"] = groupChatRes.res_info();
-    sendMsg(conn, response.dump());
+    sendMsg(conn, CLIENT_MSG, response.dump());
 }
 
 // 处理注销业务
@@ -630,23 +729,125 @@ void ChatService::logout(const corpc::TcpConnection::ptr &conn, json &js)
         }
     }
 
-    sendMsg(conn, response.dump());
-    userCipherMap_.erase(userCipherMap_.find(conn));
+    sendMsg(conn, CLIENT_MSG, response.dump());
+    // userCipherMap_.erase(userCipherMap_.find(conn)); // fix: 客户端注销，不应该删掉这个
 }
 
 // 处理转发过来的消息
 void ChatService::forwarded(const corpc::TcpConnection::ptr &conn, json &js)
 {
     int toid = js["to"].get<int>();
+    std::string msg = js["msg"].get<std::string>();
     {
         // 临界区
         std::unique_lock<std::mutex> lock(connMutex_);
         auto it = userConnMap_.find(toid);
         if (it != userConnMap_.end()) {
-            sendMsgInCor(it->second, js["msg"].get<std::string>());
+            // lock.unlock();
+            sendMsgInCor(it->second, CLIENT_MSG, msg);
             return;
         }
     }
+    // 转发过来后，该用户下线了，也要存离线消息
+    SaveOfflineMessageRequest saveOfflineMessageReq;
+    SaveOfflineMessageResponse saveOfflineMessageRes;
+    saveOfflineMessageReq.set_user_id(toid);
+    saveOfflineMessageReq.set_msg(msg);
+    int ret = doSaveOfflineMessageReq(saveOfflineMessageReq, saveOfflineMessageRes);
+}
+
+// 获取当前用户信息业务
+void ChatService::getUserInfo(const corpc::TcpConnection::ptr &conn, json &js)
+{
+    USER_LOG_INFO << "do get user info service!!!";
+    int userid = js["id"].get<int>();
+
+    json response;
+    response["msgid"] = GET_USER_INFO_MSG_ACK;
+
+    // 查询用户信息
+    UserInfoRequest userInfoReq;
+    UserInfoResponse userInfoRes;
+    userInfoReq.set_user_id(userid);
+    int ret = doGetUserInfoReq(userInfoReq, userInfoRes);
+    if (userInfoRes.ret_code() == ProxyService::SUCCESS) {
+        response["id"] = userid;
+        response["name"] = userInfoRes.user().name();
+        std::string state = UserState_descriptor()->FindValueByNumber(userInfoRes.user().state())->name();
+        std::transform(state.begin(), state.end(), state.begin(), tolower);
+        response["state"] = state;
+        response["errno"] = userInfoRes.ret_code();
+        response["errmsg"] = userInfoRes.res_info();
+    }
+    else {
+        response["errno"] = userInfoRes.ret_code();
+        response["errmsg"] = userInfoRes.res_info();
+        sendMsg(conn, CLIENT_MSG, response.dump());
+        return;
+    }
+
+    // 查询该用户的好友信息并返回
+    FriendListRequest friendListReq;
+    FriendListResponse friendListRes;
+    friendListReq.set_user_id(userid);
+    ret = doGetFriendListReq(friendListReq, friendListRes);
+    if (friendListRes.ret_code() == ProxyService::SUCCESS) {
+        std::vector<json> vec2;
+        for (auto &user : friendListRes.friends()) {
+            json js;
+            js["id"] = user.id();
+            js["name"] = user.name();
+            std::string state = UserState_descriptor()->FindValueByNumber(user.state())->name();
+            std::transform(state.begin(), state.end(), state.begin(), tolower);
+            js["state"] = state;
+            vec2.push_back(js);
+        }
+        response["friends"] = vec2;
+    }
+    else {
+        response["errno"] = friendListRes.ret_code();
+        response["errmsg"] = friendListRes.res_info();
+        sendMsg(conn, CLIENT_MSG, response.dump());
+        return;
+    }
+
+    // 查询用户的群组信息
+    GetUserGroupsRequest userGroupsReq;
+    GetUserGroupsResponse userGroupsRes;
+    userGroupsReq.set_user_id(userid);
+    ret = doGetUserGroupsReq(userGroupsReq, userGroupsRes);
+    if (userGroupsRes.ret_code() == ProxyService::SUCCESS) {
+        // group:[{groupid:[xxx, xxx, xxx, xxx]}]
+        std::vector<json> groupV;
+        for (auto &group : userGroupsRes.groups()) {
+            json grpjson;
+            grpjson["id"] = group.id();
+            grpjson["groupname"] = group.name();
+            grpjson["groupdesc"] = group.desc();
+            std::vector<json> userV;
+            for (auto &user : group.users()) {
+                json js;
+                js["id"] = user.id();
+                js["name"] = user.name();
+                std::string state = UserState_descriptor()->FindValueByNumber(user.state())->name();
+                std::transform(state.begin(), state.end(), state.begin(), tolower);
+                js["state"] = state;
+                std::string role = GroupUserRole_descriptor()->FindValueByNumber(user.role())->name();
+                std::transform(role.begin(), role.end(), role.begin(), tolower);
+                js["role"] = role;
+                userV.push_back(js);
+            }
+            grpjson["users"] = userV;
+            groupV.push_back(grpjson);
+        }
+        response["groups"] = groupV;
+    }
+    else {
+        response["errno"] = userGroupsRes.ret_code();
+        response["errmsg"] = userGroupsRes.res_info();
+    }
+
+    sendMsg(conn, CLIENT_MSG, response.dump());
 }
 
 int ChatService::doLoginReq(const ::LoginRequest &request, ::LoginResponse &response)

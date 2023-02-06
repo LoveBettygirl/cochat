@@ -19,6 +19,7 @@
 #include <string>
 #include <corpc/net/tcp/tcp_client.h>
 #include "ChatService/lib/json.hpp"
+#include "ChatService/common/make_package.h"
 
 
 namespace ChatService {
@@ -86,8 +87,11 @@ void GroupChatInterface::run()
             js["to"] = user.getId();
             js["msg"] = msg;
 
+            std::string forwardMsg = js.dump();
+            forwardMsg = makePackage(forwardMsg);
+
             corpc::TcpClient::ptr client = std::make_shared<corpc::TcpClient>(addr);
-            if (client->sendData(js.dump())) {
+            if (client->sendData(forwardMsg)) {
                 throw BusinessException(FORWARD_CHAT_MSG_FAILED, getErrorMsg(FORWARD_CHAT_MSG_FAILED), __FILE__, __LINE__);
             }
         }

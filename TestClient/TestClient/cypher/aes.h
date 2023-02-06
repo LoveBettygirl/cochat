@@ -24,19 +24,12 @@ public:
     std::string encrypt(const std::string &src) {
         AES_set_encrypt_key((uint8_t*)&*key_.begin(), 128, &aes_);
 
-        int len = src.size(), newLen = 0;
-        if ((len + 1) % 16 == 0) {
-            // 长度刚好合适
-            newLen = len + 1;
-        }
-        else {
-            newLen = ((len + 1) / 16 + 1) * 16;
-        }
+        std::string srcTemp = PKCS7Padding(src, 16);
 
         unsigned char iv[16] = {0};
         memset(iv, 'a', sizeof(iv));
-        std::string encryptTemp(newLen, 0);
-        AES_cbc_encrypt((uint8_t*)&*src.begin(), (uint8_t*)&*encryptTemp.begin(), newLen, &aes_, iv, AES_ENCRYPT);
+        std::string encryptTemp(srcTemp.size(), 0);
+        AES_cbc_encrypt((uint8_t*)&*srcTemp.begin(), (uint8_t*)&*encryptTemp.begin(), srcTemp.size(), &aes_, iv, AES_ENCRYPT);
 
         return encryptTemp;
     }
@@ -44,21 +37,12 @@ public:
     std::string decrypt(const std::string &src) {
         AES_set_decrypt_key((uint8_t*)&*key_.begin(), 128, &aes_);
 
-        int len = src.size(), oldLen = 0;
-        if (src.size() % 16 == 0) {
-            // 长度刚好合适
-            oldLen = src.size() - 1;
-        }
-        else {
-            oldLen = (len / 16 - 1) * 16 - 1;
-        }
-
         unsigned char iv[16] = {0};
         memset(iv, 'a', sizeof(iv));
-        std::string decryptTemp(len, 0);
-        AES_cbc_encrypt((uint8_t*)&*src.begin(), (uint8_t*)&*decryptTemp.begin(), len, &aes_, iv, AES_DECRYPT);
+        std::string decryptTemp(src.size(), 0);
+        AES_cbc_encrypt((uint8_t*)&*src.begin(), (uint8_t*)&*decryptTemp.begin(), src.size(), &aes_, iv, AES_DECRYPT);
 
-        return std::string(decryptTemp.begin(), decryptTemp.begin() + oldLen);
+        return PKCS7UnPadding(decryptTemp);
     }
 
     static std::string randomString(std::string::size_type len = 16) {
@@ -76,6 +60,23 @@ public:
             generated += delta;
         }
         return result;
+    }
+
+private:
+    std::string PKCS7Padding(const std::string &in, int alignSize) {
+        // 计算需要填充字节数（按alignSize字节对齐进行填充）
+        int remainder = in.size() % alignSize;
+        int paddingSize = (remainder == 0) ? alignSize : (alignSize - remainder);
+
+        // 进行填充
+        std::string temp(in);
+        temp.insert(temp.size(), paddingSize, paddingSize);
+        return temp;
+    }
+
+    std::string PKCS7UnPadding(const std::string &in) {
+        char paddingSize = in.at(in.size() - 1);
+        return std::string(in.begin(), in.begin() + in.size() - paddingSize);
     }
 
 private:

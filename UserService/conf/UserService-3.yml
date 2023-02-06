@@ -3,7 +3,7 @@
 
 log:
   # identify path of log file
-  log_path: ./log/
+  log_path: ./log3/
   log_prefix: UserService
   # identify max size of single log file, MB
   log_max_file_size: 5

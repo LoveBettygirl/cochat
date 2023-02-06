@@ -16,7 +16,7 @@ public:
     void setName(const std::string &name) { this->name = name; }
     void setPwd(const std::string &pwd) { this->password = pwd; }
     void setState(const std::string &state) { this->state = state; }
-    void setSalt(const std::string &state) { this->salt = salt; }
+    void setSalt(const std::string &salt) { this->salt = salt; }
 
     int getId() const { return id; }
     std::string getName() const { return name; }

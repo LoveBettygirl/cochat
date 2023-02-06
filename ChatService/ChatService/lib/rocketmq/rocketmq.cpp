@@ -160,7 +160,7 @@ void RocketMQConsumer::start()
     USER_LOG_INFO << "[RocketMQ] Addr: " << gRocketMQConsumerConfig->ip << ":" << gRocketMQConsumerConfig->port;
     consumer_->setConsumeThreadCount(gRocketMQConsumerConfig->consumeThreadCount);
     consumer_->setConsumeFromWhere(rocketmq::CONSUME_FROM_FIRST_OFFSET);
-    consumer_->setMessageModel(rocketmq::BROADCASTING); // 广播模式，同一个消费者组都能消费到消息
+    consumer_->setMessageModel(gRocketMQConsumerConfig->messageModel);
     consumer_->registerMessageListener(listener_.get());
     consumer_->start();
     USER_LOG_INFO << "[RocketMQ] start consumer";

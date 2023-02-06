@@ -12,6 +12,7 @@
 #include <sys/types.h>
 #include <sys/socket.h>
 #include <arpa/inet.h>
+#include <thread>
 
 namespace TestClient {
 
@@ -42,7 +43,7 @@ ChatClient::ChatClient(const std::string &ip, uint16_t port) : ip(ip), port(port
     // 注册系统支持的客户端命令处理
     commandHandlerMap_ = {
         {"help", std::bind(&ChatClient::help, this, std::placeholders::_1, std::placeholders::_2)},
-        {"showdata", std::bind(&ChatClient::showCurrentUserData, this, std::placeholders::_1, std::placeholders::_2)},
+        {"showdata", std::bind(&ChatClient::showdata, this, std::placeholders::_1, std::placeholders::_2)},
         {"chat", std::bind(&ChatClient::chat, this, std::placeholders::_1, std::placeholders::_2)},
         {"addfriend", std::bind(&ChatClient::addfriend, this, std::placeholders::_1, std::placeholders::_2)},
         {"delfriend", std::bind(&ChatClient::delfriend, this, std::placeholders::_1, std::placeholders::_2)},
@@ -53,26 +54,84 @@ ChatClient::ChatClient(const std::string &ip, uint16_t port) : ip(ip), port(port
         {"logout", std::bind(&ChatClient::logout, this, std::placeholders::_1, std::placeholders::_2)}};
 }
 
-int ChatClient::sendKey(int clientfd, const std::string &data)
+int ChatClient::sendClientRequest(int clientfd)
 {
-    std::string encrypted = rsa_->publicEncrypt(data);
-
-    int pkLen = 12 + encrypted.size();
+    int pkLen = 13;
     char *buf = reinterpret_cast<char *>(malloc(pkLen));
     char *temp = buf;
 
     int magicBegin = htonl(MAGIC_BEGIN);
     memcpy(temp, &magicBegin, sizeof(int32_t));
+    temp += sizeof(int32_t);
 
-    int encryptedSize = htonl(encrypted.size());
-    memcpy(temp, &encryptedSize, sizeof(int32_t));
+    int encryptedSizeNet = htonl(1);
+    memcpy(temp, &encryptedSizeNet, sizeof(int32_t));
+    temp += sizeof(int32_t);
 
-    memcpy(temp, &*encrypted.begin(), encryptedSize);
+    char pkTypeChar = CLIENT_CONNECTION;
+    memcpy(temp, &pkTypeChar, sizeof(pkTypeChar));
+    temp += sizeof(pkTypeChar);
 
     int magicEnd = htonl(MAGIC_END);
     memcpy(temp, &magicEnd, sizeof(int32_t));
+    temp += sizeof(int32_t);
 
-    return send(clientfd, temp, pkLen + 12, 0);
+    return send(clientfd, buf, pkLen, 0);
+}
+
+int ChatClient::sendKey(int clientfd, const std::string &data)
+{
+    std::string encrypted = rsa_->publicEncrypt(data);
+
+    int pkLen = 13 + encrypted.size();
+    char *buf = reinterpret_cast<char *>(malloc(pkLen));
+    char *temp = buf;
+
+    int magicBegin = htonl(MAGIC_BEGIN);
+    memcpy(temp, &magicBegin, sizeof(int32_t));
+    temp += sizeof(int32_t);
+
+    int encryptedSizeNet = htonl(encrypted.size() + 1);
+    memcpy(temp, &encryptedSizeNet, sizeof(int32_t));
+    temp += sizeof(int32_t);
+
+    char pkTypeChar = CLIENT_KEY;
+    memcpy(temp, &pkTypeChar, sizeof(pkTypeChar));
+    temp += sizeof(pkTypeChar);
+
+    memcpy(temp, &*encrypted.begin(), encrypted.size());
+    temp += encrypted.size();
+
+    int magicEnd = htonl(MAGIC_END);
+    memcpy(temp, &magicEnd, sizeof(int32_t));
+    temp += sizeof(int32_t);
+
+    return send(clientfd, buf, pkLen, 0);
+}
+
+int ChatClient::sendHeartbeat(int clientfd)
+{
+    int pkLen = 13;
+    char *buf = reinterpret_cast<char *>(malloc(pkLen));
+    char *temp = buf;
+
+    int magicBegin = htonl(MAGIC_BEGIN);
+    memcpy(temp, &magicBegin, sizeof(int32_t));
+    temp += sizeof(int32_t);
+
+    int encryptedSizeNet = htonl(1);
+    memcpy(temp, &encryptedSizeNet, sizeof(int32_t));
+    temp += sizeof(int32_t);
+
+    char pkTypeChar = HEARTBEAT;
+    memcpy(temp, &pkTypeChar, sizeof(pkTypeChar));
+    temp += sizeof(pkTypeChar);
+
+    int magicEnd = htonl(MAGIC_END);
+    memcpy(temp, &magicEnd, sizeof(int32_t));
+    temp += sizeof(int32_t);
+
+    return send(clientfd, buf, pkLen, 0);
 }
 
 int ChatClient::sendMsg(int clientfd, const std::string &data)
@@ -85,16 +144,24 @@ int ChatClient::sendMsg(int clientfd, const std::string &data)
 
     int magicBegin = htonl(MAGIC_BEGIN);
     memcpy(temp, &magicBegin, sizeof(int32_t));
+    temp += sizeof(int32_t);
 
-    int encryptedSize = htonl(encrypted.size());
-    memcpy(temp, &encryptedSize, sizeof(int32_t));
+    int encryptedSizeNet = htonl(encrypted.size() + 1);
+    memcpy(temp, &encryptedSizeNet, sizeof(int32_t));
+    temp += sizeof(int32_t);
 
-    memcpy(temp, &*encrypted.begin(), encryptedSize);
+    char pkTypeChar = CLIENT_MSG;
+    memcpy(temp, &pkTypeChar, sizeof(pkTypeChar));
+    temp += sizeof(pkTypeChar);
+
+    memcpy(temp, &*encrypted.begin(), encrypted.size());
+    temp += encrypted.size();
 
     int magicEnd = htonl(MAGIC_END);
     memcpy(temp, &magicEnd, sizeof(int32_t));
+    temp += sizeof(int32_t);
 
-    return send(clientfd, temp, pkLen + 12, 0);
+    return send(clientfd, buf, pkLen, 0);
 }
 
 std::string ChatClient::recvMsg(int clientfd)
@@ -141,7 +208,13 @@ std::string ChatClient::recvMsg(int clientfd)
         exit(-1);
     }
 
-    return std::string(temp + 2 * sizeof(int32_t), temp + 2 * sizeof(int32_t) + pkLen);
+    std::string finalStr = std::string(temp + 2 * sizeof(int32_t) + 1, temp + 2 * sizeof(int32_t) + pkLen);
+
+    if (temp[2 * sizeof(int32_t)] == HEARTBEAT) {
+        finalStr = "heartbeat";
+    }
+
+    return temp[2 * sizeof(int32_t)] == CLIENT_MSG ? aes_->decrypt(finalStr) : finalStr;
 }
 
 void ChatClient::start()
@@ -168,11 +241,16 @@ void ChatClient::start()
         exit(-1);
     }
 
+    int ret = sendClientRequest(clientfd);
+    if (ret == -1) {
+        std::cerr << "send client request error" << std::endl;
+        exit(-1);
+    }
     std::string serverPubKey = recvMsg(clientfd);
     rsa_ = std::make_shared<RSATool>(serverPubKey);
     std::string randomAESKey = AESTool::randomString();
     aes_ = std::make_shared<AESTool>(randomAESKey);
-    int ret = sendKey(clientfd, randomAESKey);
+    ret = sendKey(clientfd, randomAESKey);
     if (ret == -1) {
         std::cerr << "send key error: " << randomAESKey << std::endl;
         exit(-1);
@@ -184,6 +262,8 @@ void ChatClient::start()
     // 连接服务器成功，启动接收子线程
     std::thread readTask(std::bind(&ChatClient::readTaskHandler, this, std::placeholders::_1), clientfd); // pthread_create
     readTask.detach(); // pthread_detach
+    std::thread heatbeatTask(std::bind(&ChatClient::heartbeatTaskHandler, this, std::placeholders::_1), clientfd); // pthread_create
+    heatbeatTask.detach(); // pthread_detach
 
     // main线程用于接收用户输入，负责发送数据
     while (true) {
@@ -455,13 +535,21 @@ void ChatClient::logout(int clientfd, std::string)
     if (-1 == len) {
         std::cerr << "send logout msg error -> " << buffer << std::endl;
     }
-    else {
-        sem_wait(&rwsem_); // 等待信号量，子线程处理完注册消息会通知
-        isMainMenuRunning_ = false;
-        currentUser_ = User();
-        currentUserFriendList_.clear();
-        currentUserGroupList_.clear();
-    }   
+    sem_wait(&rwsem_); // 等待信号量，子线程处理完注册消息会通知
+}
+// "showdata" command handler
+void ChatClient::showdata(int clientfd, std::string)
+{
+    json js;
+    js["msgid"] = GET_USER_INFO_MSG;
+    js["id"] = currentUser_.getId();
+    std::string buffer = js.dump();
+
+    int len = sendMsg(clientfd, buffer);
+    if (-1 == len) {
+        std::cerr << "send logout msg error -> " << buffer << std::endl;
+    }
+    sem_wait(&rwsem_); // 等待信号量，子线程处理完注册消息会通知
 }
 
 // 获取系统时间（聊天信息需要添加时间信息）
@@ -571,6 +659,12 @@ void ChatClient::doLogoutResponse(json &responsejs)
     if (0 != responsejs["errno"].get<int>()) { // 注销失败
         std::cerr << responsejs["errmsg"].get<std::string>() << std::endl;
     }
+    else {
+        isMainMenuRunning_ = false;
+        currentUser_ = User();
+        currentUserFriendList_.clear();
+        currentUserGroupList_.clear();
+    }
 }
 
 // 处理单聊响应逻辑
@@ -612,18 +706,82 @@ void ChatClient::doGroupResponse(json &responsejs)
     std::cerr << responsejs["errmsg"].get<std::string>() << std::endl;
     if (0 == responsejs["errno"].get<int>()) { // 创建群成功
         currentUserGroupList_.clear();
-        json groupjs = responsejs["group"];
-        Group group(groupjs["id"], groupjs["groupname"], groupjs["groupdesc"]);
-        std::vector<json> users = groupjs["users"];
-        for (json &js : users) {
-            GroupUser user;
-            user.setId(js["id"].get<int>());
-            user.setName(js["name"]);
-            user.setState(js["state"]);
-            user.setRole(js["role"]);
-            group.getUsers().push_back(user);
+        std::vector<json> vec1 = responsejs["groups"];
+        for (json &grpjs : vec1) {
+            Group group;
+            group.setId(grpjs["id"].get<int>());
+            group.setName(grpjs["groupname"]);
+            group.setDesc(grpjs["groupdesc"]);
+
+            std::vector<json> vec2 = grpjs["users"];
+            for (json &js : vec2) {
+                GroupUser user;
+                user.setId(js["id"].get<int>());
+                user.setName(js["name"]);
+                user.setState(js["state"]);
+                user.setRole(js["role"]);
+                group.getUsers().push_back(user);
+            }
+
+            currentUserGroupList_.push_back(group);
         }
-        currentUserGroupList_.push_back(group);
+    }
+}
+
+// 处理获取当前用户信息的响应逻辑
+void ChatClient::doShowDataResponse(json &responsejs)
+{
+    if (0 != responsejs["errno"].get<int>()) {
+        std::cerr << responsejs["errmsg"].get<std::string>() << std::endl;
+    }
+    else {
+        // 记录当前用户的id和name
+        currentUser_ = User();
+        currentUser_.setId(responsejs["id"].get<int>());
+        currentUser_.setName(responsejs["name"]);
+        currentUser_.setState("online");
+
+        // 初始化
+        currentUserFriendList_.clear();
+        currentUserGroupList_.clear();
+
+        // 记录当前用户的好友列表信息
+        if (responsejs.contains("friends")) {
+            std::vector<json> vec = responsejs["friends"];
+            for (json &js : vec) {
+                User user;
+                user.setId(js["id"].get<int>());
+                user.setName(js["name"]);
+                user.setState(js["state"]);
+                currentUserFriendList_.push_back(user);
+            }
+        }
+
+        // 记录当前用户的群组列表信息
+        if (responsejs.contains("groups")) {
+            std::vector<json> vec1 = responsejs["groups"];
+            for (json &grpjs : vec1) {
+                Group group;
+                group.setId(grpjs["id"].get<int>());
+                group.setName(grpjs["groupname"]);
+                group.setDesc(grpjs["groupdesc"]);
+
+                std::vector<json> vec2 = grpjs["users"];
+                for (json &js : vec2) {
+                    GroupUser user;
+                    user.setId(js["id"].get<int>());
+                    user.setName(js["name"]);
+                    user.setState(js["state"]);
+                    user.setRole(js["role"]);
+                    group.getUsers().push_back(user);
+                }
+
+                currentUserGroupList_.push_back(group);
+            }
+        }
+
+        // 显示登录用户的基本信息
+        showCurrentUserData();
     }
 }
 
@@ -635,6 +793,9 @@ void ChatClient::readTaskHandler(int clientfd)
         if (buffer.empty()) {
             close(clientfd);
             exit(-1);
+        }
+        if (buffer == "heartbeat") {
+            continue;
         }
 
         // 接收ChatServer转发的数据，反序列化生成json数据对象
@@ -693,13 +854,31 @@ void ChatClient::readTaskHandler(int clientfd)
             sem_post(&rwsem_);    // 通知主线程，登录结果处理完成
             continue;
         }
+
+        if (GET_USER_INFO_MSG_ACK == msgtype ) {
+            doShowDataResponse(js);
+            sem_post(&rwsem_);    // 通知主线程，登录结果处理完成
+            continue;
+        }
+    }
+}
+
+// 发送心跳消息线程，每2s发一次
+void ChatClient::heartbeatTaskHandler(int clientfd)
+{
+    while (true) {
+        int len = sendHeartbeat(clientfd);
+        if (len == -1) {
+            std::cerr << "send heartbeat msg error" << std::endl;
+        }
+
+        std::this_thread::sleep_for(std::chrono::seconds(2));
     }
 }
 
 // 显示当前登录成功用户的基本信息
 void ChatClient::showCurrentUserData(int, std::string)
 {
-    // TODO: 这边可以给服务端发请求，获取最新的信息，但是没空改了，之后再说吧
     std::cout << "======================login user======================" << std::endl;
     std::cout << "current login user => id: " << currentUser_.getId() << " name: " << currentUser_.getName() << std::endl;
     std::cout << "----------------------friend list---------------------" << std::endl;

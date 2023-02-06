@@ -23,7 +23,7 @@ void initSaveOfflineMqConsumer(const YAML::Node &node)
     if (!gOfflineMsgConsumer) {
         gOfflineMsgListener = std::make_shared<RocketMQMsgListener>([](const std::string &key, const std::string &tag, const std::string &msg) {
             OfflineMessageDao dao;
-            dao.insertMessage(std::stoi(tag), msg);
+            dao.insertMessage(key, std::stoi(tag), msg);
         });
         gOfflineMsgConsumer = std::make_shared<RocketMQConsumer>(gOfflineMsgListener);
         gOfflineMsgConsumer->loadConf(node);

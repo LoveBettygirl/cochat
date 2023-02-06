@@ -36,9 +36,15 @@ public:
 
     bool set(const std::string &key, const std::string &value);
 
+    bool setex(const std::string &key, const std::string &value, int time);
+
     std::string get(const std::string &key);
 
     bool del(const std::string &key);
+
+    bool expire(const std::string &key, int expireSec);
+
+    int incr(const std::string &key);
 
     bool flushdb();
 
@@ -55,6 +61,27 @@ private:
     // hiredis同步上下文对象，负责缓存
     redisContext *cacheContext_;
     clock_t aliveTime_; // 记录进入空闲状态后的存活时间
+};
+
+// 分布式锁，scoped lock，利用C++的RAII机制自动释放锁
+class RedisLock {
+public:
+    typedef std::shared_ptr<RedisLock> ptr;
+
+    RedisLock(Redis::ptr redis, const std::string &key);
+    ~RedisLock();
+
+    bool gotLock() const { return gotLock_; };
+    bool unlock();
+
+private:
+    Redis::ptr redis_;
+    std::string key_;
+    bool gotLock_{false};
+
+    bool tryLock();
+    bool getLock();
+    bool releaseLock();
 };
 
 }

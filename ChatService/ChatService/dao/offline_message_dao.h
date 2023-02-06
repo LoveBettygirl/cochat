@@ -13,7 +13,7 @@ public:
     OfflineMessageDao();
 
     // 存储用户的离线信息
-    bool insertMessage(int userid, const std::string &msg);
+    bool insertMessage(const std::string &key, int userid, const std::string &msg);
 
     // 删除用户的所有离线消息
     bool removeMessage(int userid);

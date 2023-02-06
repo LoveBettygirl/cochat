@@ -39,12 +39,13 @@ void LogoutInterface::run()
     int id = request_.user_id();
     UserDao dao;
     User user = dao.queryUserState(id);
-    if (user.getState() != NOT_EXIST_STATE) {
+    if (user.getState() == NOT_EXIST_STATE) {
         throw BusinessException(CURRENT_USER_NOT_EXIST, getErrorMsg(CURRENT_USER_NOT_EXIST), __FILE__, __LINE__);
     }
     if (user.getState() != ONLINE_STATE) {
         throw BusinessException(USER_LOGGED_OUT, getErrorMsg(USER_LOGGED_OUT), __FILE__, __LINE__);
     }
+    user.setState(OFFLINE_STATE);
     if (!dao.updateUserState(user)) {
         // 注销失败
         throw BusinessException(USER_LOGOUT_FAILED, getErrorMsg(USER_LOGOUT_FAILED), __FILE__, __LINE__);

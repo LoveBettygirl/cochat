@@ -39,6 +39,10 @@ void DeleteFriendInterface::run()
     int userid = request_.user_id();
     int friendid = request_.friend_id();
 
+    if (userid == friendid) {
+        throw BusinessException(FRIEND_IS_SELF_USER, getErrorMsg(FRIEND_IS_SELF_USER), __FILE__, __LINE__);
+    }
+
     UserDao userDao;
     User user = userDao.queryUserInfo(userid);
     if (user.getState() == NOT_EXIST_STATE) {

@@ -18,6 +18,7 @@
 #include <string>
 #include <corpc/net/tcp/tcp_client.h>
 #include "ChatService/lib/json.hpp"
+#include "ChatService/common/make_package.h"
 
 
 namespace ChatService {
@@ -45,7 +46,7 @@ void OneChatInterface::run()
     // response_.set_ret_code(0);
     // response_.set_res_info("Succ");
     //
-    int fromUserId = request_.to_user_id();
+    int fromUserId = request_.from_user_id();
     int toUserId = request_.to_user_id();
     std::string msg = request_.msg();
 
@@ -57,11 +58,6 @@ void OneChatInterface::run()
     User friendUser = userDao.queryUserInfo(toUserId);
     if (friendUser.getState() == NOT_EXIST_STATE) {
         throw BusinessException(FRIEND_USER_NOT_EXIST, getErrorMsg(FRIEND_USER_NOT_EXIST), __FILE__, __LINE__);
-    }
-
-    FriendDao friendDao;
-    if (!friendDao.queryFriend(fromUserId, toUserId)) {
-        throw BusinessException(USER_NOT_IN_FRIEND_RELATION, getErrorMsg(USER_NOT_IN_FRIEND_RELATION), __FILE__, __LINE__);
     }
 
     if (user.getState() == ONLINE_STATE) {
@@ -80,8 +76,11 @@ void OneChatInterface::run()
         js["to"] = user.getId();
         js["msg"] = msg;
 
+        std::string forwardMsg = js.dump();
+        forwardMsg = makePackage(forwardMsg);
+
         corpc::TcpClient::ptr client = std::make_shared<corpc::TcpClient>(addr);
-        if (client->sendData(js.dump())) {
+        if (client->sendData(forwardMsg)) {
             throw BusinessException(FORWARD_CHAT_MSG_FAILED, getErrorMsg(FORWARD_CHAT_MSG_FAILED), __FILE__, __LINE__);
         }
     }

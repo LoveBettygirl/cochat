@@ -12,6 +12,15 @@ const std::string NOT_EXIST_STATE = "not_exist"; // 仅用作缓存，防止缓�
 const int MAGIC_BEGIN = 0xaabbccdd;
 const int MAGIC_END = 0xddccbbaa;
 
+enum PackageType {
+    CLIENT_CONNECTION, // 客户端连接请求
+    SERVER_PUBKEY, // 服务端发送公钥
+    CLIENT_KEY, // 客户端发送服务端公钥加密的对称密钥
+    CLIENT_MSG, // 跟客户端交互的消息
+    SERVER_FORWARD_MSG, // 从其他服务器转发来的消息
+    HEARTBEAT, // 心跳消息
+};
+
 // 业务类型
 enum EnMsgType {
     LOGIN_MSG = 1, // 登录消息
@@ -35,6 +44,8 @@ enum EnMsgType {
     GROUP_CHAT_MSG, // 群聊天
     GROUP_CHAT_MSG_ACK, // 群聊天响应
     FORWARDED_MSG, // 转发过来的消息
+    GET_USER_INFO_MSG, // 获取当前用户信息消息
+    GET_USER_INFO_MSG_ACK, // 获取当前用户信息消息响应
 };
 
 }

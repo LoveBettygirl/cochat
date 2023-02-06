@@ -12,11 +12,11 @@ OfflineMessageDao::OfflineMessageDao()
 }
 
 // 存储用户的离线信息
-bool OfflineMessageDao::insertMessage(int userid, const std::string &msg)
+bool OfflineMessageDao::insertMessage(const std::string &key, int userid, const std::string &msg)
 {
     // 1. 组装sql语句
     char sql[1024] = {0};
-    sprintf(sql, "insert into offlinemessage values(%d, '%s')", userid, msg.c_str());
+    sprintf(sql, "insert into offlinemessage values('%s', %d, '%s')", key.c_str(), userid, msg.c_str());
 
     return mysql_->update(sql) > 0;
 }

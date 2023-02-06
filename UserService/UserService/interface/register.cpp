@@ -48,7 +48,7 @@ void RegisterInterface::run()
 
     std::string salt = randomString(32), reverseSalt = salt;
     std::reverse(reverseSalt.begin(), reverseSalt.end());
-    std::string newPwd = pwd + salt;
+    std::string newPwd = pwd + reverseSalt;
     corpc::MD5 md5;
     newPwd = md5.getResultString(newPwd);
 

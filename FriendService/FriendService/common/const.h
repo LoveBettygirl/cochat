@@ -11,6 +11,7 @@ const std::string NOT_EXIST_STATE = "not_exist"; // 仅用作缓存，防止缓�
 
 const std::string USER_STATE_CACHE_PREFIX = "user_state:";
 const std::string USER_HOST_CACHE_PREFIX = "user_host:";
+const std::string LOCK_PREFIX = "lock:";
 
 }
 

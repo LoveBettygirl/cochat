@@ -11,7 +11,7 @@ enum {
 };
 
 enum {
-    USER_LOGGED_IN, // 账号已经登录，不能重复登录
+    USER_LOGGED_IN = 1000, // 账号已经登录，不能重复登录
     CURRENT_USER_NOT_EXIST, // 用户不存在
     INVALID_USER_ID_OR_PWD, // 账号或密码不正确
     REGISTER_FAILED, // 注册失败
@@ -24,14 +24,15 @@ enum {
 };
 
 enum {
-    USER_NOT_IN_FRIEND_RELATION, // 消息发送者和对方不是好友关系，无法发送消息
+    USER_NOT_IN_FRIEND_RELATION = 2000, // 消息发送者和对方不是好友关系，无法发送消息
     FRIEND_USER_NOT_EXIST, // 好友用户不存在
     FRIEND_RELATION_IS_ADDED, // 已经加好友，不能重复加好友
     FRIEND_RELATION_NOT_EXIST, // 没有好友关系，不能删除好友
+    FRIEND_IS_SELF_USER, // 不能对自己添加或删除好友
 };
 
 enum {
-    GROUP_NOT_EXIST, // 群组不存在
+    GROUP_NOT_EXIST = 3000, // 群组不存在
     GROUP_IS_EXIST, // 群组已存在
     USER_NOT_IN_GROUP, // 消息发送者不在群中，无法发送消息
     USER_IS_IN_GROUP, // 已经在群里了，不能重复加群
@@ -40,9 +41,13 @@ enum {
 };
 
 enum {
-    FORWARD_CHAT_MSG_FAILED, // 转发聊天消息失败
+    FORWARD_CHAT_MSG_FAILED = 4000, // 转发聊天消息失败
     SAVE_OFFLINE_MSG_FAILED, // 存储离线消息失败
     REMOVE_OFFLINE_MSG_FAILED, // 删除离线消息失败
+};
+
+enum {
+    AES_KEY_LEN_ERROR = 5000, // AES密钥长度不正确
 };
 
 const std::unordered_map<int, std::string> code2msg = {
@@ -63,6 +68,7 @@ const std::unordered_map<int, std::string> code2msg = {
     {FRIEND_USER_NOT_EXIST, "The friend user is not exist"},
     {FRIEND_RELATION_IS_ADDED, "The friend relation is added"},
     {FRIEND_RELATION_NOT_EXIST, "The friend relation is not exist"},
+    {FRIEND_IS_SELF_USER, "The friend is self user"},
 
     {GROUP_NOT_EXIST, "The group is not exist"},
     {GROUP_IS_EXIST, "The group is exist"},
@@ -74,6 +80,8 @@ const std::unordered_map<int, std::string> code2msg = {
     {FORWARD_CHAT_MSG_FAILED, "The chat msg forward failed"},
     {SAVE_OFFLINE_MSG_FAILED, "The offline msg save failed"},
     {REMOVE_OFFLINE_MSG_FAILED, "The offline msg remove failed"},
+
+    {AES_KEY_LEN_ERROR, "The aes key bit length is not 128"},
 };
 
 const std::string UNKNOWN_ERROR = "Unknown error";

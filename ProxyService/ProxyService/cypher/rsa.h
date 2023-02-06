@@ -44,7 +44,7 @@ public:
     std::string privateDecrypt(const std::string &src) {
         int rsaLen = RSA_size(privateRsa_);
         std::string decryptMsg(rsaLen, 0);
-        int msgLen = RSA_private_decrypt(rsaLen, (uint8_t*)&*src.begin(), (uint8_t*)&*decryptMsg.begin(), publicRsa_, RSA_PKCS1_PADDING);
+        int msgLen = RSA_private_decrypt(rsaLen, (uint8_t*)&*src.begin(), (uint8_t*)&*decryptMsg.begin(), privateRsa_, RSA_PKCS1_PADDING);
         if (msgLen < 0)
             return "";
         return decryptMsg.substr(0, msgLen);

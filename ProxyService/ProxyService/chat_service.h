@@ -11,6 +11,7 @@
 #include "ProxyService/cypher/rsa.h"
 #include "ProxyService/cypher/aes.h"
 #include <corpc/net/service_register.h>
+#include "ProxyService/common/const.h"
 
 namespace ProxyService {
 
@@ -18,31 +19,6 @@ using json = nlohmann::json;
 
 // 表示处理消息的事件回调方法类型
 using MsgHandler = std::function<void(const corpc::TcpConnection::ptr &conn, json &js)>;
-
-// 业务类型
-enum EnMsgType {
-    LOGIN_MSG = 1, // 登录消息
-    LOGIN_MSG_ACK, // 登录响应消息
-    LOGOUT_MSG, // 注销消息
-    LOGOUT_MSG_ACK, // 注销响应消息
-    REG_MSG, // 注册消息
-    REG_MSG_ACK, // 注册响应消息
-    ONE_CHAT_MSG, // 聊天消息
-    ONE_CHAT_MSG_ACK, // 聊天消息响应
-    ADD_FRIEND_MSG, // 添加好友消息
-    ADD_FRIEND_MSG_ACK, // 添加好友响应消息
-    DEL_FRIEND_MSG, // 删除好友消息
-    DEL_FRIEND_MSG_ACK, // 删除好友响应消息
-    CREATE_GROUP_MSG, // 创建群组
-    CREATE_GROUP_MSG_ACK, // 创建群组响应消息
-    ADD_GROUP_MSG, // 加入群组
-    ADD_GROUP_MSG_ACK, // 加入群组响应消息
-    QUIT_GROUP_MSG, // 退出群组
-    QUIT_GROUP_MSG_ACK, // 退出群组响应消息
-    GROUP_CHAT_MSG, // 群聊天
-    GROUP_CHAT_MSG_ACK, // 群聊天响应
-    FORWARDED_MSG, // 转发过来的消息
-};
 
 // 聊天服务器业务类
 class ChatService {
@@ -83,6 +59,9 @@ public:
     // 处理转发过来的消息
     void forwarded(const corpc::TcpConnection::ptr &conn, json &js);
 
+    // 获取当前用户信息业务
+    void getUserInfo(const corpc::TcpConnection::ptr &conn, json &js);
+
     // 获取消息对应的处理器
     MsgHandler getHandler(int msgid);
 
@@ -92,9 +71,7 @@ public:
     // 服务器异常，业务重置方法
     void reset();
 
-    void sendPubKeyToClient(const corpc::TcpConnection::ptr &conn);
-
-    void dealWithClient(const corpc::TcpConnection::ptr &conn, const std::string &data);
+    void dealWithClient(const corpc::TcpConnection::ptr &conn, int pkType, const std::string &data);
 
 private:
     ChatService();
@@ -108,11 +85,13 @@ private:
     // 定义互斥锁，保证_userConnMap的线程安全
     std::mutex connMutex_;
 
-    std::string rsaPrivateKey, rsaPublicKey;
+    std::string rsaPrivateKey_, rsaPublicKey_;
 
-    RSATool::ptr rsa;
+    RSATool::ptr rsa_;
 
     std::unordered_map<corpc::TcpConnection::ptr, AESTool::ptr> userCipherMap_;
+
+    std::mutex cipherMutex_;
 
     corpc::AbstractServiceRegister::ptr center_;
 
@@ -138,8 +117,8 @@ private:
     int doSaveOfflineMessageReq(const ::SaveOfflineMessageRequest &request, ::SaveOfflineMessageResponse &response);
 
     void readRsaKey(const std::string &fileName, std::string &pemFile);
-    void sendMsg(const corpc::TcpConnection::ptr &conn, const std::string &data);
-    void sendMsgInCor(const corpc::TcpConnection::ptr &conn, const std::string &data);
+    void sendMsg(const corpc::TcpConnection::ptr &conn, int pkType, const std::string &data);
+    void sendMsgInCor(const corpc::TcpConnection::ptr &conn, int pkType, const std::string &data);
 };
 
 }

@@ -45,6 +45,9 @@ private:
     // 接收线程
     void readTaskHandler(int clientfd);
 
+    // 发送心跳消息线程
+    void heartbeatTaskHandler(int clientfd);
+
     // 获取系统时间（聊天信息需要添加时间信息）
     std::string getCurrentTime();
 
@@ -72,6 +75,9 @@ private:
     // 处理群聊响应逻辑
     void doGroupChatResponse(json &responsejs);
 
+    // 处理获取当前用户信息的响应逻辑
+    void doShowDataResponse(json &responsejs);
+
     /* handlers */
 
     // "help" command handler
@@ -94,6 +100,8 @@ private:
     void groupchat(int, std::string);
     // "logout" command handler
     void logout(int, std::string);
+    // "showdata" command handler
+    void showdata(int clientfd, std::string);
 
     // 系统支持的客户端命令列表
     std::unordered_map<std::string, std::string> commandMap_;
@@ -103,6 +111,10 @@ private:
 
     AESTool::ptr aes_;
     RSATool::ptr rsa_;
+
+    int sendClientRequest(int clientfd);
+
+    int sendHeartbeat(int clientfd);
 
     int sendMsg(int clientfd, const std::string &data);
 
