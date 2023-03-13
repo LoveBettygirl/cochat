@@ -2,13 +2,15 @@
 #include <string>
 #include <signal.h>
 #include <corpc/common/start.h>
-#include "ProxyService/chat_server.h"
 #include "ProxyService/chat_service.h"
 
 // 处理服务器ctrl+c结束后，重置user的状态信息
 void resetHandler(int)
 {
-    ProxyService::ChatService::instance()->reset();
+    std::shared_ptr<ProxyService::ChatServiceDispatcher> dispatcher = std::dynamic_pointer_cast<ProxyService::ChatServiceDispatcher>(corpc::getServer()->getDispatcher());
+    if (dispatcher) {
+        dispatcher->reset();
+    }
     exit(0);
 }
 
@@ -25,7 +27,7 @@ int main(int argc, char *argv[])
 
     corpc::initConfig(argv[1]);
 
-    ProxyService::ChatServer::ptr server = std::make_shared<ProxyService::ChatServer>();
+    REGISTER_SERVICE(ProxyService::ChatService);
 
     corpc::startServer();
 

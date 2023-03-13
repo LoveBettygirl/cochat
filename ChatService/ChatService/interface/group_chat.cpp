@@ -20,6 +20,8 @@
 #include <corpc/net/tcp/tcp_client.h>
 #include "ChatService/lib/json.hpp"
 #include "ChatService/common/make_package.h"
+#include "ChatService/protocol/chat_service_codec.h"
+#include "ChatService/protocol/chat_service_data.h"
 
 
 namespace ChatService {
@@ -87,11 +89,14 @@ void GroupChatInterface::run()
             js["to"] = user.getId();
             js["msg"] = msg;
 
-            std::string forwardMsg = js.dump();
-            forwardMsg = makePackage(forwardMsg);
-
+            ChatServiceStruct forwarded;
+            forwarded.msgType = SERVER_FORWARD_MSG;
+            forwarded.protocolData = js.dump();
+            ChatServiceCodeC codec;
             corpc::TcpClient::ptr client = std::make_shared<corpc::TcpClient>(addr);
-            if (client->sendData(forwardMsg)) {
+
+            codec.encode(client->getConnection()->getOutBuffer(), &forwarded);
+            if (client->sendData()) {
                 throw BusinessException(FORWARD_CHAT_MSG_FAILED, getErrorMsg(FORWARD_CHAT_MSG_FAILED), __FILE__, __LINE__);
             }
         }

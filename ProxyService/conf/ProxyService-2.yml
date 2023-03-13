@@ -40,8 +40,7 @@ zk_config:
 server:
   ip: 127.0.0.1
   port: 3001
-  server_type: common
-  rpc_protocol: PB
+  protocol: custom
 
 rsa:
   private_key_path: ./private.pem

@@ -3,8 +3,8 @@
 #include <regex>
 #include <getopt.h>
 
-int port = 2000;
-std::string ip = "127.0.0.1";
+int port = 0;
+std::string ip = "0.0.0.0";
 
 void showUsage()
 {
@@ -23,14 +23,11 @@ void parseArgs(int argc, char *argv[])
             "(1\\d{2}|2[0-4]\\d|25[0-5]|[1-9]\\d|\\d)\\."
             "(1\\d{2}|2[0-4]\\d|25[0-5]|[1-9]\\d|\\d)$");
 
-    if (argc == 1)
-        showUsage();
-
     while (true) {
         int option_index = 0;
         static struct option long_options[] = {
-            {"address", required_argument, 0, 'a'},
-            {"port", required_argument, 0, 'p'},
+            {"address", optional_argument, 0, 'a'},
+            {"port", optional_argument, 0, 'p'},
             {"help", no_argument, 0, 'h'},
             {0, 0, 0, 0}};
 

@@ -43,16 +43,16 @@ private:
     std::atomic_bool isLoginSuccess_{false};
 
     // 接收线程
-    void readTaskHandler(int clientfd);
+    void readTaskHandler();
 
     // 发送心跳消息线程
-    void heartbeatTaskHandler(int clientfd);
+    void heartbeatTaskHandler();
 
     // 获取系统时间（聊天信息需要添加时间信息）
     std::string getCurrentTime();
 
     // 主聊天页面程序
-    void mainMenu(int);
+    void mainMenu();
 
     // 处理注册的响应逻辑
     void doRegResponse(json &responsejs);
@@ -81,46 +81,46 @@ private:
     /* handlers */
 
     // "help" command handler
-    void help(int fd = 0, std::string str = "");
+    void help(std::string str = "");
     // "showdata" command handler，显示当前登录成功用户的基本信息
-    void showCurrentUserData(int fd = 0, std::string str = "");
+    void showCurrentUserData(std::string str = "");
     // "chat" command handler
-    void chat(int, std::string);
+    void chat(std::string);
     // "addfriend" command handler
-    void addfriend(int, std::string);
+    void addfriend(std::string);
     // "delfriend" command handler
-    void delfriend(int, std::string);
+    void delfriend(std::string);
     // "creategroup" command handler
-    void creategroup(int, std::string);
+    void creategroup(std::string);
     // "addgroup" command handler
-    void addgroup(int, std::string);
+    void addgroup(std::string);
     // "quitgroup" command handler
-    void quitgroup(int, std::string);
+    void quitgroup(std::string);
     // "groupchat" command handler
-    void groupchat(int, std::string);
+    void groupchat(std::string);
     // "logout" command handler
-    void logout(int, std::string);
+    void logout(std::string);
     // "showdata" command handler
-    void showdata(int clientfd, std::string);
+    void showdata(std::string);
 
     // 系统支持的客户端命令列表
     std::unordered_map<std::string, std::string> commandMap_;
 
     // 注册系统支持的客户端命令处理
-    std::unordered_map<std::string, std::function<void(int, std::string)>> commandHandlerMap_;
+    std::unordered_map<std::string, std::function<void(std::string)>> commandHandlerMap_;
 
     AESTool::ptr aes_;
     RSATool::ptr rsa_;
 
-    int sendClientRequest(int clientfd);
+    int sendClientRequest();
 
-    int sendHeartbeat(int clientfd);
+    int sendHeartbeat();
 
-    int sendMsg(int clientfd, const std::string &data);
+    int sendMsg(const std::string &str);
 
-    int sendKey(int clientfd, const std::string &data);
+    int sendKey(const std::string &str);
 
-    std::string recvMsg(int clientfd);
+    std::string recvMsg();
 };
 
 }
