@@ -140,7 +140,7 @@ json ChatServiceDispatcher::login(const corpc::TcpConnection::ptr &conn, json &j
     loginReq.set_user_id(id);
     loginReq.set_user_password(js["password"]);
     loginReq.set_auth_info(corpc::getServer()->getLocalAddr()->toString());
-    int ret = doLoginReq(loginReq, loginRes);
+    doLoginReq(loginReq, loginRes);
 
     json response;
     response["msgid"] = LOGIN_MSG_ACK;
@@ -316,7 +316,7 @@ json ChatServiceDispatcher::oneChat(const corpc::TcpConnection::ptr &conn, json 
     oneChatReq.set_from_user_id(fromid);
     oneChatReq.set_to_user_id(toid);
     oneChatReq.set_msg(js.dump());
-    int ret = doOneChatReq(oneChatReq, oneChatRes);
+    doOneChatReq(oneChatReq, oneChatRes);
     response["errno"] = oneChatRes.ret_code();
     response["errmsg"] = oneChatRes.res_info();
 
@@ -334,7 +334,7 @@ json ChatServiceDispatcher::addFriend(const corpc::TcpConnection::ptr &conn, jso
     AddFriendResponse addFriendRes;
     addFriendReq.set_user_id(userid);
     addFriendReq.set_friend_id(friendid);
-    int ret = doAddFriendReq(addFriendReq, addFriendRes);
+    doAddFriendReq(addFriendReq, addFriendRes);
     
     json response;
     response["msgid"] = ADD_FRIEND_MSG_ACK;
@@ -345,7 +345,7 @@ json ChatServiceDispatcher::addFriend(const corpc::TcpConnection::ptr &conn, jso
         FriendListRequest friendListReq;
         FriendListResponse friendListRes;
         friendListReq.set_user_id(userid);
-        int ret = doGetFriendListReq(friendListReq, friendListRes);
+        doGetFriendListReq(friendListReq, friendListRes);
         if (friendListRes.ret_code() == ProxyService::SUCCESS) {
             std::vector<json> vec2;
             for (auto &user : friendListRes.friends()) {
@@ -379,7 +379,7 @@ json ChatServiceDispatcher::deleteFriend(const corpc::TcpConnection::ptr &conn, 
     DeleteFriendResponse delFriendRes;
     delFriendReq.set_user_id(userid);
     delFriendReq.set_friend_id(friendid);
-    int ret = doDeleteFriendReq(delFriendReq, delFriendRes);
+    doDeleteFriendReq(delFriendReq, delFriendRes);
     
     json response;
     response["msgid"] = DEL_FRIEND_MSG_ACK;
@@ -389,7 +389,7 @@ json ChatServiceDispatcher::deleteFriend(const corpc::TcpConnection::ptr &conn, 
         FriendListRequest friendListReq;
         FriendListResponse friendListRes;
         friendListReq.set_user_id(userid);
-        int ret = doGetFriendListReq(friendListReq, friendListRes);
+        doGetFriendListReq(friendListReq, friendListRes);
         if (friendListRes.ret_code() == ProxyService::SUCCESS) {
             std::vector<json> vec2;
             for (auto &user : friendListRes.friends()) {
@@ -437,7 +437,7 @@ void ChatServiceDispatcher::clientCloseException(const corpc::TcpConnection::ptr
     LogoutRequest logoutReq;
     LogoutResponse logoutRes;
     logoutReq.set_user_id(userid);
-    int ret = doLogoutReq(logoutReq, logoutRes);
+    doLogoutReq(logoutReq, logoutRes);
 }
 
 // 服务器异常，业务重置方法
@@ -453,7 +453,7 @@ void ChatServiceDispatcher::reset()
         LogoutRequest logoutReq;
         LogoutResponse logoutRes;
         logoutReq.set_user_id(userid);
-        int ret = doLogoutReq(logoutReq, logoutRes);
+        doLogoutReq(logoutReq, logoutRes);
     }
     userConnMap_.clear();
     std::unique_lock<std::mutex> lock2(cipherMutex_);
@@ -473,7 +473,7 @@ json ChatServiceDispatcher::createGroup(const corpc::TcpConnection::ptr &conn, j
     createGroupReq.set_user_id(userid);
     createGroupReq.set_group_name(name);
     createGroupReq.set_group_desc(desc);
-    int ret = doCreateGroupReq(createGroupReq, createGroupRes);
+    doCreateGroupReq(createGroupReq, createGroupRes);
 
     json response;
     response["msgid"] = CREATE_GROUP_MSG_ACK;
@@ -483,7 +483,7 @@ json ChatServiceDispatcher::createGroup(const corpc::TcpConnection::ptr &conn, j
         GetUserGroupsRequest userGroupsReq;
         GetUserGroupsResponse userGroupsRes;
         userGroupsReq.set_user_id(userid);
-        ret = doGetUserGroupsReq(userGroupsReq, userGroupsRes);
+        doGetUserGroupsReq(userGroupsReq, userGroupsRes);
         if (userGroupsRes.ret_code() == ProxyService::SUCCESS) {
             // group:[{groupid:[xxx, xxx, xxx, xxx]}]
             std::vector<json> groupV;
@@ -645,7 +645,7 @@ json ChatServiceDispatcher::groupChat(const corpc::TcpConnection::ptr &conn, jso
     groupChatReq.set_from_user_id(userid);
     groupChatReq.set_to_group_id(groupid);
     groupChatReq.set_msg(js.dump());
-    int ret = doGroupChatReq(groupChatReq, groupChatRes);
+    doGroupChatReq(groupChatReq, groupChatRes);
 
     json response;
     response["msgid"] = GROUP_CHAT_MSG_ACK;
@@ -664,7 +664,7 @@ json ChatServiceDispatcher::logout(const corpc::TcpConnection::ptr &conn, json &
     LogoutRequest logoutReq;
     LogoutResponse logoutRes;
     logoutReq.set_user_id(userid);
-    int ret = doLogoutReq(logoutReq, logoutRes);
+    doLogoutReq(logoutReq, logoutRes);
 
     json response;
     response["msgid"] = LOGOUT_MSG_ACK;
@@ -716,7 +716,7 @@ json ChatServiceDispatcher::forwarded(const corpc::TcpConnection::ptr &conn, jso
     SaveOfflineMessageResponse saveOfflineMessageRes;
     saveOfflineMessageReq.set_user_id(toid);
     saveOfflineMessageReq.set_msg(msg);
-    int ret = doSaveOfflineMessageReq(saveOfflineMessageReq, saveOfflineMessageRes);
+    doSaveOfflineMessageReq(saveOfflineMessageReq, saveOfflineMessageRes);
 
     return response;
 }

@@ -48,7 +48,7 @@ void OneChatInterface::run()
     // response_.set_ret_code(0);
     // response_.set_res_info("Succ");
     //
-    int fromUserId = request_.from_user_id();
+    // int fromUserId = request_.from_user_id();
     int toUserId = request_.to_user_id();
     std::string msg = request_.msg();
 

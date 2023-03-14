@@ -3,6 +3,6 @@
 # This file will not be overwrite althrough protobuf file changed !!!
 # Just write this file while not exist
 
-file(GLOB_RECURSE SRC_LIST *.cpp *.cc *.h *.S)
-add_executable(ChatService ${SRC_LIST})
-target_link_libraries(ChatService corpc yaml-cpp protobuf dl zookeeper_mt mysqlclient hiredis rocketmq z rt pthread)
+file(GLOB_RECURSE SRC_LIST *.cpp *.cc *.h *.hpp *.S)
+add_executable(${PROJECT_NAME} ${SRC_LIST})
+target_link_libraries(${PROJECT_NAME} corpc yaml-cpp protobuf dl zookeeper_mt mysqlclient hiredis rocketmq z rt pthread)

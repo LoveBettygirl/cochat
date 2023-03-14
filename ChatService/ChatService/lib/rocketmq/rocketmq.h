@@ -42,7 +42,7 @@ public:
     virtual ~RocketMQMsgListener() {}
 
     virtual rocketmq::ConsumeStatus consumeMessage(const std::vector<rocketmq::MQMessageExt> &msgs) {
-        for (int i = 0; i < msgs.size(); i++) {
+        for (size_t i = 0; i != msgs.size(); i++) {
             USER_LOG_INFO << "recv msg: topic: " << msgs[i].getTopic() << " key: "  << msgs[i].getKeys() << " tag: " << msgs[i].getTags() << " body: "<<  msgs[i].getBody();
             callback_(msgs[i].getKeys(), msgs[i].getTags(), msgs[i].getBody());
         }
